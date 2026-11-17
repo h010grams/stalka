@@ -94,7 +94,7 @@ export function AuthLayout() {
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 py-6">
       <div className="mb-8 flex items-center justify-between">
         <span className="flex items-center gap-2 text-lg font-bold">
-          <img src="/favicon.svg" alt="" className="size-7" /> Pečiatka
+          <img src="/logo.svg" alt="" className="size-7" /> Pečiatka
         </span>
         <LanguageSwitcher />
       </div>
