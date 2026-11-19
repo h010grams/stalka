@@ -13,7 +13,7 @@ export default defineConfig({
       manifest: {
         name: 'Stálka',
         short_name: 'Stálka',
-        description: 'Vernostné karty pre salóny',
+        description: 'Vernostné karty v Apple a Google Wallet',
         lang: 'sk',
         start_url: '/',
         display: 'standalone',
