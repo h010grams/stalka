@@ -23,7 +23,7 @@ export function LandingPage() {
     <div className="min-h-dvh bg-stone-50 text-stone-900">
       <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
         <span className="flex items-center gap-2 text-lg font-bold">
-          <img src="/logo.svg" alt="" className="size-8" /> Stálka
+          <img src="/mark.svg" alt="" className="h-7 w-auto" /> Stálka
         </span>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
