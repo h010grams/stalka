@@ -94,6 +94,21 @@ export interface MeResponse {
   currentSalonId: string | null;
 }
 
+// ───────── Тариф ─────────
+
+export const TRIAL_DAYS = 30;
+export const PRICE_MONTH_EUR = 14.9;
+export const PRICE_YEAR_EUR = 149;
+
+export interface PlanDto {
+  /** trial — пробный период; active — оплачено; expired — пробный период закончился, оплаты нет */
+  status: 'trial' | 'active' | 'expired';
+  trialEndsAt: string;
+  paidUntil: string | null;
+  /** сколько дней осталось до конца пробного периода или оплаченного срока */
+  daysLeft: number;
+}
+
 export interface SalonDto {
   id: string;
   name: string;
@@ -102,6 +117,7 @@ export interface SalonDto {
   phone: string | null;
   defaultLocale: Locale;
   timezone: string;
+  plan: PlanDto;
 }
 
 export interface StaffResponse {

@@ -114,6 +114,32 @@ export function LandingPage() {
           </section>
         )}
 
+        <section className="mx-auto max-w-5xl px-4 pt-14">
+          <h2 className="mb-6 text-2xl font-bold">{t('landing.price_title')}</h2>
+          <div className="grid gap-6 rounded-3xl border border-stone-200 bg-white p-8 md:grid-cols-2 md:p-10">
+            <div className="space-y-2">
+              <p>
+                <span className="text-5xl font-bold tracking-tight">14,90 €</span>{' '}
+                <span className="text-stone-500">{t('landing.per_month')}</span>
+              </p>
+              <p className="text-stone-600">{t('landing.price_year')}</p>
+              <p className="pt-2 font-semibold">{t('landing.trial')}</p>
+              <p className="text-sm text-stone-500">{t('landing.cancel')}</p>
+              <Link to="/register" className={buttonClass('primary', 'mt-3 min-h-12 px-6 text-base')}>
+                {t('landing.cta')}
+              </Link>
+            </div>
+            <ul className="space-y-2 self-center text-stone-700">
+              {([1, 2, 3, 4, 5] as const).map((n) => (
+                <li key={n} className="flex gap-2">
+                  <span className="text-brand-600">✓</span>
+                  {t(`landing.inc_${n}`)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         <section className="mx-auto max-w-5xl px-4 py-14">
           <div className="space-y-4 rounded-3xl bg-brand-50 p-8 ring-1 ring-brand-100 md:p-10">
             <h2 className="text-2xl font-bold">{t('landing.pilot_title')}</h2>

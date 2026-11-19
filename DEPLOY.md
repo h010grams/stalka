@@ -122,6 +122,13 @@ When everything works: Wallet Console → **Request publishing access** (busines
 
 ## 8. Operations
 
+- **Subscriptions:** every new salon gets a 30-day trial (`Salon.trialEndsAt`). Until online payments are added, mark a paying salon by hand in the Neon SQL editor:
+  ```sql
+  UPDATE "Salon" SET "paidUntil" = now() + interval '1 year' WHERE slug = 'salon-slug';
+  ```
+  Extend a pilot salon's trial: `UPDATE "Salon" SET "trialEndsAt" = now() + interval '60 days' WHERE slug = '…';`
+  Nothing is blocked when a trial ends — the owner just sees a reminder.
+
 - **Logs:** Render → service → **Logs**. Wallet sync errors are tagged `[wallet]`.
 - **Backups:** Neon point-in-time restore; test a restore on a copy once a month.
 - **New migrations:** locally `pnpm --filter api db:migrate --name <name>` → commit → the deployment applies them.

@@ -5,6 +5,7 @@ import { audit } from '../../lib/audit.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
 import { requireTenant } from '../../plugins/auth.js';
+import { planOf } from '../../domain/plan.js';
 
 function toDto(s: Salon): SalonDto {
   return {
@@ -15,6 +16,7 @@ function toDto(s: Salon): SalonDto {
     phone: s.phone,
     defaultLocale: s.defaultLocale,
     timezone: s.timezone,
+    plan: planOf(s, new Date()),
   };
 }
 

@@ -8,6 +8,7 @@ import { LOCALES, updateSalonSchema, type SalonDto, type StaffResponse } from '@
 import { api } from '../lib/api';
 import { meKey, useCurrentRole, useMe } from '../lib/auth';
 import { Alert, Button, Card, ErrorAlert, Field, Input, Select, Spinner } from '../components/ui';
+import { PlanCard } from '../components/PlanCard';
 
 const LOCALE_NAMES = { sk: 'Slovenčina', en: 'English', uk: 'Українська' } as const;
 
@@ -47,6 +48,7 @@ export function SettingsPage() {
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold">{t('nav.settings')}</h1>
+      {isOwner && <PlanCard plan={salon.data!.plan} />}
       <Card flush>
         <ul className="divide-y divide-stone-100">
           {[

@@ -228,3 +228,24 @@ describe('CSV export', () => {
     expect([c.marketingConsentAt, c.birthDay, c.birthMonth]).toEqual([null, null, null]);
   });
 });
+
+describe('plan', () => {
+  it('a new salon starts a 30-day trial; payment wins over the trial; then it expires', async () => {
+    const { planOf } = await import('../src/domain/plan.js');
+    const now = new Date('2026-11-19T12:00:00Z');
+    const trialEndsAt = new Date(now.getTime() + 10 * DAY);
+    expect(planOf({ trialEndsAt, paidUntil: null }, now)).toMatchObject({ status: 'trial', daysLeft: 10 });
+    expect(planOf({ trialEndsAt, paidUntil: new Date(now.getTime() + 365 * DAY) }, now)).toMatchObject({
+      status: 'active',
+      daysLeft: 365,
+    });
+    expect(planOf({ trialEndsAt: new Date(now.getTime() - DAY), paidUntil: null }, now)).toMatchObject({
+      status: 'expired',
+      daysLeft: 0,
+    });
+
+    const { owner } = await salonWithProgram(app);
+    const salon = json(await owner.client.get('/api/salon'));
+    expect(salon.plan).toMatchObject({ status: 'trial', daysLeft: 30, paidUntil: null });
+  });
+});

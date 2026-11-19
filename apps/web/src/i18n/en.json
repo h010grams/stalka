@@ -438,6 +438,27 @@
     "pilot_text": "During the pilot, Stálka is free for 2 months. I will help you set it up in person – in Bratislava, right at your salon.",
     "pilot_cta": "Register your salon",
     "pilot_write": "Write to me",
-    "footer": "Loyalty cards for salons"
+    "footer": "Loyalty cards for salons",
+    "price_title": "Simple pricing",
+    "per_month": "a month",
+    "price_year": "or €149 a year – 2 months free",
+    "trial": "First 30 days free, no credit card.",
+    "inc_1": "Unlimited clients",
+    "inc_2": "Card in Apple and Google Wallet",
+    "inc_3": "Automatic reminders and birthday wishes",
+    "inc_4": "Messages to all clients",
+    "inc_5": "QR poster and help with setup",
+    "cancel": "No commitment – if you don't like it, you simply don't continue."
+  },
+  "plan": {
+    "title": "Subscription",
+    "trial": "Free trial. Days left: {{count}}.",
+    "active": "Subscription active until {{date}}.",
+    "expired": "The free trial has ended. To keep using Stálka, write to us – client cards keep working.",
+    "price": "€14.90 a month or €149 a year (2 months free).",
+    "contact": "Write to us",
+    "banner_trial": "Free trial: {{count}} days left.",
+    "banner_expired": "The free trial has ended.",
+    "details": "Details"
   }
 }

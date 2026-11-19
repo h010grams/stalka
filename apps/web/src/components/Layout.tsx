@@ -1,7 +1,7 @@
-import { NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
-import type { MeResponse } from '@stalka/shared';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { MeResponse, SalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole, useLogout, useMe, useSetMe } from '../lib/auth';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -18,6 +18,14 @@ export function AppLayout() {
   const location = useLocation();
   const setMe = useSetMe();
   const qc = useQueryClient();
+  // владелице за неделю до конца пробного периода и после него — напоминание сверху
+  const salon = useQuery({
+    queryKey: ['salon'],
+    queryFn: () => api.get<SalonDto>('/salon'),
+    enabled: !!me && role === 'OWNER',
+  });
+  const plan = salon.data?.plan;
+  const showPlan = plan && (plan.status === 'expired' || (plan.status === 'trial' && plan.daysLeft <= 7));
 
   if (isLoading) return <Spinner />;
   // stalka.sk для гостя — продающая страница, а не форма входа
@@ -65,6 +73,18 @@ export function AppLayout() {
           </button>
         </div>
       </header>
+
+      {showPlan && location.pathname !== '/settings' && (
+        <Link
+          to="/settings"
+          className="flex items-center justify-between gap-3 bg-brand-50 px-4 py-2 text-sm text-brand-700 ring-1 ring-brand-100"
+        >
+          <span>
+            {plan.status === 'expired' ? t('plan.banner_expired') : t('plan.banner_trial', { count: plan.daysLeft })}
+          </span>
+          <span className="shrink-0 font-semibold underline">{t('plan.details')}</span>
+        </Link>
+      )}
 
       <main className="flex-1 px-4 pb-28 pt-4">
         <Outlet />

@@ -438,6 +438,27 @@
     "pilot_text": "Počas pilotu je Stálka 2 mesiace zadarmo. Pomôžem vám s nastavením osobne – v Bratislave aj priamo v salóne.",
     "pilot_cta": "Zaregistrovať salón",
     "pilot_write": "Napísať",
-    "footer": "Vernostné karty pre salóny"
+    "footer": "Vernostné karty pre salóny",
+    "price_title": "Jednoduchá cena",
+    "per_month": "mesačne",
+    "price_year": "alebo 149 € ročne – 2 mesiace zadarmo",
+    "trial": "Prvých 30 dní zadarmo, bez platobnej karty.",
+    "inc_1": "Neobmedzený počet klientok",
+    "inc_2": "Karta v Apple a Google Wallet",
+    "inc_3": "Automatické pripomienky a blahoželania",
+    "inc_4": "Správy všetkým klientkam",
+    "inc_5": "QR plagát a pomoc s nastavením",
+    "cancel": "Bez záväzkov – ak sa vám nepáči, jednoducho nepokračujete."
+  },
+  "plan": {
+    "title": "Predplatné",
+    "trial": "Skúšobná verzia zadarmo. Zostáva dní: {{count}}.",
+    "active": "Predplatné je aktívne do {{date}}.",
+    "expired": "Skúšobná verzia skončila. Ak chcete Stálku používať ďalej, napíšte nám – karty klientok fungujú ďalej.",
+    "price": "14,90 € mesačne alebo 149 € ročne (2 mesiace zadarmo).",
+    "contact": "Napísať",
+    "banner_trial": "Skúšobná verzia: zostáva dní {{count}}.",
+    "banner_expired": "Skúšobná verzia skončila.",
+    "details": "Podrobnosti"
   }
 }
