@@ -1,6 +1,8 @@
 import type { FastifyPluginAsync, FastifyReply } from 'fastify';
 import QRCode from 'qrcode';
-import { joinSchema, marketingToggleSchema, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
+import { joinSchema, marketingToggleSchema, type PublicCardDto, type PublicSalonDto, type SiteInfoDto } from '@stalka/shared';
+import { config } from '../../config.js';
+import { urls } from '../../services/urls.js';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
@@ -51,6 +53,22 @@ function sendPng(reply: FastifyReply, png: Buffer) {
 export const publicRoutes: FastifyPluginAsync = async (app) => {
   const joinLimit = { rateLimit: { max: 10, timeWindow: '1 minute' } };
   const readLimit = { rateLimit: { max: 120, timeWindow: '1 minute' } };
+
+  // ───────── Продающая страница ─────────
+
+  app.get('/site', { config: readLimit }, async (): Promise<SiteInfoDto> => {
+    const demo = config.DEMO_SALON_SLUG
+      ? await prisma.salon.findUnique({ where: { slug: config.DEMO_SALON_SLUG }, select: { slug: true } })
+      : null;
+    return { demo: demo ? { joinPath: `/j/${demo.slug}` } : null, contactEmail: config.CONTACT_EMAIL ?? null };
+  });
+
+  // QR на демо-карту: на компьютере посетитель наводит телефон и получает карту в свой Wallet
+  app.get('/demo-qr.svg', { config: readLimit }, async (_req, reply) => {
+    if (!config.DEMO_SALON_SLUG) throw notFound();
+    const svg = await QRCode.toString(urls.joinPage(config.DEMO_SALON_SLUG), { type: 'svg', margin: 1 });
+    return reply.header('Content-Type', 'image/svg+xml').header('Cache-Control', 'public, max-age=3600').send(svg);
+  });
 
   // ───────── Салон и регистрация ─────────
 

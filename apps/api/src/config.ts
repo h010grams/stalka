@@ -14,6 +14,9 @@ const envSchema = z.object({
   // Если ключа нет, письма выводятся в лог (удобно в разработке).
   RESEND_API_KEY: z.string().optional(),
   MAIL_FROM: z.string().default('Stálka <noreply@example.com>'),
+  // Продающая страница: салон для демо-карты и контакт для салонов (оба необязательны)
+  DEMO_SALON_SLUG: z.string().optional(),
+  CONTACT_EMAIL: z.string().email().optional(),
   // Фоновые задачи (синхронизация Wallet, напоминания). В тестах выключены.
   WORKERS_ENABLED: z
     .enum(['true', 'false'])

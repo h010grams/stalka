@@ -6,6 +6,7 @@ import { api } from '../lib/api';
 import { useCurrentRole, useLogout, useMe, useSetMe } from '../lib/auth';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Spinner } from './ui';
+import { LandingPage } from '../pages/Landing';
 
 /** Оболочка для залогиненных: шапка + нижняя навигация (удобно большим пальцем). */
 export function AppLayout() {
@@ -19,6 +20,8 @@ export function AppLayout() {
   const qc = useQueryClient();
 
   if (isLoading) return <Spinner />;
+  // stalka.sk для гостя — продающая страница, а не форма входа
+  if (!me && location.pathname === '/') return <LandingPage />;
   if (!me) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
 
   // Касса: сканер — главный экран. Владельцу ещё клиенты и настройки.

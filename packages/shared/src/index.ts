@@ -237,6 +237,13 @@ export interface PublicCardDto {
   marketing: boolean;
 }
 
+/** Данные для продающей страницы. */
+export interface SiteInfoDto {
+  /** демо-салон: посетитель может добавить себе настоящую карту и посмотреть, как она работает */
+  demo: { joinPath: string } | null;
+  contactEmail: string | null;
+}
+
 export const marketingToggleSchema = z.object({ enabled: z.boolean() });
 
 // ───────── Мастер: карта клиента ─────────

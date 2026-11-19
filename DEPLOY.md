@@ -38,6 +38,8 @@ Supabase works too: Project Settings → Database → Connection string → **Se
 | `APP_NAME` | service name |
 | `RESEND_API_KEY` | Resend API key (section 4) |
 | `MAIL_FROM` | `Stálka <noreply@example.sk>` |
+| `DEMO_SALON_SLUG` | optional: slug of a demo salon — the landing page at `/` shows a QR code to add its card |
+| `CONTACT_EMAIL` | optional: shown as a "Write to me" button on the landing page |
 
 `PORT` is set by Render; the server reads it. Wallet variables are described in sections 5 and 6.
 Saving changes on the **Environment** tab redeploys the service.
