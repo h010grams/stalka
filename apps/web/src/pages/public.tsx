@@ -152,7 +152,17 @@ function platform(): 'ios' | 'android' | 'other' {
 }
 
 function WalletButton({ href, kind }: { href: string; kind: 'apple' | 'google' }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  if (kind === 'google') {
+    // официальная кнопка Google (менять цвет, текст и пропорции нельзя по правилам бренда)
+    const lang = (['sk', 'en', 'uk'] as const).find((l) => i18n.language.startsWith(l)) ?? 'en';
+    return (
+      <a href={href} className="mx-auto block w-fit rounded-full focus-visible:outline-2 focus-visible:outline-offset-2">
+        <img src={`/wallet/google-${lang}.svg`} alt={t('public_card.add_google')} className="h-12 w-auto" />
+      </a>
+    );
+  }
+  // Apple: официальный значок добавим, когда будет аккаунт Apple Developer (лицензия только для участников)
   return (
     <a
       href={href}
@@ -162,7 +172,7 @@ function WalletButton({ href, kind }: { href: string; kind: 'apple' | 'google' }
         <rect x="3" y="6" width="18" height="13" rx="3" />
         <path d="M3 10h18M16 14.5h2" strokeLinecap="round" />
       </svg>
-      {t(kind === 'apple' ? 'public_card.add_apple' : 'public_card.add_google')}
+      {t('public_card.add_apple')}
     </a>
   );
 }

@@ -221,7 +221,7 @@
   },
   "public_card": {
     "add_apple": "Додати в Apple Wallet",
-    "add_google": "Додати в Google Wallet",
+    "add_google": "Додати в Google Гаманець",
     "show_qr": "Покажіть цей QR-код під час візиту",
     "save_page": "Порада: збережіть цю сторінку в закладки – це ваша картка.",
     "reward_ready": "🎁 На вас чекає нагорода: {{reward}}",

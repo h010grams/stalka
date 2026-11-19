@@ -221,7 +221,7 @@
   },
   "public_card": {
     "add_apple": "Pridať do Apple Wallet",
-    "add_google": "Pridať do Google Wallet",
+    "add_google": "Pridať do služby Google Peňaženka",
     "show_qr": "Pri návšteve ukážte tento QR kód",
     "save_page": "Tip: uložte si túto stránku do záložiek – je to vaša karta.",
     "reward_ready": "🎁 Máte odmenu: {{reward}}",
