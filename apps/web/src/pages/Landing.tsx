@@ -105,7 +105,7 @@ function PhoneMock() {
           <p className="text-center font-display text-5xl font-medium text-stone-800">9:41</p>
           <Notification />
           <CardVisual
-            salonName="Zaneta Nail Studio"
+            salonName="Stálka Demo"
             logoUrl={null}
             stampCount={6}
             stampsRequired={10}
