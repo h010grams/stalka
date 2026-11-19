@@ -8,7 +8,7 @@ import {
   switchSalonSchema,
   updateMeSchema,
   type MeResponse,
-} from '@peciatka/shared';
+} from '@stalka/shared';
 import { config } from '../../config.js';
 import { audit } from '../../lib/audit.js';
 import { getDummyHash, hashPassword, randomToken, sha256, verifyPassword } from '../../lib/crypto.js';

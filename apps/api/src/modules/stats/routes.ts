@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { addDays, format, parseISO } from 'date-fns';
 import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
-import { STATS_PERIODS, type AuditItem, type StatsDto, type StatsPeriod } from '@peciatka/shared';
+import { STATS_PERIODS, type AuditItem, type StatsDto, type StatsPeriod } from '@stalka/shared';
 import { prisma } from '../../lib/prisma.js';
 import { requireTenant } from '../../plugins/auth.js';
 

@@ -1,8 +1,8 @@
-# Pečiatka — digital loyalty cards for small salons
+# Stálka — digital loyalty cards for small salons
 
 [![CI](https://github.com/h010grams/peciatka/actions/workflows/ci.yml/badge.svg)](https://github.com/h010grams/peciatka/actions/workflows/ci.yml)
 
-**Pečiatka** (Slovak for *"stamp"*) replaces paper stamp cards in small beauty salons — nail studios, barbershops, hair and brow/lash salons — with a digital loyalty card that lives in **Apple Wallet** and **Google Wallet**.
+**Stálka** (Slovak slang for *"a regular"* — a client who keeps coming back) replaces paper stamp cards in small beauty salons — nail studios, barbershops, hair and brow/lash salons — with a digital loyalty card that lives in **Apple Wallet** and **Google Wallet**.
 
 A client scans a QR code at the counter and gets the card on her phone in under a minute. At checkout, the stylist scans the card with their own phone and adds a stamp — the card in the client's Wallet updates itself and shows a notification. After N visits the reward appears automatically.
 

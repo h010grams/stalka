@@ -5,7 +5,7 @@ import {
   updateMemberSchema,
   type InviteInfoResponse,
   type StaffResponse,
-} from '@peciatka/shared';
+} from '@stalka/shared';
 import { config } from '../../config.js';
 import { audit } from '../../lib/audit.js';
 import { hashPassword, randomToken, sha256 } from '../../lib/crypto.js';

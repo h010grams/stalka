@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import type { FastifyPluginAsync } from 'fastify';
 import PDFDocument from 'pdfkit';
 import QRCode from 'qrcode';
-import { localeSchema, type Locale } from '@peciatka/shared';
+import { localeSchema, type Locale } from '@stalka/shared';
 import { notFound } from '../../lib/errors.js';
 import { t } from '../../lib/i18n.js';
 import { prisma } from '../../lib/prisma.js';

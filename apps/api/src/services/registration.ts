@@ -1,5 +1,5 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { CONSENT_VERSION, type joinSchema } from '@peciatka/shared';
+import { CONSENT_VERSION, type joinSchema } from '@stalka/shared';
 import type { z } from 'zod';
 import { audit } from '../lib/audit.js';
 import { randomToken } from '../lib/crypto.js';

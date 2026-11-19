@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { LOCALES, type Locale } from '@peciatka/shared';
+import { LOCALES, type Locale } from '@stalka/shared';
 import sk from '../i18n/sk.json';
 import en from '../i18n/en.json';
 import uk from '../i18n/uk.json';

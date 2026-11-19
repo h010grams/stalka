@@ -1,7 +1,7 @@
 import { NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import type { MeResponse } from '@peciatka/shared';
+import type { MeResponse } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole, useLogout, useMe, useSetMe } from '../lib/auth';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -50,7 +50,7 @@ export function AppLayout() {
             ))}
           </select>
         ) : (
-          <span className="truncate text-base font-semibold">{me.salons[0]?.name ?? 'Pečiatka'}</span>
+          <span className="truncate text-base font-semibold">{me.salons[0]?.name ?? 'Stálka'}</span>
         )}
         <div className="flex shrink-0 items-center gap-2">
           <LanguageSwitcher persist />
@@ -94,7 +94,7 @@ export function AuthLayout() {
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 py-6">
       <div className="mb-8 flex items-center justify-between">
         <span className="flex items-center gap-2 text-lg font-bold">
-          <img src="/logo.svg" alt="" className="size-7" /> Pečiatka
+          <img src="/logo.svg" alt="" className="size-7" /> Stálka
         </span>
         <LanguageSwitcher />
       </div>

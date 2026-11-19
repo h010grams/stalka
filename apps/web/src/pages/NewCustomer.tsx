@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { joinSchema, LOCALES, type CounterRegisterResponse, type Locale } from '@peciatka/shared';
+import { joinSchema, LOCALES, type CounterRegisterResponse, type Locale } from '@stalka/shared';
 import { api } from '../lib/api';
 import { Button, Card, ErrorAlert, Field, Input, Select } from '../components/ui';
 

@@ -1,4 +1,4 @@
-import type { StaffCardDto } from '@peciatka/shared';
+import type { StaffCardDto } from '@stalka/shared';
 import {
   applyRedeem,
   applyRevoke,

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync, FastifyReply } from 'fastify';
 import QRCode from 'qrcode';
-import { joinSchema, type PublicCardDto, type PublicSalonDto } from '@peciatka/shared';
+import { joinSchema, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';

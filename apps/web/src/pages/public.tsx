@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { joinSchema, type Locale, type PublicCardDto, type PublicSalonDto } from '@peciatka/shared';
+import { joinSchema, type Locale, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { CardVisual } from '../components/CardVisual';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { Alert, Button, ErrorAlert, Field, Input, Spinner } from '../components/ui';
 
-const APP_NAME = 'Pečiatka';
+const APP_NAME = 'Stálka';
 
 function savedCard(slug: string): string | null {
   try {

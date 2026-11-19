@@ -1,4 +1,4 @@
-import type { ApiErrorBody } from '@peciatka/shared';
+import type { ApiErrorBody } from '@stalka/shared';
 
 export class ApiError extends Error {
   constructor(

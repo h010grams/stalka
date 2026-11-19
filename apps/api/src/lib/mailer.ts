@@ -1,4 +1,4 @@
-import type { Locale } from '@peciatka/shared';
+import type { Locale } from '@stalka/shared';
 import { config } from '../config.js';
 
 export interface Mail {

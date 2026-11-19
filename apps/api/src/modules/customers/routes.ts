@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { Prisma } from '@prisma/client';
-import type { CustomerDetailDto, CustomerListItem, CustomerListResponse, HistoryItem } from '@peciatka/shared';
+import type { CustomerDetailDto, CustomerListItem, CustomerListResponse, HistoryItem } from '@stalka/shared';
 import { audit } from '../../lib/audit.js';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';

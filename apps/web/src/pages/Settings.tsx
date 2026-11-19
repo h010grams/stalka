@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LOCALES, updateSalonSchema, type SalonDto, type StaffResponse } from '@peciatka/shared';
+import { LOCALES, updateSalonSchema, type SalonDto, type StaffResponse } from '@stalka/shared';
 import { api } from '../lib/api';
 import { meKey, useCurrentRole, useMe } from '../lib/auth';
 import { Alert, Button, Card, ErrorAlert, Field, Input, Select, Spinner } from '../components/ui';

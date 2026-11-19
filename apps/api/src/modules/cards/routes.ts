@@ -1,7 +1,7 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { fromZonedTime } from 'date-fns-tz';
 import QRCode from 'qrcode';
-import { appointmentSchema, joinSchema, type CounterRegisterResponse, type StampResultDto } from '@peciatka/shared';
+import { appointmentSchema, joinSchema, type CounterRegisterResponse, type StampResultDto } from '@stalka/shared';
 import { assertUuid, badRequest, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';

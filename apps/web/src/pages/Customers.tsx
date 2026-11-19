@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AuditItem, CustomerDetailDto, CustomerListResponse, StatsDto } from '@peciatka/shared';
+import type { AuditItem, CustomerDetailDto, CustomerListResponse, StatsDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { formatDateTime, formatDay, formatRelative } from '../lib/format';

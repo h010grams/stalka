@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import type { InviteInfoResponse, MeResponse } from '@peciatka/shared';
+import type { InviteInfoResponse, MeResponse } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useLogout, useMe, useSetMe } from '../lib/auth';
 import { Alert, Button, Card, ErrorAlert, Field, Input, Spinner, buttonClass } from '../components/ui';

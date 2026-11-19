@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import type { LoyaltyProgram } from '@prisma/client';
-import { programSchema, type ProgramDto } from '@peciatka/shared';
+import { programSchema, type ProgramDto } from '@stalka/shared';
 import { audit } from '../../lib/audit.js';
 import { badRequest, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';

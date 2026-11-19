@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CounterRegisterResponse, StaffCardDto, StampResultDto } from '@peciatka/shared';
+import type { CounterRegisterResponse, StaffCardDto, StampResultDto } from '@stalka/shared';
 import { api, ApiError } from '../lib/api';
 import { formatDateTime, formatRelative, toLocalInput } from '../lib/format';
 import { Button, Card, ErrorAlert, Input, Spinner, buttonClass } from '../components/ui';

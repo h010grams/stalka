@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { programSchema, type ProgramDto, type SalonDto } from '@peciatka/shared';
+import { programSchema, type ProgramDto, type SalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { CardVisual } from '../components/CardVisual';

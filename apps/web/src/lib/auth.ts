@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { MeResponse } from '@peciatka/shared';
+import type { MeResponse } from '@stalka/shared';
 import { api, ApiError } from './api';
 import { setLocale } from './i18n';
 

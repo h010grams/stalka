@@ -10,10 +10,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   // Публичный адрес, на который ведут ссылки в письмах, QR-коды и Wallet.
   APP_URL: z.string().url().default('http://localhost:5174'),
-  APP_NAME: z.string().default('Pečiatka'),
+  APP_NAME: z.string().default('Stálka'),
   // Если ключа нет, письма выводятся в лог (удобно в разработке).
   RESEND_API_KEY: z.string().optional(),
-  MAIL_FROM: z.string().default('Pečiatka <noreply@example.com>'),
+  MAIL_FROM: z.string().default('Stálka <noreply@example.com>'),
   // Фоновые задачи (синхронизация Wallet, напоминания). В тестах выключены.
   WORKERS_ENABLED: z
     .enum(['true', 'false'])

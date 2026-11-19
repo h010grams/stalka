@@ -11,7 +11,7 @@ import {
   resetPasswordSchema,
   type Locale,
   type MeResponse,
-} from '@peciatka/shared';
+} from '@stalka/shared';
 import { api } from '../lib/api';
 import { useMe, useSetMe } from '../lib/auth';
 import { Alert, Button, ErrorAlert, Field, Input } from '../components/ui';

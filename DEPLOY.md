@@ -37,7 +37,7 @@ Supabase works too: Project Settings → Database → Connection string → **Se
 | `NODE_ENV` | `production` |
 | `APP_NAME` | service name |
 | `RESEND_API_KEY` | Resend API key (section 4) |
-| `MAIL_FROM` | `Pečiatka <noreply@example.sk>` |
+| `MAIL_FROM` | `Stálka <noreply@example.sk>` |
 
 `PORT` is set by Render; the server reads it. Wallet variables are described in sections 5 and 6.
 Saving changes on the **Environment** tab redeploys the service.
@@ -69,7 +69,7 @@ Requires an Apple Developer Program membership.
    ```bash
    openssl req -new -newkey rsa:2048 -nodes -keyout certs/signerKey.pem -out certs/pass.certSigningRequest -subj "/CN=Pass Type ID/C=SK"
    ```
-2. developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → **+** → **Pass Type IDs** → e.g. `pass.sk.peciatka.loyalty`.
+2. developer.apple.com → Certificates, Identifiers & Profiles → Identifiers → **+** → **Pass Type IDs** → e.g. `pass.sk.stalka.loyalty`.
 3. Open the Pass Type ID → **Create Certificate** → upload `pass.certSigningRequest` → download `pass.cer`.
 4. Convert the certificate and download Apple's WWDR G4 intermediate certificate (apple.com/certificateauthority):
    ```bash

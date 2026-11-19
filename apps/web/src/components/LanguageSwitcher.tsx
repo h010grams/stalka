@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { LOCALES, type Locale } from '@peciatka/shared';
+import { LOCALES, type Locale } from '@stalka/shared';
 import { api } from '../lib/api';
 import { setLocale } from '../lib/i18n';
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import QrScanner from 'qr-scanner';
-import type { CustomerListResponse, ProgramDto, StaffCardDto } from '@peciatka/shared';
+import type { CustomerListResponse, ProgramDto, StaffCardDto } from '@stalka/shared';
 import { api, ApiError } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { formatRelative } from '../lib/format';

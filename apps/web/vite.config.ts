@@ -11,8 +11,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Pečiatka',
-        short_name: 'Pečiatka',
+        name: 'Stálka',
+        short_name: 'Stálka',
         description: 'Vernostné karty pre salóny',
         lang: 'sk',
         start_url: '/',

@@ -8,5 +8,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   // общий пакет — это TS-исходники, вшиваем его в бандл
-  noExternal: ['@peciatka/shared'],
+  noExternal: ['@stalka/shared'],
 });

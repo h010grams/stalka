@@ -1,4 +1,4 @@
-import type { Locale } from '@peciatka/shared';
+import type { Locale } from '@stalka/shared';
 
 /** Тексты, которые видит клиентка в Wallet и в уведомлениях. */
 const dict = {

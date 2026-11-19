@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import type { Salon } from '@prisma/client';
-import { updateSalonSchema, type SalonDto } from '@peciatka/shared';
+import { updateSalonSchema, type SalonDto } from '@stalka/shared';
 import { audit } from '../../lib/audit.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
