@@ -485,7 +485,10 @@
     "faq_5_q": "Je to v súlade s GDPR?",
     "faq_5_a": "Áno. Klientka dáva súhlas s dátumom a verziou textu, súhlas s ponukami je samostatný a dobrovoľný. Údaje môžete exportovať alebo vymazať jedným klikom. Dáta sú uložené v EÚ.",
     "final_title": "Vyskúšajte to 30 dní zadarmo",
-    "final_text": "Nastavenie trvá asi 10 minút. Platobnú kartu nepotrebujete."
+    "final_text": "Nastavenie trvá asi 10 minút. Platobnú kartu nepotrebujete.",
+    "lead_short": "Vernostná karta v Apple a Google Wallet, ktorá sama pripomenie, kedy je čas prísť znova.",
+    "demo_reward_barber": "Strih zadarmo",
+    "demo_reward_cafe": "10. káva zadarmo"
   },
   "plan": {
     "title": "Predplatné",

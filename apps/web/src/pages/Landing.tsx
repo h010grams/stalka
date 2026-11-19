@@ -92,36 +92,6 @@ function Notification() {
   );
 }
 
-/** Телефон: уведомление «пора вернуться» поверх карты — главное, что отличает Stálka. */
-function PhoneMock() {
-  const { t } = useTranslation();
-  const nextVisit = new Date(Date.now() + 3 * 24 * 3600_000);
-  nextVisit.setHours(14, 30, 0, 0);
-  return (
-    <div className="relative mx-auto w-full max-w-[330px]">
-      <div className="absolute -inset-10 -z-10 rounded-full bg-brand-300/40 blur-3xl" aria-hidden />
-      <div className="rounded-[2.75rem] bg-stone-900 p-2.5 shadow-2xl shadow-stone-900/20">
-        <div className="space-y-3 rounded-[2.2rem] bg-gradient-to-b from-stone-200 to-stone-100 px-3 pb-6 pt-10">
-          <p className="text-center font-display text-5xl font-medium text-stone-800">9:41</p>
-          <Notification />
-          <CardVisual
-            salonName="Stálka Demo"
-            logoUrl={null}
-            stampCount={6}
-            stampsRequired={10}
-            rewardText={t('landing.demo_reward')}
-            bgColor="#7A1F3D"
-            fgColor="#FFFFFF"
-            labelColor="#F4C7D3"
-            nextAppointmentAt={nextVisit.toISOString()}
-            timezone="Europe/Bratislava"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /** Продающая страница: stalka.sk для тех, кто не вошёл. */
 export function LandingPage() {
   const { t } = useTranslation();
@@ -160,44 +130,82 @@ export function LandingPage() {
       </header>
 
       <main>
-        {/* ───────── Hero ───────── */}
-        <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 pb-20 pt-12 md:grid-cols-[1.2fr_1fr] md:pb-28 md:pt-20">
-          <div className="space-y-7">
-            <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm text-stone-600 ring-1 ring-stone-200">
-              <Sparkles className="size-4 text-brand-600" aria-hidden />
-              {t('landing.eyebrow')}
-            </p>
-            <h1 className="font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
-              {t('landing.title_a')} <em className="font-medium text-brand-600">{t('landing.title_b')}</em>
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-stone-600">{t('landing.lead')}</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link to="/register" className={CTA_DARK}>
-                {t('landing.cta')}
-              </Link>
-              {demo && (
-                <a href="#demo" className={CTA_LIGHT}>
-                  {t('landing.cta_demo')}
-                </a>
-              )}
-            </div>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-stone-600">
-              {(
-                [
-                  [Smartphone, 'trust_wallet'],
-                  [WalletCards, 'trust_noapp'],
-                  [ShieldCheck, 'trust_gdpr'],
-                  [Timer, 'trust_setup'],
-                ] as const
-              ).map(([Icon, key]) => (
-                <li key={key} className="flex items-center gap-1.5">
-                  <Icon className="size-4 text-brand-600" aria-hidden />
-                  {t(`landing.${key}`)}
-                </li>
-              ))}
-            </ul>
+        {/* ───────── Hero: заголовок по центру и веер карт разных заведений ───────── */}
+        <section className="mx-auto max-w-6xl overflow-x-clip px-4 pb-16 pt-14 text-center md:pt-20">
+          <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm text-stone-600 ring-1 ring-stone-200">
+            <Sparkles className="size-4 text-brand-600" aria-hidden />
+            {t('landing.eyebrow')}
+          </p>
+          <h1 className="mx-auto mt-6 max-w-5xl font-display text-5xl leading-[1.02] tracking-tight sm:text-6xl md:text-[5.5rem]">
+            {t('landing.title_a')} <em className="font-medium text-brand-600">{t('landing.title_b')}</em>
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-stone-600 md:text-xl">{t('landing.lead_short')}</p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+            <Link to="/register" className={CTA_DARK}>
+              {t('landing.cta')}
+            </Link>
+            {demo && (
+              <a href="#demo" className={CTA_LIGHT}>
+                {t('landing.cta_demo')}
+              </a>
+            )}
           </div>
-          <PhoneMock />
+          <ul className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-stone-600">
+            {(
+              [
+                [Smartphone, 'trust_wallet'],
+                [WalletCards, 'trust_noapp'],
+                [ShieldCheck, 'trust_gdpr'],
+                [Timer, 'trust_setup'],
+              ] as const
+            ).map(([Icon, key]) => (
+              <li key={key} className="flex items-center gap-1.5">
+                <Icon className="size-4 text-brand-600" aria-hidden />
+                {t(`landing.${key}`)}
+              </li>
+            ))}
+          </ul>
+
+          <div className="relative mx-auto mt-14 flex max-w-5xl items-start justify-center lg:h-[330px]">
+            <div className="absolute -inset-x-10 top-10 -z-10 h-64 rounded-full bg-brand-300/30 blur-3xl" aria-hidden />
+            {/* боковые карты — только на широком экране, на телефоне хватает одной */}
+            <div className="absolute left-[4%] top-12 hidden w-[330px] -rotate-[8deg] text-left lg:block">
+              <CardVisual
+                salonName="Barber 41"
+                logoUrl={null}
+                stampCount={3}
+                stampsRequired={10}
+                rewardText={t('landing.demo_reward_barber')}
+                bgColor="#1C1917"
+                fgColor="#FFFFFF"
+                labelColor="#E7B9A8"
+              />
+            </div>
+            <div className="absolute right-[4%] top-12 hidden w-[330px] rotate-[8deg] text-left lg:block">
+              <CardVisual
+                salonName="Káva u Evy"
+                logoUrl={null}
+                stampCount={8}
+                stampsRequired={10}
+                rewardText={t('landing.demo_reward_cafe')}
+                bgColor="#1F3A34"
+                fgColor="#FFFFFF"
+                labelColor="#C9DCC8"
+              />
+            </div>
+            <div className="relative z-10 w-full max-w-[340px] rounded-2xl text-left shadow-2xl shadow-stone-900/25">
+              <CardVisual
+                salonName="Stálka Demo"
+                logoUrl={null}
+                stampCount={6}
+                stampsRequired={10}
+                rewardText={t('landing.demo_reward')}
+                bgColor="#7A1F3D"
+                fgColor="#FFFFFF"
+                labelColor="#F4C7D3"
+              />
+            </div>
+          </div>
         </section>
 
         {/* ───────── Бумага против Stálka ───────── */}

@@ -485,7 +485,10 @@
     "faq_5_q": "Is it GDPR-compliant?",
     "faq_5_a": "Yes. Consent is stored with a date and the version of the text, consent to offers is separate and optional. You can export or delete a client's data in one click. Data is stored in the EU.",
     "final_title": "Try it free for 30 days",
-    "final_text": "Setup takes about 10 minutes. No credit card needed."
+    "final_text": "Setup takes about 10 minutes. No credit card needed.",
+    "lead_short": "A loyalty card in Apple and Google Wallet that reminds your customers when it is time to come back.",
+    "demo_reward_barber": "Free haircut",
+    "demo_reward_cafe": "10th coffee free"
   },
   "plan": {
     "title": "Subscription",
