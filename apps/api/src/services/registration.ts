@@ -32,6 +32,10 @@ export async function registerCustomer(
 
   const phone = normalizePhone(input.phone);
   const email = input.email || null;
+  const now = new Date();
+  // Отсутствие галочки при повторной регистрации — не отзыв согласия: отозвать можно на карте
+  const marketing = input.marketing ? { marketingConsentAt: now } : {};
+  const birthday = input.birthDay && input.birthMonth ? { birthDay: input.birthDay, birthMonth: input.birthMonth } : {};
 
   const result = await prisma.$transaction(async (tx) => {
     const existing =
@@ -52,9 +56,11 @@ export async function registerCustomer(
       await tx.customer.update({
         where: { id: existing.id },
         data: {
-          consentAt: new Date(),
+          consentAt: now,
           consentVersion: CONSENT_VERSION,
           locale: input.locale,
+          ...marketing,
+          ...birthday,
           ...(addPhone ? { phoneE164: phone } : {}),
           ...(addEmail ? { email } : {}),
         },
@@ -67,8 +73,10 @@ export async function registerCustomer(
           phoneE164: phone,
           email,
           locale: input.locale,
-          consentAt: new Date(),
+          consentAt: now,
           consentVersion: CONSENT_VERSION,
+          ...marketing,
+          ...birthday,
         },
       });
       customerId = created.id;

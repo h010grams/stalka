@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync, FastifyReply } from 'fastify';
 import QRCode from 'qrcode';
-import { joinSchema, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
+import { joinSchema, marketingToggleSchema, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
@@ -33,6 +33,7 @@ export function toPublicCard(card: WalletCard): PublicCardDto {
     nextAppointmentAt: card.appointments[0]?.startsAt.toISOString() ?? null,
     timezone: card.salon.timezone,
     wallet: { apple: apple.appleEnabled(), google: google.googleEnabled() },
+    marketing: card.customer.marketingConsentAt !== null,
   };
 }
 
@@ -59,7 +60,16 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
     const p = salon.programs.find((x) => x.isActive);
     let program: PublicSalonDto['program'] = null;
     if (p) {
-      const { id: _id, cooldownHours: _c, firstStampOnJoin: _f, ...rest } = toProgramDto(p);
+      const {
+        id: _id,
+        cooldownHours: _c,
+        firstStampOnJoin: _f,
+        winbackEnabled: _w,
+        rewardReminderEnabled: _r,
+        birthdayEnabled: _b,
+        birthdayGift: _g,
+        ...rest
+      } = toProgramDto(p);
       program = rest;
     }
     return { name: salon.name, slug: salon.slug, address: salon.address, phone: salon.phone, program };
@@ -77,6 +87,17 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
 
   app.get<{ Params: { serial: string } }>('/cards/:serial', { config: readLimit }, async (req) => {
     return toPublicCard(await activeCard(assertUuid(req.params.serial, 'card_not_found')));
+  });
+
+  // Клиентка сама включает или отключает рекламные сообщения (GDPR: отказ так же прост, как согласие)
+  app.post<{ Params: { serial: string } }>('/cards/:serial/marketing', { config: joinLimit }, async (req) => {
+    const { enabled } = parse(marketingToggleSchema, req.body);
+    const card = await activeCard(assertUuid(req.params.serial, 'card_not_found'));
+    await prisma.customer.update({
+      where: { id: card.customerId },
+      data: { marketingConsentAt: enabled ? new Date() : null },
+    });
+    return toPublicCard(await activeCard(card.serialNumber));
   });
 
   app.get<{ Params: { serial: string } }>('/cards/:serial/qr.svg', { config: readLimit }, async (req, reply) => {

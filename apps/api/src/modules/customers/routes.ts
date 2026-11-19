@@ -118,6 +118,12 @@ async function history(cardIds: string[]): Promise<HistoryItem[]> {
   return items.sort((a, b) => b.at.localeCompare(a.at)).slice(0, 100);
 }
 
+const CSV_HEADERS = {
+  sk: ['Meno', 'Telefón', 'E-mail', 'Návštevy', 'Pečiatky', 'Odmeny k dispozícii', 'Posledná návšteva', 'Registrácia', 'Súhlas s ponukami', 'Narodeniny'],
+  en: ['Name', 'Phone', 'Email', 'Visits', 'Stamps', 'Rewards available', 'Last visit', 'Registered', 'Marketing consent', 'Birthday'],
+  uk: ['Ім’я', 'Телефон', 'E-mail', 'Візити', 'Штампи', 'Доступні нагороди', 'Останній візит', 'Реєстрація', 'Згода на пропозиції', 'День народження'],
+} as const;
+
 /** /api/customers */
 export const customerRoutes: FastifyPluginAsync = async (app) => {
   // Поиск нужен и мастеру: если камера не сработала, клиентку находят по имени/телефону.
@@ -132,6 +138,54 @@ export const customerRoutes: FastifyPluginAsync = async (app) => {
     },
   );
 
+  // Все клиентки одним файлом — для Excel/Google Sheets (разделитель «;» и BOM, как ждёт Excel в SK)
+  app.get('/export.csv', { preHandler: requireTenant('OWNER') }, async (req, reply) => {
+    const { salonId } = req.tenant!;
+    const { rows } = await queryCustomers(salonId, { sort: 'name', limit: 100_000, offset: 0 });
+    const extra = await prisma.customer.findMany({
+      where: { salonId, anonymizedAt: null },
+      select: { id: true, marketingConsentAt: true, birthDay: true, birthMonth: true },
+    });
+    const byId = new Map(extra.map((e) => [e.id, e]));
+    const date = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : '');
+    const cell = (v: string | number) => {
+      const s = String(v);
+      // защита от формул в Excel (CSV injection); телефоны вида +421… не трогаем
+      const safe = /^(?:[=@\t\r]|[+-](?!\d))/.test(s) ? `'${s}` : s;
+      return /[";\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
+    };
+    const header = CSV_HEADERS[req.auth!.user.locale];
+    const lines = rows.map((r) => {
+      const e = byId.get(r.id);
+      return [
+        r.name,
+        r.phoneE164 ?? '',
+        r.email ?? '',
+        Number(r.totalVisits),
+        Number(r.stampCount),
+        Number(r.rewardsAvailable),
+        date(r.lastStampAt),
+        date(r.createdAt),
+        e?.marketingConsentAt ? date(e.marketingConsentAt) : '',
+        e?.birthDay && e.birthMonth ? `${e.birthDay}.${e.birthMonth}.` : '',
+      ]
+        .map(cell)
+        .join(';');
+    });
+    await audit(prisma, {
+      salonId,
+      actorUserId: req.auth!.user.id,
+      action: 'customer.export_all',
+      entityType: 'salon',
+      entityId: salonId,
+      payload: { count: rows.length },
+    });
+    return reply
+      .header('Content-Type', 'text/csv; charset=utf-8')
+      .header('Content-Disposition', `attachment; filename="clients-${new Date().toISOString().slice(0, 10)}.csv"`)
+      .send('\uFEFF' + [header.join(';'), ...lines].join('\r\n') + '\r\n');
+  });
+
   app.get<{ Params: { id: string } }>('/:id', { preHandler: requireTenant() }, async (req): Promise<CustomerDetailDto> => {
     const { salonId } = req.tenant!;
     const id = assertUuid(req.params.id);
@@ -143,6 +197,9 @@ export const customerRoutes: FastifyPluginAsync = async (app) => {
       locale: customer.locale,
       consentAt: customer.consentAt.toISOString(),
       consentVersion: customer.consentVersion,
+      marketingConsentAt: customer.marketingConsentAt?.toISOString() ?? null,
+      birthday:
+        customer.birthDay && customer.birthMonth ? { day: customer.birthDay, month: customer.birthMonth } : null,
       history: await history(customer.cards.map((c) => c.id)),
     };
   });
@@ -185,6 +242,8 @@ export const customerRoutes: FastifyPluginAsync = async (app) => {
         language: customer.locale,
         registeredAt: customer.createdAt,
         consent: { givenAt: customer.consentAt, textVersion: customer.consentVersion },
+        marketingConsentGivenAt: customer.marketingConsentAt,
+        birthday: customer.birthDay && customer.birthMonth ? `${customer.birthDay}.${customer.birthMonth}.` : null,
       },
       cards: customer.cards.map((c) => ({
         program: c.program,
@@ -216,7 +275,15 @@ export const customerRoutes: FastifyPluginAsync = async (app) => {
       const now = new Date();
       await tx.customer.update({
         where: { id },
-        data: { name: '—', phoneE164: null, email: null, anonymizedAt: now },
+        data: {
+          name: '—',
+          phoneE164: null,
+          email: null,
+          marketingConsentAt: null,
+          birthDay: null,
+          birthMonth: null,
+          anonymizedAt: now,
+        },
       });
       for (const card of customer.cards) {
         await tx.card.update({

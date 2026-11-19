@@ -19,6 +19,10 @@ export function toProgramDto(p: LoyaltyProgram): ProgramDto {
     rewardText: p.rewardText,
     cooldownHours: p.cooldownHours,
     firstStampOnJoin: p.firstStampOnJoin,
+    winbackEnabled: p.winbackEnabled,
+    rewardReminderEnabled: p.rewardReminderEnabled,
+    birthdayEnabled: p.birthdayEnabled,
+    birthdayGift: p.birthdayGift,
     bgColor: p.bgColor,
     fgColor: p.fgColor,
     labelColor: p.labelColor,
@@ -44,7 +48,9 @@ export const programRoutes: FastifyPluginAsync = async (app) => {
 
   app.put('/', { preHandler: requireTenant('OWNER') }, async (req) => {
     const { salonId } = req.tenant!;
-    const input = parse(programSchema, req.body);
+    const { birthdayGift, ...rest } = parse(programSchema, req.body);
+    // '' — подарок убрали; undefined — поле не прислали, оставляем как было
+    const input = { ...rest, ...(birthdayGift === undefined ? {} : { birthdayGift: birthdayGift || null }) };
 
     const program = await prisma.$transaction(async (tx) => {
       const before = await tx.loyaltyProgram.findUnique({ where: { salonId } });

@@ -58,6 +58,7 @@ model Salon {
   assets       Asset[]
   appointments Appointment[]
   auditLogs    AuditLog[]
+  broadcasts   Broadcast[]
 }
 
 model User {
@@ -152,6 +153,12 @@ model LoyaltyProgram {
   rewardText     String
   cooldownHours  Int     @default(12) // не больше 1 штампа за N часов
   firstStampOnJoin Boolean @default(true) // новая карта сразу получает первый штамп
+
+  // Автоматические сообщения на карту (шлёт jobs/automations.ts)
+  winbackEnabled        Boolean @default(true) // «пора вернуться» по ритму визитов клиентки
+  rewardReminderEnabled Boolean @default(true) // награда лежит неиспользованной
+  birthdayEnabled       Boolean @default(true)
+  birthdayGift          String? // «-20 % на ďalšiu manikúru» — добавляется к поздравлению
   isActive       Boolean @default(true)
 
   bgColor      String  @default("#1F1F1F")
@@ -185,6 +192,12 @@ model Customer {
   locale         Locale    @default(sk)
   consentAt      DateTime  @db.Timestamptz
   consentVersion String
+  // Отдельное необязательное согласие на рекламные сообщения (рассылки, «пора вернуться», день рождения)
+  marketingConsentAt DateTime? @db.Timestamptz
+  // День рождения без года — меньше персональных данных, для поздравления достаточно
+  birthDay             Int?
+  birthMonth           Int?
+  birthdayGreetedYear  Int?
   createdAt      DateTime  @default(now()) @db.Timestamptz
   anonymizedAt   DateTime? @db.Timestamptz
 
@@ -216,6 +229,7 @@ model Card {
   // Последнее уведомление клиентке (напоминание о записи и т. п.).
   // В Apple Wallet показывается через поле с changeMessage → push на экране.
   walletNotice    String?
+  winbackSentAt   DateTime? @db.Timestamptz // «пора вернуться» — не чаще одного раза за паузу
   googleObjectId  String?   @unique
   googleSavedAt   DateTime? @db.Timestamptz
   createdAt       DateTime  @default(now()) @db.Timestamptz
@@ -263,6 +277,7 @@ model Reward {
   redeemedAt       DateTime?    @db.Timestamptz
   redeemedByUserId String?      @db.Uuid
   voidedAt         DateTime?    @db.Timestamptz
+  reminderSentAt   DateTime?    @db.Timestamptz // напомнили, что награда ждёт
 
   salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
   card  Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
@@ -339,6 +354,21 @@ model AuditLog {
   entityId    String
   payload     Json?
   createdAt   DateTime @default(now()) @db.Timestamptz
+
+  salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
+
+  @@index([salonId, createdAt])
+}
+
+// ───────── Рассылки владелицы всем клиенткам с согласием ─────────
+
+model Broadcast {
+  id              String   @id @default(uuid()) @db.Uuid
+  salonId         String   @db.Uuid
+  text            String
+  recipients      Int
+  createdByUserId String   @db.Uuid
+  createdAt       DateTime @default(now()) @db.Timestamptz
 
   salon Salon @relation(fields: [salonId], references: [id], onDelete: Cascade)
 

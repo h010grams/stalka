@@ -139,6 +139,11 @@ export const programSchema = z.object({
   cooldownHours: z.coerce.number().int('v.int').min(0, 'v.cooldown_range').max(168, 'v.cooldown_range'),
   // не задано — остаётся как было (по умолчанию в БД включено)
   firstStampOnJoin: z.boolean().optional(),
+  winbackEnabled: z.boolean().optional(),
+  rewardReminderEnabled: z.boolean().optional(),
+  birthdayEnabled: z.boolean().optional(),
+  // '' — подарка нет, только поздравление
+  birthdayGift: z.string().trim().max(60, 'v.too_long').nullable().optional(),
   bgColor: hexColor,
   fgColor: hexColor,
   labelColor: hexColor,
@@ -152,6 +157,10 @@ export interface ProgramDto {
   rewardText: string;
   cooldownHours: number;
   firstStampOnJoin: boolean;
+  winbackEnabled: boolean;
+  rewardReminderEnabled: boolean;
+  birthdayEnabled: boolean;
+  birthdayGift: string | null;
   bgColor: string;
   fgColor: string;
   labelColor: string;
@@ -163,15 +172,36 @@ export interface ProgramDto {
 /** Версия текста согласия; меняйте при изменении текста — сохраняется у каждого клиента. */
 export const CONSENT_VERSION = '2026-10-v1';
 
+// '' из <select> — «не указано»
+const optionalInt = (min: number, max: number) =>
+  z.preprocess(
+    (v) => (v === '' || v === null ? undefined : v),
+    z.coerce.number().int().min(min, 'v.birthday').max(max, 'v.birthday').optional(),
+  );
+
+const DAYS_IN_MONTH = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 export const joinSchema = z
   .object({
     name: z.string().trim().min(1, 'v.required').max(80, 'v.too_long'),
     phone: z.string().trim().max(30, 'v.too_long').optional().default(''),
     email: z.union([z.literal(''), z.string().trim().toLowerCase().max(254).email('v.email')]).optional().default(''),
     consent: z.literal(true, { errorMap: () => ({ message: 'v.consent' }) }),
+    // необязательно: согласие на рекламные сообщения и день рождения без года
+    marketing: z.boolean().optional().default(false),
+    birthDay: optionalInt(1, 31),
+    birthMonth: optionalInt(1, 12),
     locale: localeSchema.default('sk'),
   })
-  .refine((v) => v.phone !== '' || v.email !== '', { message: 'v.contact_required', path: ['phone'] });
+  .refine((v) => v.phone !== '' || v.email !== '', { message: 'v.contact_required', path: ['phone'] })
+  .refine((v) => (v.birthDay === undefined) === (v.birthMonth === undefined), {
+    message: 'v.birthday',
+    path: ['birthDay'],
+  })
+  .refine((v) => !v.birthDay || !v.birthMonth || v.birthDay <= DAYS_IN_MONTH[v.birthMonth - 1]!, {
+    message: 'v.birthday',
+    path: ['birthDay'],
+  });
 export type JoinInput = z.input<typeof joinSchema>;
 
 export interface PublicSalonDto {
@@ -179,7 +209,10 @@ export interface PublicSalonDto {
   slug: string;
   address: string | null;
   phone: string | null;
-  program: Omit<ProgramDto, 'id' | 'cooldownHours' | 'firstStampOnJoin'> | null;
+  program: Omit<
+    ProgramDto,
+    'id' | 'cooldownHours' | 'firstStampOnJoin' | 'winbackEnabled' | 'rewardReminderEnabled' | 'birthdayEnabled' | 'birthdayGift'
+  > | null;
 }
 
 export interface PublicCardDto {
@@ -200,7 +233,11 @@ export interface PublicCardDto {
   nextAppointmentAt: string | null;
   timezone: string;
   wallet: { apple: boolean; google: boolean };
+  /** клиентка согласилась на рекламные сообщения — показываем ссылку «отписаться» */
+  marketing: boolean;
 }
+
+export const marketingToggleSchema = z.object({ enabled: z.boolean() });
 
 // ───────── Мастер: карта клиента ─────────
 
@@ -270,6 +307,8 @@ export interface CustomerDetailDto extends CustomerListItem {
   locale: Locale;
   consentAt: string;
   consentVersion: string;
+  marketingConsentAt: string | null;
+  birthday: { day: number; month: number } | null;
   history: HistoryItem[];
 }
 
@@ -299,4 +338,26 @@ export interface AuditItem {
   entityId: string;
   payload: unknown;
   createdAt: string;
+}
+
+// ───────── Рассылки ─────────
+
+export const BROADCAST_MAX = 150;
+export const broadcastSchema = z.object({
+  text: z.string().trim().min(1, 'v.required').max(BROADCAST_MAX, 'v.too_long'),
+});
+
+export interface BroadcastItem {
+  id: string;
+  text: string;
+  recipients: number;
+  createdAt: string;
+}
+
+export interface BroadcastsDto {
+  /** скольким клиенткам дойдёт сообщение (активная карта + согласие на рекламу) */
+  reachable: number;
+  /** null — можно отправлять сейчас */
+  nextAllowedAt: string | null;
+  items: BroadcastItem[];
 }

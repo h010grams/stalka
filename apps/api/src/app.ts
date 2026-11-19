@@ -22,6 +22,7 @@ import { cardRoutes } from './modules/cards/routes.js';
 import { customerRoutes } from './modules/customers/routes.js';
 import { statsRoutes } from './modules/stats/routes.js';
 import { appleWebServiceRoutes } from './modules/wallet/apple-ws.js';
+import { broadcastRoutes } from './modules/broadcasts/routes.js';
 
 export interface AppOptions {
   logger?: FastifyServerOptions['logger'];
@@ -80,6 +81,7 @@ export async function buildApp(opts: AppOptions = {}) {
   await app.register(posterRoutes, { prefix: '/api/poster' });
   await app.register(cardRoutes, { prefix: '/api/cards' });
   await app.register(customerRoutes, { prefix: '/api/customers' });
+  await app.register(broadcastRoutes, { prefix: '/api/broadcasts' });
   await app.register(statsRoutes, { prefix: '/api' });
   await app.register(publicRoutes, { prefix: '/api/public' });
   await app.register(appleWebServiceRoutes, { prefix: '/api/wallet/apple' });
