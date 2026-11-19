@@ -7,6 +7,7 @@ import { programSchema, type ProgramDto, type SalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { CardVisual } from '../components/CardVisual';
+import { COLOR_PRESETS } from '../lib/presets';
 import { Alert, Button, Card, ErrorAlert, Field, Input, Spinner, buttonClass } from '../components/ui';
 
 const DEFAULTS = {
@@ -24,14 +25,6 @@ const DEFAULTS = {
   labelColor: '#E7B9A8',
 };
 
-/** Готовые сочетания цветов — проще, чем подбирать три цвета с нуля. */
-const PRESETS = [
-  { bgColor: '#1C1917', fgColor: '#FFFFFF', labelColor: '#E7B9A8' },
-  { bgColor: '#F5E6E0', fgColor: '#3F2A24', labelColor: '#B5644C' },
-  { bgColor: '#7A1F3D', fgColor: '#FFFFFF', labelColor: '#F4C7D3' },
-  { bgColor: '#1F3A34', fgColor: '#FFFFFF', labelColor: '#C9DCC8' },
-  { bgColor: '#E8EEF6', fgColor: '#1E2A44', labelColor: '#4C6FA8' },
-];
 
 export function ProgramPage() {
   const { t, i18n } = useTranslation();
@@ -94,7 +87,7 @@ export function ProgramPage() {
             <div className="space-y-2">
               <span className="text-sm font-medium text-stone-700">{t('program.colors')}</span>
               <div className="flex gap-2">
-                {PRESETS.map((p) => (
+                {COLOR_PRESETS.map((p) => (
                   <button
                     key={p.bgColor}
                     type="button"

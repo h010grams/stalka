@@ -80,7 +80,7 @@ export function RegisterPage() {
     mutationFn: (v: object) => api.post<MeResponse>('/auth/register', { ...v, locale: i18n.language as Locale }),
     onSuccess: (me) => {
       setMe(me);
-      navigate('/', { replace: true });
+      navigate('/setup', { replace: true }); // новый салон сразу попадает в мастер настройки
     },
   });
 

@@ -500,5 +500,31 @@
     "banner_trial": "Skúšobná verzia: zostáva dní {{count}}.",
     "banner_expired": "Skúšobná verzia skončila.",
     "details": "Podrobnosti"
+  },
+  "wizard": {
+    "step": "Krok {{n}} z 3",
+    "s1_title": "Akú odmenu dostane klientka?",
+    "s1_text": "Odmenu aj počet pečiatok môžete neskôr kedykoľvek zmeniť.",
+    "reward": "Odmena",
+    "reward_placeholder": "napr. Zľava 50 % na ďalšiu návštevu",
+    "sug_1": "Zľava 50 % na ďalšiu návštevu",
+    "sug_2": "Manikúra zadarmo",
+    "sug_3": "Strih zadarmo",
+    "sug_4": "Káva zadarmo",
+    "stamps": "Po koľkých návštevách?",
+    "stamps_value": "{{n}} návštev",
+    "s2_title": "Ako bude karta vyzerať?",
+    "s2_text": "Vyberte farby a nahrajte logo. Logo je nepovinné – môžete ho pridať aj neskôr.",
+    "logo": "Nahrať logo",
+    "logo_change": "Zmeniť logo",
+    "s3_title": "Hotovo! Karta je pripravená.",
+    "s3_text": "Zostáva vytlačiť plagát a dať ho na pult. Klientky si kartu pridajú naskenovaním QR kódu.",
+    "todo_poster": "Stiahnuť plagát na pult (PDF)",
+    "todo_try": "Vyskúšať kartu na svojom mobile",
+    "todo_first": "Pridať prvú klientku",
+    "todo_done": "Prejsť na skener",
+    "next": "Ďalej",
+    "back": "Späť",
+    "default_name": "Vernostná karta"
   }
 }

@@ -500,5 +500,31 @@
     "banner_trial": "Free trial: {{count}} days left.",
     "banner_expired": "The free trial has ended.",
     "details": "Details"
+  },
+  "wizard": {
+    "step": "Step {{n}} of 3",
+    "s1_title": "What reward will clients get?",
+    "s1_text": "You can change the reward and the number of stamps any time.",
+    "reward": "Reward",
+    "reward_placeholder": "e.g. 50% off the next visit",
+    "sug_1": "50% off the next visit",
+    "sug_2": "Free manicure",
+    "sug_3": "Free haircut",
+    "sug_4": "Free coffee",
+    "stamps": "After how many visits?",
+    "stamps_value": "{{n}} visits",
+    "s2_title": "How will the card look?",
+    "s2_text": "Pick colors and upload a logo. The logo is optional – you can add it later.",
+    "logo": "Upload logo",
+    "logo_change": "Change logo",
+    "s3_title": "Done! Your card is ready.",
+    "s3_text": "Print the poster and put it on the counter. Clients add the card by scanning the QR code.",
+    "todo_poster": "Download the counter poster (PDF)",
+    "todo_try": "Try the card on your phone",
+    "todo_first": "Add your first client",
+    "todo_done": "Go to the scanner",
+    "next": "Next",
+    "back": "Back",
+    "default_name": "Loyalty card"
   }
 }

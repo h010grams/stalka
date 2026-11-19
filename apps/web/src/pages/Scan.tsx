@@ -92,7 +92,7 @@ export function ScanPage() {
           <h2 className="text-lg font-semibold">{t('setup.title')}</h2>
           <p className="text-sm text-stone-700">{t('setup.text')}</p>
           {isOwner && (
-            <Link to="/program" className={buttonClass('primary', 'w-full')}>
+            <Link to="/setup" className={buttonClass('primary', 'w-full')}>
               {t('setup.cta')}
             </Link>
           )}
