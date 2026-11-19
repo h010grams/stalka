@@ -2,11 +2,12 @@ import { Link, Outlet, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { joinSchema, type Locale, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { CardVisual } from '../components/CardVisual';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import { BirthdayFields, MarketingCheckbox } from '../components/JoinExtras';
 import { Alert, Button, ErrorAlert, Field, Input, Spinner } from '../components/ui';
 
 const APP_NAME = 'Stálka';
@@ -116,6 +117,7 @@ export function JoinPage() {
               <Input type="email" inputMode="email" autoComplete="email" {...form.register('email')} />
             </Field>
             <p className="-mt-2 text-xs text-stone-500">{t('join.contact_hint')}</p>
+            <BirthdayFields register={form.register} errors={errors} />
 
             <label className="flex gap-3 text-sm">
               <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-stone-900" {...form.register('consent')} />
@@ -127,6 +129,7 @@ export function JoinPage() {
               </span>
             </label>
             {errors.consent && <p className="-mt-2 text-sm text-red-600">{t(errors.consent.message ?? 'v.consent')}</p>}
+            <MarketingCheckbox register={form.register} label={t('join.marketing', { salon: s.name })} />
 
             <Button type="submit" className="w-full" loading={join.isPending}>
               {t('join.submit')}
@@ -166,6 +169,11 @@ function WalletButton({ href, kind }: { href: string; kind: 'apple' | 'google' }
 export function CardPage() {
   const { serial = '' } = useParams();
   const { t } = useTranslation();
+  const qc = useQueryClient();
+  const marketing = useMutation({
+    mutationFn: (enabled: boolean) => api.post<PublicCardDto>(`/public/cards/${serial}/marketing`, { enabled }),
+    onSuccess: (data) => qc.setQueryData(['public-card', serial], data),
+  });
   const card = useQuery({
     queryKey: ['public-card', serial],
     queryFn: () => api.get<PublicCardDto>(`/public/cards/${serial}`),
@@ -228,6 +236,18 @@ export function CardPage() {
         <p className="text-sm text-stone-500">{t('public_card.show_qr')}</p>
         {buttons.length === 0 && <p className="text-xs text-stone-500">{t('public_card.save_page')}</p>}
       </div>
+
+      <p className="text-center text-xs text-stone-500">
+        {t(c.marketing ? 'public_card.marketing_on' : 'public_card.marketing_off')}{' '}
+        <button
+          type="button"
+          className="underline disabled:opacity-50"
+          disabled={marketing.isPending}
+          onClick={() => marketing.mutate(!c.marketing)}
+        >
+          {t(c.marketing ? 'public_card.marketing_stop' : 'public_card.marketing_start')}
+        </button>
+      </p>
     </div>
   );
 }
@@ -246,7 +266,7 @@ export function PrivacyPage() {
   return (
     <article className="space-y-3 text-sm leading-relaxed text-stone-700">
       <h1 className="text-xl font-bold text-stone-900">{t('privacy.title')}</h1>
-      {(['p_controller', 'p_data', 'p_purpose', 'p_basis', 'p_retention', 'p_rights', 'p_processor'] as const).map((k) => (
+      {(['p_controller', 'p_data', 'p_purpose', 'p_marketing', 'p_basis', 'p_retention', 'p_rights', 'p_processor'] as const).map((k) => (
         <p key={k}>{t(`privacy.${k}`, vars)}</p>
       ))}
       <Link to={`/j/${slug}`} className="inline-block pt-2 font-semibold underline">

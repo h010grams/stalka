@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { joinSchema, LOCALES, type CounterRegisterResponse, type Locale } from '@stalka/shared';
 import { api } from '../lib/api';
 import { Button, Card, ErrorAlert, Field, Input, Select } from '../components/ui';
+import { BirthdayFields, MarketingCheckbox } from '../components/JoinExtras';
 
 const LOCALE_NAMES = { sk: 'Slovenčina', en: 'English', uk: 'Українська' } as const;
 
@@ -47,6 +48,7 @@ export function NewCustomerPage() {
             <Input type="email" inputMode="email" autoComplete="off" {...form.register('email')} />
           </Field>
           <p className="-mt-2 text-xs text-stone-500">{t('join.contact_hint')}</p>
+          <BirthdayFields register={form.register} errors={errors} />
           <Field label={t('newcust.language')}>
             <Select {...form.register('locale')}>
               {LOCALES.map((l) => (
@@ -61,6 +63,7 @@ export function NewCustomerPage() {
             <span>{t('newcust.consent')}</span>
           </label>
           {errors.consent && <p className="-mt-2 text-sm text-red-600">{t(errors.consent.message ?? 'v.consent')}</p>}
+          <MarketingCheckbox register={form.register} label={t('newcust.marketing')} />
           <Button type="submit" className="min-h-14 w-full text-lg" loading={register.isPending}>
             {t('newcust.submit')}
           </Button>

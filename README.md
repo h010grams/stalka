@@ -21,6 +21,8 @@ No app to install, no account for the client, setup in about 10 minutes for the 
 - Register a new client right at the counter in ~20 seconds: name and phone, the first stamp is added, and a QR code on screen lets the client add the card to her phone
 - One big "+1 stamp" button; a ready reward is shown on top and redeemed with one tap
 - Set the client's next appointment — it appears on the card, with a reminder a day before
+- Message all clients at once ("a slot opened up tomorrow at 2 pm"), at most once a day
+- Download the client list as CSV for Excel
 - After a stamp the screen returns to the scanner automatically, ready for the next client
 - Undo a mistaken stamp within 24 hours
 
@@ -35,6 +37,8 @@ No app to install, no account for the client, setup in about 10 minutes for the 
 - Sign-up page: name, phone or email, explicit consent
 - Card in Apple Wallet / Google Wallet, or a web card with a QR code
 - Push notifications for new stamps, rewards and appointment reminders
+- Automatic messages, sent only during the salon's daytime hours: a nudge when she hasn't come back for one and a half of her usual gaps between visits, a reminder about an unused reward, and birthday wishes with an optional gift
+- Marketing messages are opt-in (a separate checkbox) and she can unsubscribe with one tap on her card page
 
 **Everywhere:** Slovak, English and Ukrainian; times stored in UTC and shown in the salon's time zone (Europe/Bratislava).
 
@@ -88,9 +92,9 @@ Each event (stamp, reward, reminder) produces exactly **one** notification: thro
 
 ## Tests
 
-97 automated tests (Vitest):
+113 automated tests (Vitest):
 - unit tests for the stamping rules,
-- integration tests against a real PostgreSQL database: authentication, tenant isolation, roles, invitations, stamping, cooldown, concurrent scans, rewards, undo, reminders, customer search, GDPR export/deletion, statistics,
+- integration tests against a real PostgreSQL database: authentication, tenant isolation, roles, invitations, stamping, cooldown, concurrent scans, rewards, undo, reminders, automatic messages, broadcasts, customer search, CSV and GDPR export/deletion, statistics,
 - Wallet tests with self-signed certificates and mocked network calls: `.pkpass` contents and signature, the full PassKit Web Service flow, APNs token cleanup, retries, Google JWT signature and object updates.
 
 ```bash
@@ -138,7 +142,7 @@ packages/
 
 ## Status
 
-Working MVP, deployed on Render + Neon. Next steps: Wallet testing on real devices, and a pilot with salons in Bratislava. Planned: "time for your next visit" reminders based on each client's visit rhythm, Google review prompts, and referral rewards.
+Working MVP, deployed on Render + Neon. Next steps: Wallet testing on real devices, and a pilot with salons in Bratislava. Planned: Google review prompts and referral rewards.
 
 ## Author
 

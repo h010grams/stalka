@@ -15,6 +15,10 @@ const DEFAULTS = {
   rewardText: '',
   cooldownHours: 12,
   firstStampOnJoin: true,
+  winbackEnabled: true,
+  rewardReminderEnabled: true,
+  birthdayEnabled: true,
+  birthdayGift: '' as string | null,
   bgColor: '#1C1917',
   fgColor: '#FFFFFF',
   labelColor: '#E7B9A8',
@@ -146,6 +150,33 @@ export function ProgramPage() {
                 </label>
               </div>
             </details>
+
+            <div className="space-y-3 border-t border-stone-200 pt-4">
+              <div>
+                <h2 className="font-semibold">{t('program.automations')}</h2>
+                <p className="text-xs text-stone-500">{t('program.automations_hint')}</p>
+              </div>
+              {(
+                [
+                  ['winbackEnabled', 'winback'],
+                  ['rewardReminderEnabled', 'reward_reminder'],
+                  ['birthdayEnabled', 'birthday'],
+                ] as const
+              ).map(([field, key]) => (
+                <label key={field} className="flex gap-3 text-sm">
+                  <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-stone-900" {...form.register(field)} />
+                  <span>
+                    <span className="font-medium">{t(`program.${key}`)}</span>
+                    <span className="block text-xs text-stone-500">{t(`program.${key}_hint`)}</span>
+                  </span>
+                </label>
+              ))}
+              {values.birthdayEnabled && (
+                <Field label={t('program.birthday_gift')} error={errors.birthdayGift?.message}>
+                  <Input placeholder={t('program.birthday_gift_placeholder')} {...form.register('birthdayGift')} />
+                </Field>
+              )}
+            </div>
 
             {isOwner && (
               <Button type="submit" className="w-full" loading={save.isPending}>

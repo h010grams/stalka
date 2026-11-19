@@ -58,6 +58,16 @@ export function CustomersPage() {
           ))}
         </div>
       )}
+      {isOwner && (
+        <div className="grid grid-cols-2 gap-2">
+          <Link to="/messages" className={buttonClass('secondary', 'w-full')}>
+            {t('customers.message_all')}
+          </Link>
+          <a href="/api/customers/export.csv" download className={buttonClass('secondary', 'w-full')}>
+            {t('customers.export_csv')}
+          </a>
+        </div>
+      )}
       <div className="flex gap-2">
         <div className="min-w-0 flex-1">
           <Input type="search" placeholder={t('scan.search_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
@@ -176,6 +186,12 @@ export function CustomerDetailPage() {
       <div className="space-y-1 text-xs text-stone-500">
         <p>{t('customers.registered', { date: formatDay(c.createdAt) })}</p>
         <p>{t('customers.consent', { date: formatDay(c.consentAt), version: c.consentVersion })}</p>
+        <p>
+          {c.marketingConsentAt
+            ? t('customers.marketing_yes', { date: formatDay(c.marketingConsentAt) })
+            : t('customers.marketing_no')}
+        </p>
+        {c.birthday && <p>{t('customers.birthday', { date: `${c.birthday.day}. ${c.birthday.month}.` })}</p>}
       </div>
 
       {isOwner && (

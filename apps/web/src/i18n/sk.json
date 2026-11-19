@@ -27,7 +27,8 @@
     "customers": "Klienti",
     "more": "Viac",
     "program": "Program a karta",
-    "audit": "Denník akcií"
+    "audit": "Denník akcií",
+    "messages": "Správy"
   },
   "roles": {
     "OWNER": "Majiteľ",
@@ -109,7 +110,8 @@
     "cooldown_range": "Od 0 do 168 hodín",
     "consent": "Bez súhlasu kartu vydať nemôžeme",
     "contact_required": "Zadajte telefón alebo e-mail",
-    "datetime": "Zadajte dátum a čas"
+    "datetime": "Zadajte dátum a čas",
+    "birthday": "Skontrolujte dátum narodenín"
   },
   "errors": {
     "unauthorized": "Prihláste sa, prosím.",
@@ -143,7 +145,9 @@
     "file_too_large": "Súbor je príliš veľký (max. 5 MB).",
     "appointment_invalid": "Zadajte termín v budúcnosti (najviac o rok).",
     "apple_disabled": "Apple Wallet zatiaľ nie je zapnutý.",
-    "google_disabled": "Google Wallet zatiaľ nie je zapnutý."
+    "google_disabled": "Google Wallet zatiaľ nie je zapnutý.",
+    "broadcast_too_soon": "Ďalšiu správu môžete poslať až 24 hodín po predchádzajúcej.",
+    "no_recipients": "Zatiaľ nie je komu poslať – žiadna klientka nesúhlasila s ponukami."
   },
   "program": {
     "title": "Program a karta",
@@ -167,7 +171,17 @@
     "more_colors": "Vlastné farby",
     "advanced": "Pokročilé nastavenia",
     "first_stamp": "Prvá pečiatka pri registrácii",
-    "first_stamp_hint": "Nová klientka hneď vidí 1 pečiatku namiesto prázdnej karty."
+    "first_stamp_hint": "Nová klientka hneď vidí 1 pečiatku namiesto prázdnej karty.",
+    "automations": "Automatické správy",
+    "automations_hint": "Prídu ako upozornenie na kartu vo Wallete, len cez deň (10:00–19:00).",
+    "winback": "Pripomenúť, keď klientka dlho nepríde",
+    "winback_hint": "Podľa jej obvyklého rytmu návštev. Len klientkam so súhlasom s ponukami.",
+    "reward_reminder": "Pripomenúť nevyužitú odmenu",
+    "reward_reminder_hint": "Raz, ak odmena 14 dní čaká.",
+    "birthday": "Blahoželanie k narodeninám",
+    "birthday_hint": "Len klientkam, ktoré zadali narodeniny a súhlasili s ponukami.",
+    "birthday_gift": "Darček k narodeninám (nepovinné)",
+    "birthday_gift_placeholder": "napr. −20 % na ďalšiu návštevu"
   },
   "poster": {
     "title": "QR plagát na pult",
@@ -198,7 +212,12 @@
     "no_program": "Salón zatiaľ nemá vernostný program.",
     "have_card": "Kartu už máte v tomto zariadení.",
     "open_my_card": "Otvoriť moju kartu",
-    "not_found": "Salón sa nenašiel."
+    "not_found": "Salón sa nenašiel.",
+    "marketing": "Chcem dostávať ponuky a pripomienky od salónu {{salon}} do karty v mobile (nepovinné).",
+    "birthday": "Narodeniny (nepovinné)",
+    "birthday_hint": "Bez roku – len aby vám salón mohol zablahoželať.",
+    "day": "Deň",
+    "month": "Mesiac"
   },
   "public_card": {
     "add_apple": "Pridať do Apple Wallet",
@@ -209,18 +228,23 @@
     "stamps_left": "Ešte {{count}} do odmeny",
     "next_visit": "Ďalšia návšteva: {{when}}",
     "not_found": "Karta sa nenašla alebo už neplatí.",
-    "wallet_hint": "Vo Wallete sa karta aktualizuje sama a pripomenie vám návštevu."
+    "wallet_hint": "Vo Wallete sa karta aktualizuje sama a pripomenie vám návštevu.",
+    "marketing_on": "Dostávate ponuky a pripomienky od salónu.",
+    "marketing_off": "Ponuky a pripomienky sú vypnuté.",
+    "marketing_stop": "Odhlásiť sa",
+    "marketing_start": "Zapnúť"
   },
   "privacy": {
     "title": "Ochrana osobných údajov",
     "p_controller": "Prevádzkovateľ: {{salon}}{{address}}.",
-    "p_data": "Spracúvame: meno, telefón a/alebo e-mail, históriu návštev a odmien, jazyk karty.",
+    "p_data": "Spracúvame: meno, telefón a/alebo e-mail, históriu návštev a odmien, jazyk karty a – ak ich zadáte – deň a mesiac narodenín.",
     "p_purpose": "Účel: vedenie vernostného programu (pečiatky, odmeny, pripomienky termínov).",
     "p_basis": "Právny základ: váš súhlas (čl. 6 ods. 1 písm. a) GDPR). Súhlas môžete kedykoľvek odvolať.",
     "p_retention": "Údaje uchovávame, kým ste členom programu; po vymazaní ostanú len anonymné štatistiky.",
     "p_rights": "Máte právo na prístup k údajom, ich opravu, vymazanie a prenosnosť. Stačí požiadať salón osobne alebo telefonicky.",
     "p_processor": "Technicky službu prevádzkuje {{app}} ako sprostredkovateľ salónu.",
-    "template_note": "Šablóna – pred spustením ju nechajte skontrolovať právnikovi."
+    "template_note": "Šablóna – pred spustením ju nechajte skontrolovať právnikovi.",
+    "p_marketing": "Ak ste súhlasili s ponukami, salón vám môže do karty posielať správy: ponuky, pripomienku, keď ste dlho neboli, a blahoželanie k narodeninám. Odhlásiť sa môžete jedným klikom na stránke svojej karty."
   },
   "scan": {
     "title": "Skener",
@@ -275,7 +299,12 @@
     "sort_new": "Noví",
     "sort_name": "Podľa mena",
     "more": "Načítať ďalšie",
-    "gdpr": "Údaje klienta (GDPR)"
+    "gdpr": "Údaje klienta (GDPR)",
+    "marketing_yes": "Ponuky: súhlas od {{date}}",
+    "marketing_no": "Ponuky: bez súhlasu",
+    "birthday": "Narodeniny: {{date}}",
+    "export_csv": "Stiahnuť zoznam (CSV)",
+    "message_all": "Správa klientkam"
   },
   "stats": {
     "title": "Prehľad",
@@ -318,7 +347,9 @@
       "stamp.revoke": "Pečiatka zrušená",
       "reward.redeem": "Odmena uplatnená",
       "appointment.set": "Termín nastavený",
-      "appointment.cancel": "Termín zrušený"
+      "appointment.cancel": "Termín zrušený",
+      "broadcast.send": "Správa klientkam",
+      "customer.export_all": "Export zoznamu klientov"
     }
   },
   "counter": {
@@ -343,12 +374,28 @@
     "submit": "Vytvoriť kartu",
     "created_stamp": "Karta vytvorená s prvou pečiatkou 🎉",
     "created": "Karta vytvorená",
-    "existing": "Klientka už kartu má – otvorili sme ju."
+    "existing": "Klientka už kartu má – otvorili sme ju.",
+    "marketing": "Klientka chce dostávať ponuky a pripomienky (nepovinné)."
   },
   "walletqr": {
     "title": "Karta do mobilu",
     "text": "Nech klientka naskenuje tento QR kód fotoaparátom. Otvorí sa jej karta s tlačidlom Apple Wallet / Google Wallet.",
     "show": "Zobraziť QR na pridanie karty",
     "done": "Hotovo"
+  },
+  "broadcast": {
+    "title": "Správa klientkam",
+    "text": "Správa príde ako upozornenie na kartu vo Wallete. Dostanú ju len klientky, ktoré súhlasili s ponukami.",
+    "reachable": "Dostane ju klientok: {{count}}",
+    "placeholder": "napr. Zajtra o 14:00 máme voľný termín na manikúru.",
+    "send": "Odoslať",
+    "confirm": "Odoslať správu {{count}} klientkam? Vziať späť sa nedá.",
+    "sent": "Správa odoslaná ({{count}})",
+    "next_at": "Ďalšiu správu môžete poslať {{when}}.",
+    "limit_hint": "Najviac 1 správa denne – pri častejších správach si klientky upozornenia vypínajú.",
+    "history": "Odoslané",
+    "recipients": "príjemcov: {{count}}",
+    "none": "Zatiaľ ste nič neposlali.",
+    "nobody": "Zatiaľ žiadna klientka nesúhlasila s ponukami. Súhlas môže dať pri registrácii alebo na stránke svojej karty."
   }
 }

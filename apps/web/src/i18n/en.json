@@ -27,7 +27,8 @@
     "customers": "Customers",
     "more": "More",
     "program": "Program & card",
-    "audit": "Activity log"
+    "audit": "Activity log",
+    "messages": "Messages"
   },
   "roles": {
     "OWNER": "Owner",
@@ -109,7 +110,8 @@
     "cooldown_range": "From 0 to 168 hours",
     "consent": "We can't issue a card without your consent",
     "contact_required": "Enter a phone or email",
-    "datetime": "Enter date and time"
+    "datetime": "Enter date and time",
+    "birthday": "Check the birthday date"
   },
   "errors": {
     "unauthorized": "Please log in.",
@@ -143,7 +145,9 @@
     "file_too_large": "File is too large (max 5 MB).",
     "appointment_invalid": "Enter a future date (at most one year ahead).",
     "apple_disabled": "Apple Wallet is not enabled yet.",
-    "google_disabled": "Google Wallet is not enabled yet."
+    "google_disabled": "Google Wallet is not enabled yet.",
+    "broadcast_too_soon": "You can send the next message 24 hours after the previous one.",
+    "no_recipients": "There is no one to send to yet – no client has agreed to offers."
   },
   "program": {
     "title": "Program & card",
@@ -167,7 +171,17 @@
     "more_colors": "Custom colors",
     "advanced": "Advanced settings",
     "first_stamp": "First stamp on sign-up",
-    "first_stamp_hint": "A new client sees 1 stamp right away instead of an empty card."
+    "first_stamp_hint": "A new client sees 1 stamp right away instead of an empty card.",
+    "automations": "Automatic messages",
+    "automations_hint": "Delivered as a notification on the Wallet card, only during the day (10:00–19:00).",
+    "winback": "Remind clients who haven't come back",
+    "winback_hint": "Based on her usual visit rhythm. Only clients who agreed to offers.",
+    "reward_reminder": "Remind about an unused reward",
+    "reward_reminder_hint": "Once, if the reward has been waiting for 14 days.",
+    "birthday": "Birthday wishes",
+    "birthday_hint": "Only clients who entered a birthday and agreed to offers.",
+    "birthday_gift": "Birthday gift (optional)",
+    "birthday_gift_placeholder": "e.g. 20% off the next visit"
   },
   "poster": {
     "title": "QR poster for the counter",
@@ -198,7 +212,12 @@
     "no_program": "This salon has no loyalty program yet.",
     "have_card": "You already have a card on this device.",
     "open_my_card": "Open my card",
-    "not_found": "Salon not found."
+    "not_found": "Salon not found.",
+    "marketing": "I'd like offers and reminders from {{salon}} on my card (optional).",
+    "birthday": "Birthday (optional)",
+    "birthday_hint": "No year needed – just so the salon can wish you a happy birthday.",
+    "day": "Day",
+    "month": "Month"
   },
   "public_card": {
     "add_apple": "Add to Apple Wallet",
@@ -209,18 +228,23 @@
     "stamps_left": "{{count}} more to your reward",
     "next_visit": "Next visit: {{when}}",
     "not_found": "Card not found or no longer valid.",
-    "wallet_hint": "In Wallet the card updates itself and reminds you of visits."
+    "wallet_hint": "In Wallet the card updates itself and reminds you of visits.",
+    "marketing_on": "You get offers and reminders from the salon.",
+    "marketing_off": "Offers and reminders are off.",
+    "marketing_stop": "Unsubscribe",
+    "marketing_start": "Turn on"
   },
   "privacy": {
     "title": "Privacy",
     "p_controller": "Controller: {{salon}}{{address}}.",
-    "p_data": "We process: name, phone and/or email, visit and reward history, card language.",
+    "p_data": "We process: name, phone and/or email, visit and reward history, card language and – if you enter it – the day and month of your birthday.",
     "p_purpose": "Purpose: running the loyalty program (stamps, rewards, appointment reminders).",
     "p_basis": "Legal basis: your consent (Art. 6(1)(a) GDPR). You can withdraw it at any time.",
     "p_retention": "We keep the data while you are in the program; after deletion only anonymous statistics remain.",
     "p_rights": "You have the right to access, correct, delete and port your data. Just ask the salon in person or by phone.",
     "p_processor": "The service is technically operated by {{app}} as the salon's processor.",
-    "template_note": "Template – have it reviewed by a lawyer before launch."
+    "template_note": "Template – have it reviewed by a lawyer before launch.",
+    "p_marketing": "If you agreed to offers, the salon may send messages to your card: offers, a reminder when you have not visited for a while, and birthday wishes. You can unsubscribe with one tap on your card page."
   },
   "scan": {
     "title": "Scanner",
@@ -275,7 +299,12 @@
     "sort_new": "Newest",
     "sort_name": "By name",
     "more": "Load more",
-    "gdpr": "Client data (GDPR)"
+    "gdpr": "Client data (GDPR)",
+    "marketing_yes": "Offers: consent since {{date}}",
+    "marketing_no": "Offers: no consent",
+    "birthday": "Birthday: {{date}}",
+    "export_csv": "Download list (CSV)",
+    "message_all": "Message clients"
   },
   "stats": {
     "title": "Overview",
@@ -318,7 +347,9 @@
       "stamp.revoke": "Stamp removed",
       "reward.redeem": "Reward redeemed",
       "appointment.set": "Appointment set",
-      "appointment.cancel": "Appointment removed"
+      "appointment.cancel": "Appointment removed",
+      "broadcast.send": "Message to clients",
+      "customer.export_all": "Client list export"
     }
   },
   "counter": {
@@ -343,12 +374,28 @@
     "submit": "Create card",
     "created_stamp": "Card created with the first stamp 🎉",
     "created": "Card created",
-    "existing": "This client already has a card — we opened it."
+    "existing": "This client already has a card — we opened it.",
+    "marketing": "The client wants offers and reminders (optional)."
   },
   "walletqr": {
     "title": "Card to the phone",
     "text": "Let the client scan this QR code with her camera. Her card opens with an Apple Wallet / Google Wallet button.",
     "show": "Show QR to add the card",
     "done": "Done"
+  },
+  "broadcast": {
+    "title": "Message clients",
+    "text": "The message arrives as a notification on the Wallet card. Only clients who agreed to offers receive it.",
+    "reachable": "Recipients: {{count}}",
+    "placeholder": "e.g. We have a free manicure slot tomorrow at 2 pm.",
+    "send": "Send",
+    "confirm": "Send the message to {{count}} clients? This can't be undone.",
+    "sent": "Message sent ({{count}})",
+    "next_at": "You can send the next message {{when}}.",
+    "limit_hint": "At most 1 message a day – with more, clients turn notifications off.",
+    "history": "Sent",
+    "recipients": "recipients: {{count}}",
+    "none": "You haven't sent anything yet.",
+    "nobody": "No client has agreed to offers yet. They can do it when signing up or on their card page."
   }
 }
