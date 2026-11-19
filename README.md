@@ -1,6 +1,6 @@
 # Stálka — digital loyalty cards for small salons
 
-[![CI](https://github.com/h010grams/peciatka/actions/workflows/ci.yml/badge.svg)](https://github.com/h010grams/peciatka/actions/workflows/ci.yml)
+[![CI](https://github.com/h010grams/stalka/actions/workflows/ci.yml/badge.svg)](https://github.com/h010grams/stalka/actions/workflows/ci.yml)
 
 **Stálka** (Slovak slang for *"a regular"* — a client who keeps coming back) replaces paper stamp cards in small beauty salons — nail studios, barbershops, hair and brow/lash salons — with a digital loyalty card that lives in **Apple Wallet** and **Google Wallet**.
 
