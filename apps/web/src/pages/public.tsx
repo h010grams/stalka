@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -170,6 +171,14 @@ export function CardPage() {
   const { serial = '' } = useParams();
   const { t } = useTranslation();
   const qc = useQueryClient();
+  // карта с именем клиентки не должна попасть в поиск, даже если ссылку где-то опубликуют
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => meta.remove();
+  }, []);
   const marketing = useMutation({
     mutationFn: (enabled: boolean) => api.post<PublicCardDto>(`/public/cards/${serial}/marketing`, { enabled }),
     onSuccess: (data) => qc.setQueryData(['public-card', serial], data),

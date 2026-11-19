@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+# карты клиенток (имена) и API не индексируем
+Disallow: /c/
+Disallow: /api/
+Disallow: /invite/
+Disallow: /reset-password
+
+Sitemap: https://stalka.sk/sitemap.xml
