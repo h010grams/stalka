@@ -88,6 +88,9 @@ export const authRoutes: FastifyPluginAsync<{ mailer: Mailer }> = async (app, { 
       ? await verifyPassword(user.passwordHash, input.password)
       : await verifyPassword(await getDummyHash(), input.password).then(() => false);
     if (!user || !ok) throw new AppError(401, 'invalid_credentials');
+    if (input.locale && input.locale !== user.locale) {
+      await prisma.user.update({ where: { id: user.id }, data: { locale: input.locale } });
+    }
 
     const salonId = await defaultSalonId(prisma, user.id);
     await createSession(prisma, reply, user.id, salonId);
@@ -122,7 +125,7 @@ export const authRoutes: FastifyPluginAsync<{ mailer: Mailer }> = async (app, { 
 
   // Всегда 204, чтобы нельзя было проверить, зарегистрирован ли email.
   app.post('/forgot-password', { config: strictLimit }, async (req, reply) => {
-    const { email } = parse(forgotPasswordSchema, req.body);
+    const { email, locale } = parse(forgotPasswordSchema, req.body);
     const user = await prisma.user.findUnique({ where: { email } });
     if (user) {
       const token = randomToken();
@@ -130,7 +133,7 @@ export const authRoutes: FastifyPluginAsync<{ mailer: Mailer }> = async (app, { 
         data: { userId: user.id, tokenHash: sha256(token), expiresAt: new Date(Date.now() + RESET_TTL_MS) },
       });
       const url = `${config.APP_URL}/reset-password?token=${token}`;
-      await mailer.send({ to: user.email, ...mailTemplates.passwordReset(user.locale, { url }) });
+      await mailer.send({ to: user.email, ...mailTemplates.passwordReset(locale ?? user.locale, { url }) });
     }
     return reply.code(204).send();
   });

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -29,7 +30,7 @@ export function LoginPage() {
   const target = useRedirectTarget();
   const form = useForm({ resolver: zodResolver(loginSchema) });
   const login = useMutation({
-    mutationFn: (v: unknown) => api.post<MeResponse>('/auth/login', v),
+    mutationFn: (v: object) => api.post<MeResponse>('/auth/login', { ...v, locale: i18n.language }),
     onSuccess: (me) => {
       setMe(me);
       navigate(target, { replace: true });
@@ -123,7 +124,9 @@ export function RegisterPage() {
 export function ForgotPasswordPage() {
   const { t } = useTranslation();
   const form = useForm({ resolver: zodResolver(forgotPasswordSchema) });
-  const forgot = useMutation({ mutationFn: (v: unknown) => api.post('/auth/forgot-password', v) });
+  const forgot = useMutation({
+    mutationFn: (v: object) => api.post('/auth/forgot-password', { ...v, locale: i18n.language }),
+  });
 
   return (
     <div className="space-y-6">

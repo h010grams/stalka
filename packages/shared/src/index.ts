@@ -36,10 +36,12 @@ export type RegisterInput = z.input<typeof registerSchema>;
 export const loginSchema = z.object({
   email,
   password: z.string().min(1, 'v.required').max(200),
+  // язык, выбранный в интерфейсе: становится языком аккаунта (письма, Wallet)
+  locale: localeSchema.optional(),
 });
 export type LoginInput = z.input<typeof loginSchema>;
 
-export const forgotPasswordSchema = z.object({ email });
+export const forgotPasswordSchema = z.object({ email, locale: localeSchema.optional() });
 export type ForgotPasswordInput = z.input<typeof forgotPasswordSchema>;
 
 export const resetPasswordSchema = z.object({

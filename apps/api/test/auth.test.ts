@@ -124,6 +124,18 @@ describe('password reset', () => {
     expect(login.statusCode).toBe(200);
   });
 
+  it('writes the email in the language chosen on the page', async () => {
+    const { email } = await registerOwner(app);
+    await new TestClient(app).post('/api/auth/forgot-password', { email, locale: 'en' });
+    expect(mailer.outbox[0]!.subject).toMatch(/password reset/);
+  });
+
+  it('login switches the account language to the one chosen on the page', async () => {
+    const { email } = await registerOwner(app);
+    const res = await new TestClient(app).post('/api/auth/login', { email, password: 'password123', locale: 'uk' });
+    expect(json(res).user.locale).toBe('uk');
+  });
+
   it('does not reveal unknown emails', async () => {
     const res = await new TestClient(app).post('/api/auth/forgot-password', { email: 'nobody@test.sk' });
     expect(res.statusCode).toBe(204);
