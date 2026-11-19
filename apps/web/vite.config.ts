@@ -29,7 +29,15 @@ export default defineConfig({
       workbox: {
         // API и файлы Wallet никогда не кешируем — только оболочку приложения
         navigateFallbackDenylist: [/^\/api\//],
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // шрифты не скачиваем заранее все подряд (там все алфавиты) — только те, что понадобились странице
+        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.woff2'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'fonts', expiration: { maxEntries: 30 } },
+          },
+        ],
       },
     }),
   ],

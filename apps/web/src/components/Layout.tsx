@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { MeResponse, SalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { useCurrentRole, useLogout, useMe, useSetMe } from '../lib/auth';
+import { ScanLine, Settings, Users } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Spinner } from './ui';
 import { LandingPage } from '../pages/Landing';
@@ -34,9 +35,9 @@ export function AppLayout() {
 
   // Касса: сканер — главный экран. Владельцу ещё клиенты и настройки.
   const nav = [
-    { to: '/', label: t('nav.scan'), icon: '⌖' },
-    { to: '/customers', label: t('nav.customers'), icon: '☺' },
-    ...(role === 'OWNER' ? [{ to: '/settings', label: t('nav.settings'), icon: '⚙' }] : []),
+    { to: '/', label: t('nav.scan'), icon: ScanLine },
+    { to: '/customers', label: t('nav.customers'), icon: Users },
+    ...(role === 'OWNER' ? [{ to: '/settings', label: t('nav.settings'), icon: Settings }] : []),
   ];
 
   async function switchSalon(salonId: string) {
@@ -101,7 +102,7 @@ export function AppLayout() {
                 `flex flex-1 flex-col items-center gap-0.5 py-2.5 text-xs ${isActive ? 'font-semibold text-stone-900' : 'text-stone-500'}`
               }
             >
-              <span className="text-lg leading-none">{n.icon}</span>
+              <n.icon className="size-5" aria-hidden />
               {n.label}
             </NavLink>
           ))}

@@ -1,13 +1,126 @@
+import { useEffect, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
+import {
+  Bell,
+  CalendarClock,
+  Check,
+  ChevronDown,
+  Gift,
+  Globe,
+  Megaphone,
+  QrCode,
+  ScanLine,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Timer,
+  WalletCards,
+  X,
+  type LucideIcon,
+} from 'lucide-react';
 import type { SiteInfoDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { CardVisual } from '../components/CardVisual';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { buttonClass } from '../components/ui';
 
-const FEATURES = ['winback', 'appt', 'wallet', 'msg', 'bday', 'counter', 'gdpr', 'lang'] as const;
+const CTA =
+  'inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full px-6 text-base font-semibold transition-colors duration-200';
+const CTA_DARK = `${CTA} bg-stone-900 text-white hover:bg-stone-700`;
+const CTA_LIGHT = `${CTA} bg-white text-stone-900 ring-1 ring-stone-300 hover:bg-stone-100`;
+
+const FEATURES: { key: string; icon: LucideIcon }[] = [
+  { key: 'appt', icon: CalendarClock },
+  { key: 'msg', icon: Megaphone },
+  { key: 'bday', icon: Gift },
+  { key: 'counter', icon: Timer },
+  { key: 'gdpr', icon: ShieldCheck },
+  { key: 'lang', icon: Globe },
+];
+const STEPS: LucideIcon[] = [QrCode, WalletCards, ScanLine];
+
+/** Плавное появление блоков при прокрутке; без IntersectionObserver всё видно сразу. */
+function useReveal() {
+  useEffect(() => {
+    const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach((el) => el.setAttribute('data-shown', ''));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.setAttribute('data-shown', '');
+            io.unobserve(e.target);
+          }
+        }),
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    items.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  });
+}
+
+function Section({ id, children, className = '' }: { id?: string; children: ReactNode; className?: string }) {
+  return (
+    <section id={id} className={`mx-auto max-w-6xl scroll-mt-20 px-4 py-20 md:py-28 ${className}`}>
+      {children}
+    </section>
+  );
+}
+
+function Heading({ children }: { children: ReactNode }) {
+  return <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">{children}</h2>;
+}
+
+function Notification() {
+  const { t } = useTranslation();
+  return (
+    <div className="flex gap-3 rounded-2xl bg-white/85 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-stone-900 text-white">
+        <WalletCards className="size-5" aria-hidden />
+      </span>
+      <div className="min-w-0 text-[13px] leading-snug">
+        <p className="flex justify-between gap-2 font-semibold">
+          Wallet <span className="font-normal text-stone-500">{t('landing.notif_time')}</span>
+        </p>
+        <p className="text-stone-700">{t('landing.notif_text')}</p>
+      </div>
+    </div>
+  );
+}
+
+/** Телефон: уведомление «пора вернуться» поверх карты — главное, что отличает Stálka. */
+function PhoneMock() {
+  const { t } = useTranslation();
+  const nextVisit = new Date(Date.now() + 3 * 24 * 3600_000);
+  nextVisit.setHours(14, 30, 0, 0);
+  return (
+    <div className="relative mx-auto w-full max-w-[330px]">
+      <div className="absolute -inset-10 -z-10 rounded-full bg-brand-300/40 blur-3xl" aria-hidden />
+      <div className="rounded-[2.75rem] bg-stone-900 p-2.5 shadow-2xl shadow-stone-900/20">
+        <div className="space-y-3 rounded-[2.2rem] bg-gradient-to-b from-stone-200 to-stone-100 px-3 pb-6 pt-10">
+          <p className="text-center font-display text-5xl font-medium text-stone-800">9:41</p>
+          <Notification />
+          <CardVisual
+            salonName="Zaneta Nail Studio"
+            logoUrl={null}
+            stampCount={6}
+            stampsRequired={10}
+            rewardText={t('landing.demo_reward')}
+            bgColor="#7A1F3D"
+            fgColor="#FFFFFF"
+            labelColor="#F4C7D3"
+            nextAppointmentAt={nextVisit.toISOString()}
+            timezone="Europe/Bratislava"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /** Продающая страница: stalka.sk для тех, кто не вошёл. */
 export function LandingPage() {
@@ -15,152 +128,273 @@ export function LandingPage() {
   const site = useQuery({ queryKey: ['site'], queryFn: () => api.get<SiteInfoDto>('/public/site'), staleTime: Infinity });
   const demo = site.data?.demo ?? null;
   const contact = site.data?.contactEmail ?? null;
-  // демо-карта с записью через три дня — как у настоящей клиентки
-  const nextVisit = new Date(Date.now() + 3 * 24 * 3600_000);
-  nextVisit.setHours(14, 30, 0, 0);
+  useReveal();
 
   return (
-    <div className="min-h-dvh bg-stone-50 text-stone-900">
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
-        <span className="flex items-center gap-2 text-lg font-bold">
-          <img src="/mark.svg" alt="" className="h-7 w-auto" /> Stálka
-        </span>
-        <div className="flex items-center gap-3">
-          <LanguageSwitcher />
-          <Link to="/login" className="text-sm font-semibold underline">
-            {t('landing.login')}
+    <div className="min-h-dvh bg-cream text-stone-900">
+      <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-cream/85 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+          <Link to="/" className="flex items-center gap-2 text-lg font-bold">
+            <img src="/mark.svg" alt="" className="h-7 w-auto" /> Stálka
           </Link>
+          <nav className="hidden items-center gap-7 text-sm text-stone-600 md:flex">
+            {(['how', 'features', 'price', 'faq'] as const).map((k) => (
+              <a key={k} href={`#${k}`} className="transition-colors hover:text-stone-900">
+                {t(`landing.nav_${k}`)}
+              </a>
+            ))}
+          </nav>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link to="/login" className="text-sm font-semibold hover:underline">
+              {t('landing.login')}
+            </Link>
+            <Link
+              to="/register"
+              className="hidden min-h-10 items-center rounded-full bg-stone-900 px-4 text-sm font-semibold text-white transition-colors hover:bg-stone-700 lg:inline-flex"
+            >
+              {t('landing.cta')}
+            </Link>
+          </div>
         </div>
       </header>
 
       <main>
-        <section className="mx-auto grid max-w-5xl items-center gap-10 px-4 pb-16 pt-6 md:grid-cols-[1.15fr_1fr] md:pt-12">
-          <div className="space-y-5">
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl">{t('landing.title')}</h1>
-            <p className="text-lg text-stone-600">{t('landing.lead')}</p>
+        {/* ───────── Hero ───────── */}
+        <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 pb-20 pt-12 md:grid-cols-[1.2fr_1fr] md:pb-28 md:pt-20">
+          <div className="space-y-7">
+            <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm text-stone-600 ring-1 ring-stone-200">
+              <Sparkles className="size-4 text-brand-600" aria-hidden />
+              {t('landing.eyebrow')}
+            </p>
+            <h1 className="font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
+              {t('landing.title_a')} <em className="font-medium text-brand-600">{t('landing.title_b')}</em>
+            </h1>
+            <p className="max-w-xl text-lg leading-relaxed text-stone-600">{t('landing.lead')}</p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/register" className={buttonClass('primary', 'min-h-12 px-6 text-base')}>
+              <Link to="/register" className={CTA_DARK}>
                 {t('landing.cta')}
               </Link>
               {demo && (
-                <a href="#demo" className={buttonClass('secondary', 'min-h-12 px-6 text-base')}>
+                <a href="#demo" className={CTA_LIGHT}>
                   {t('landing.cta_demo')}
                 </a>
               )}
             </div>
-            <p className="text-sm text-stone-500">{t('landing.for_whom')}</p>
-          </div>
-          <div className="mx-auto w-full max-w-sm">
-            <CardVisual
-              salonName="Zaneta Nail Studio"
-              logoUrl={null}
-              stampCount={3}
-              stampsRequired={10}
-              rewardText={t('landing.demo_reward')}
-              bgColor="#7A1F3D"
-              fgColor="#FFFFFF"
-              labelColor="#F4C7D3"
-              nextAppointmentAt={nextVisit.toISOString()}
-              timezone="Europe/Bratislava"
-            />
-          </div>
-        </section>
-
-        <section className="border-y border-stone-200 bg-white">
-          <div className="mx-auto max-w-5xl px-4 py-14">
-            <h2 className="mb-8 text-2xl font-bold">{t('landing.how_title')}</h2>
-            <ol className="grid gap-6 md:grid-cols-3">
-              {([1, 2, 3] as const).map((n) => (
-                <li key={n} className="space-y-2">
-                  <span className="flex size-9 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700">
-                    {n}
-                  </span>
-                  <h3 className="font-semibold">{t(`landing.how_${n}_t`)}</h3>
-                  <p className="text-sm text-stone-600">{t(`landing.how_${n}`)}</p>
+            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-stone-600">
+              {(
+                [
+                  [Smartphone, 'trust_wallet'],
+                  [WalletCards, 'trust_noapp'],
+                  [ShieldCheck, 'trust_gdpr'],
+                  [Timer, 'trust_setup'],
+                ] as const
+              ).map(([Icon, key]) => (
+                <li key={key} className="flex items-center gap-1.5">
+                  <Icon className="size-4 text-brand-600" aria-hidden />
+                  {t(`landing.${key}`)}
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
+          <PhoneMock />
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="mb-8 text-2xl font-bold">{t('landing.feat_title')}</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map((f) => (
-              <div key={f} className="space-y-1.5 rounded-2xl border border-stone-200 bg-white p-5">
-                <h3 className="font-semibold">{t(`landing.f_${f}_t`)}</h3>
-                <p className="text-sm text-stone-600">{t(`landing.f_${f}`)}</p>
+        {/* ───────── Бумага против Stálka ───────── */}
+        <div className="border-y border-stone-200 bg-white">
+          <Section>
+            <div data-reveal>
+              <Heading>{t('landing.vs_title')}</Heading>
+            </div>
+            <div className="mt-10 grid gap-5 md:grid-cols-2">
+              <div data-reveal className="rounded-3xl bg-stone-100 p-7">
+                <h3 className="mb-4 font-semibold text-stone-500">{t('landing.vs_paper')}</h3>
+                <ul className="space-y-3">
+                  {[1, 2, 3, 4].map((n) => (
+                    <li key={n} className="flex gap-3 text-stone-600">
+                      <X className="mt-0.5 size-5 shrink-0 text-stone-400" aria-hidden />
+                      {t(`landing.vs_paper_${n}`)}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
-          </div>
-        </section>
+              <div data-reveal className="rounded-3xl bg-stone-900 p-7 text-white">
+                <h3 className="mb-4 font-semibold">{t('landing.vs_stalka')}</h3>
+                <ul className="space-y-3">
+                  {[1, 2, 3, 4].map((n) => (
+                    <li key={n} className="flex gap-3">
+                      <Check className="mt-0.5 size-5 shrink-0 text-brand-300" aria-hidden />
+                      {t(`landing.vs_stalka_${n}`)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </Section>
+        </div>
 
+        {/* ───────── Как это работает ───────── */}
+        <Section id="how">
+          <div data-reveal>
+            <Heading>{t('landing.how_title')}</Heading>
+          </div>
+          <ol className="mt-12 grid gap-10 md:grid-cols-3">
+            {STEPS.map((Icon, i) => (
+              <li key={i} data-reveal className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">
+                    <Icon className="size-6" aria-hidden />
+                  </span>
+                  <span className="font-display text-3xl text-stone-300">0{i + 1}</span>
+                </div>
+                <h3 className="text-lg font-semibold">{t(`landing.how_${i + 1}_t`)}</h3>
+                <p className="leading-relaxed text-stone-600">{t(`landing.how_${i + 1}`)}</p>
+              </li>
+            ))}
+          </ol>
+        </Section>
+
+        {/* ───────── Функции ───────── */}
+        <div className="bg-white">
+          <Section id="features">
+            <div data-reveal>
+              <Heading>{t('landing.feat_title')}</Heading>
+            </div>
+            <div className="mt-12 grid gap-4 md:grid-cols-3">
+              {/* главная функция — крупно */}
+              <div
+                data-reveal
+                className="flex flex-col justify-between gap-6 rounded-3xl bg-brand-50 p-7 ring-1 ring-brand-100 md:col-span-2 md:row-span-2"
+              >
+                <div className="space-y-2">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-white text-brand-700 ring-1 ring-brand-100">
+                    <Bell className="size-5" aria-hidden />
+                  </span>
+                  <h3 className="pt-2 font-display text-2xl font-semibold">{t('landing.f_winback_t')}</h3>
+                  <p className="max-w-lg leading-relaxed text-stone-700">{t('landing.f_winback')}</p>
+                </div>
+                <div className="max-w-md">
+                  <Notification />
+                </div>
+              </div>
+              {FEATURES.map(({ key, icon: Icon }) => (
+                <div key={key} data-reveal className="space-y-2 rounded-3xl bg-cream p-6 ring-1 ring-stone-200">
+                  <Icon className="size-6 text-brand-600" aria-hidden />
+                  <h3 className="pt-1 font-semibold">{t(`landing.f_${key}_t`)}</h3>
+                  <p className="text-sm leading-relaxed text-stone-600">{t(`landing.f_${key}`)}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+
+        {/* ───────── Демо ───────── */}
         {demo && (
-          <section id="demo" className="bg-stone-900 text-white">
-            <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 md:grid-cols-[1fr_auto]">
-              <div className="space-y-3">
-                <h2 className="text-2xl font-bold">{t('landing.demo_title')}</h2>
-                <p className="text-stone-300">{t('landing.demo_text')}</p>
-                <a href={demo.joinPath} className={buttonClass('secondary', 'min-h-12 px-6 text-base md:hidden')}>
+          <div id="demo" className="scroll-mt-16 bg-stone-900 text-white">
+            <Section className="grid items-center gap-10 md:grid-cols-[1fr_auto]">
+              <div data-reveal className="space-y-4">
+                <Heading>{t('landing.demo_title')}</Heading>
+                <p className="max-w-xl text-lg text-stone-300">{t('landing.demo_text')}</p>
+                <a href={demo.joinPath} className={`${CTA} bg-white text-stone-900 hover:bg-stone-200 md:hidden`}>
                   {t('landing.demo_open')}
                 </a>
               </div>
               {/* на компьютере удобнее навести телефон на QR */}
-              <div className="hidden space-y-2 text-center md:block">
-                <img src="/api/public/demo-qr.svg" alt="" className="size-44 rounded-2xl bg-white p-3" />
-                <p className="text-xs text-stone-400">{t('landing.demo_scan')}</p>
+              <div data-reveal className="hidden space-y-3 text-center md:block">
+                <img src="/api/public/demo-qr.svg" alt="QR" className="size-48 rounded-3xl bg-white p-4" />
+                <p className="text-sm text-stone-400">{t('landing.demo_scan')}</p>
               </div>
-            </div>
-          </section>
+            </Section>
+          </div>
         )}
 
-        <section className="mx-auto max-w-5xl px-4 pt-14">
-          <h2 className="mb-6 text-2xl font-bold">{t('landing.price_title')}</h2>
-          <div className="grid gap-6 rounded-3xl border border-stone-200 bg-white p-8 md:grid-cols-2 md:p-10">
-            <div className="space-y-2">
-              <p>
-                <span className="text-5xl font-bold tracking-tight">14,90 €</span>{' '}
+        {/* ───────── Цена ───────── */}
+        <Section id="price">
+          <div data-reveal className="text-center">
+            <Heading>{t('landing.price_title')}</Heading>
+          </div>
+          <div
+            data-reveal
+            className="mx-auto mt-12 max-w-3xl overflow-hidden rounded-3xl bg-white shadow-xl shadow-stone-900/5 ring-1 ring-stone-200 md:grid md:grid-cols-2"
+          >
+            <div className="space-y-3 p-8 md:p-10">
+              <span className="inline-block rounded-xl bg-brand-100 px-3 py-1.5 text-sm font-semibold text-brand-700">
+                {t('landing.trial')}
+              </span>
+              <p className="pt-2">
+                <span className="font-display text-6xl font-semibold tracking-tight">14,90 €</span>{' '}
                 <span className="text-stone-500">{t('landing.per_month')}</span>
               </p>
               <p className="text-stone-600">{t('landing.price_year')}</p>
-              <p className="pt-2 font-semibold">{t('landing.trial')}</p>
-              <p className="text-sm text-stone-500">{t('landing.cancel')}</p>
-              <Link to="/register" className={buttonClass('primary', 'mt-3 min-h-12 px-6 text-base')}>
+              <Link to="/register" className={`${CTA_DARK} mt-4 w-full`}>
                 {t('landing.cta')}
               </Link>
+              <p className="text-center text-sm text-stone-500">{t('landing.cancel')}</p>
             </div>
-            <ul className="space-y-2 self-center text-stone-700">
-              {([1, 2, 3, 4, 5] as const).map((n) => (
-                <li key={n} className="flex gap-2">
-                  <span className="text-brand-600">✓</span>
+            <ul className="space-y-3 bg-stone-50 p-8 md:p-10">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <li key={n} className="flex gap-3 text-stone-700">
+                  <Check className="mt-0.5 size-5 shrink-0 text-brand-600" aria-hidden />
                   {t(`landing.inc_${n}`)}
                 </li>
               ))}
             </ul>
           </div>
-        </section>
+        </Section>
 
-        <section className="mx-auto max-w-5xl px-4 py-14">
-          <div className="space-y-4 rounded-3xl bg-brand-50 p-8 ring-1 ring-brand-100 md:p-10">
-            <h2 className="text-2xl font-bold">{t('landing.pilot_title')}</h2>
-            <p className="max-w-2xl text-stone-700">{t('landing.pilot_text')}</p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/register" className={buttonClass('primary', 'min-h-12 px-6 text-base')}>
-                {t('landing.pilot_cta')}
-              </Link>
-              {contact && (
-                <a href={`mailto:${contact}`} className={buttonClass('secondary', 'min-h-12 px-6 text-base')}>
-                  {t('landing.pilot_write')}
-                </a>
-              )}
+        {/* ───────── Вопросы ───────── */}
+        <div className="border-t border-stone-200 bg-white">
+          <Section id="faq" className="max-w-3xl">
+            <div data-reveal>
+              <Heading>{t('landing.faq_title')}</Heading>
+            </div>
+            <div className="mt-10 divide-y divide-stone-200 border-y border-stone-200">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <details key={n} className="group py-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
+                    {t(`landing.faq_${n}_q`)}
+                    <ChevronDown
+                      className="size-5 shrink-0 text-stone-400 transition-transform duration-200 group-open:rotate-180"
+                      aria-hidden
+                    />
+                  </summary>
+                  <p className="pt-3 leading-relaxed text-stone-600">{t(`landing.faq_${n}_a`)}</p>
+                </details>
+              ))}
+            </div>
+          </Section>
+        </div>
+
+        {/* ───────── Пилот и финальный призыв ───────── */}
+        <Section>
+          <div data-reveal className="relative overflow-hidden rounded-[2rem] bg-brand-700 px-8 py-14 text-white md:px-14">
+            <div className="absolute -right-16 -top-16 size-64 rounded-full bg-white/10" aria-hidden />
+            <div className="relative max-w-2xl space-y-4">
+              <h2 className="font-display text-3xl font-semibold md:text-4xl">{t('landing.final_title')}</h2>
+              <p className="text-lg text-white/90">{t('landing.final_text')}</p>
+              <p className="text-white/90">
+                <strong className="text-white">{t('landing.pilot_title')}.</strong> {t('landing.pilot_text')}
+              </p>
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+                <Link to="/register" className={`${CTA} bg-white text-stone-900 hover:bg-stone-100`}>
+                  {t('landing.pilot_cta')}
+                </Link>
+                {contact && (
+                  <a href={`mailto:${contact}`} className={`${CTA} ring-1 ring-white/60 hover:bg-white/10`}>
+                    {t('landing.pilot_write')}
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </section>
+        </Section>
       </main>
 
-      <footer className="mx-auto flex max-w-5xl justify-between gap-3 px-4 pb-10 text-sm text-stone-500">
-        <span>Stálka · {t('landing.footer')}</span>
-        <Link to="/login" className="underline">
+      <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-stone-200 px-4 py-8 text-sm text-stone-500">
+        <span className="flex items-center gap-2">
+          <img src="/mark.svg" alt="" className="h-5 w-auto" /> Stálka · {t('landing.footer')}
+        </span>
+        <Link to="/login" className="hover:underline">
           {t('landing.login')}
         </Link>
       </footer>
