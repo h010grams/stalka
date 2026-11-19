@@ -26,7 +26,7 @@ import { CardVisual } from '../components/CardVisual';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 
 const CTA =
-  'inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full px-6 text-base font-semibold transition-colors duration-200';
+  'inline-flex min-h-12 cursor-pointer items-center justify-center whitespace-nowrap rounded-full px-6 text-base font-semibold transition-colors duration-200';
 const CTA_DARK = `${CTA} bg-stone-900 text-white hover:bg-stone-700`;
 const CTA_LIGHT = `${CTA} bg-white text-stone-900 ring-1 ring-stone-300 hover:bg-stone-100`;
 
@@ -171,7 +171,7 @@ export function LandingPage() {
               {t('landing.title_a')} <em className="font-medium text-brand-600">{t('landing.title_b')}</em>
             </h1>
             <p className="max-w-xl text-lg leading-relaxed text-stone-600">{t('landing.lead')}</p>
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link to="/register" className={CTA_DARK}>
                 {t('landing.cta')}
               </Link>
