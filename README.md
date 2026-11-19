@@ -21,8 +21,6 @@ No app to install, no account for the client, setup in about 10 minutes for the 
 - Register a new client right at the counter in ~20 seconds: name and phone, the first stamp is added, and a QR code on screen lets the client add the card to her phone
 - One big "+1 stamp" button; a ready reward is shown on top and redeemed with one tap
 - Set the client's next appointment — it appears on the card, with a reminder a day before
-- Message all clients at once ("a slot opened up tomorrow at 2 pm"), at most once a day
-- Download the client list as CSV for Excel
 - After a stamp the screen returns to the scanner automatically, ready for the next client
 - Undo a mistaken stamp within 24 hours
 
@@ -30,6 +28,9 @@ No app to install, no account for the client, setup in about 10 minutes for the 
 - Loyalty card setup in one screen: reward, number of stamps, color preset and logo, with a live card preview
 - Printable QR poster (PDF) for the counter
 - Clients list with three key numbers: total clients, visits and returning clients in the last 30 days
+- Message all clients at once ("a slot opened up tomorrow at 2 pm"), at most once a day
+- Download the client list as CSV for Excel
+- Automatic messages can be switched on or off in the card settings
 - Optional staff logins (e.g. receptionists on shifts) with an activity log of every action
 - GDPR tools: export all data of a client as JSON, delete (anonymize) a client
 
