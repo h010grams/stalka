@@ -3,7 +3,7 @@
 A single container (see `Dockerfile`) serves the API, the web app and the PassKit Web Service from one domain.
 Database migrations run automatically on start (`prisma migrate deploy`).
 
-Live instance: https://peciatka.onrender.com
+Live instance: https://stalka.sk
 
 > **HTTPS is required:** Apple Wallet (`webServiceURL`), the in-browser camera and Secure cookies don't work without it.
 > Render provides HTTPS automatically, both on its `onrender.com` subdomain and on a custom domain.
@@ -33,7 +33,7 @@ Supabase works too: Project Settings → Database → Connection string → **Se
 | Variable | Value |
 |---|---|
 | `DATABASE_URL` | connection string from Neon |
-| `APP_URL` | e.g. `https://peciatka.onrender.com` (no trailing `/`) — **exactly the address clients see** |
+| `APP_URL` | e.g. `https://stalka.sk` (no trailing `/`) — **exactly the address clients see** |
 | `NODE_ENV` | `production` |
 | `APP_NAME` | service name |
 | `RESEND_API_KEY` | Resend API key (section 4) |

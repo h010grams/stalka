@@ -8,7 +8,7 @@ A client scans a QR code at the counter and gets the card on her phone in under 
 
 No app to install, no account for the client, setup in about 10 minutes for the salon.
 
-**Live demo:** https://peciatka.onrender.com (free instance — the first load after a pause can take up to a minute)
+**Live demo:** https://stalka.sk (free instance — the first load after a pause can take up to a minute)
 
 <p align="center">
   <img src="docs/images/customer-card.jpg" alt="Customer loyalty card with stamps, reward and next appointment" width="300">
