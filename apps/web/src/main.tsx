@@ -17,6 +17,7 @@ import { AuditPage, CustomerDetailPage, CustomersPage } from './pages/Customers'
 import { CardPage, JoinPage, PrivacyPage, PublicLayout } from './pages/public';
 import { MessagesPage } from './pages/Messages';
 import { SetupPage } from './pages/Setup';
+import { AdminPage } from './pages/Admin';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { path: '/audit', element: <AuditPage /> },
       { path: '/messages', element: <MessagesPage /> },
       { path: '/setup', element: <SetupPage /> },
+      { path: '/admin', element: <AdminPage /> },
     ],
   },
   {

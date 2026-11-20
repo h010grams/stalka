@@ -55,6 +55,7 @@ export function SettingsPage() {
             { to: '/program', label: t('nav.program') },
             ...(isOwner ? [{ to: '/staff', label: t('nav.staff') }] : []),
             ...(isOwner && hasTeam ? [{ to: '/audit', label: t('nav.audit') }] : []),
+            ...(me?.isAdmin ? [{ to: '/admin', label: t('admin.link') }] : []),
           ].map((l) => (
             <li key={l.to}>
               <Link to={l.to} className="flex items-center justify-between px-5 py-4 font-medium">

@@ -3,7 +3,7 @@ import fp from 'fastify-plugin';
 import type { Role, User } from '@prisma/client';
 import { config } from '../config.js';
 import { randomToken, sha256 } from '../lib/crypto.js';
-import { forbidden, unauthorized } from '../lib/errors.js';
+import { AppError, forbidden, unauthorized } from '../lib/errors.js';
 import { prisma, type Tx } from '../lib/prisma.js';
 
 export const SESSION_COOKIE = 'sid';
@@ -95,6 +95,12 @@ export function requireTenant(...roles: Role[]): preHandlerAsyncHookHandler {
     req.tenant = { salonId: membership.salonId, role: membership.role, membershipId: membership.id };
   };
 }
+
+/** Владелец платформы (ADMIN_EMAILS). Чужим отвечаем 404 — страница как будто не существует. */
+export const requireAdmin: preHandlerAsyncHookHandler = async (req) => {
+  if (!req.auth) throw unauthorized();
+  if (!config.ADMIN_EMAILS.includes(req.auth.user.email)) throw new AppError(404, 'not_found');
+};
 
 // ───────── Plugin ─────────
 

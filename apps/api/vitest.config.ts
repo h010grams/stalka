@@ -18,6 +18,7 @@ export default defineConfig({
       // ключи Wallet из .env/certs не должны влиять на тесты — включаем их в тестах вручную
       APPLE_PASS_TYPE_ID: '',
       GOOGLE_WALLET_ISSUER_ID: '',
+      ADMIN_EMAILS: 'admin@stalka.test',
     },
     globalSetup: ['./test/global-setup.ts'],
     // одна БД на все тесты — запускаем файлы последовательно

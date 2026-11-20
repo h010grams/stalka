@@ -38,6 +38,7 @@ export async function buildMe(userId: string, currentSalonId: string | null): Pr
     user: { id: user.id, name: user.name, email: user.email, locale: user.locale },
     salons: user.memberships.map((m) => ({ id: m.salon.id, name: m.salon.name, role: m.role })),
     currentSalonId,
+    isAdmin: config.ADMIN_EMAILS.includes(user.email),
   };
 }
 

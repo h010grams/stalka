@@ -349,7 +349,8 @@
       "appointment.set": "Termín nastavený",
       "appointment.cancel": "Termín zrušený",
       "broadcast.send": "Správa klientkam",
-      "customer.export_all": "Export zoznamu klientov"
+      "customer.export_all": "Export zoznamu klientov",
+      "admin.plan": "Zmena predplatného (admin)"
     }
   },
   "counter": {
@@ -526,5 +527,36 @@
     "next": "Ďalej",
     "back": "Späť",
     "default_name": "Vernostná karta"
+  },
+  "admin": {
+    "title": "Administrácia",
+    "subtitle": "Všetky salóny v Stálke",
+    "t_salons": "Salóny",
+    "t_active": "Aktívne (30 dní)",
+    "t_trial": "Skúšobná verzia",
+    "t_paid": "Platiace",
+    "t_expired": "Po skúšobnej",
+    "t_clients": "Klientky spolu",
+    "search": "Hľadať salón alebo e-mail",
+    "f_all": "Všetky",
+    "f_trial": "Skúšobná verzia",
+    "f_active": "Platiace",
+    "f_expired": "Po skúšobnej",
+    "registered": "Registrácia {{date}}",
+    "clients": "Klientky: {{n}}",
+    "stamps": "Pečiatky (30 dní): {{n}}",
+    "last": "Posledná pečiatka: {{when}}",
+    "never": "zatiaľ žiadna pečiatka",
+    "s_trial": "Skúšobná · {{n}} dní",
+    "s_active": "Zaplatené do {{date}}",
+    "s_expired": "Skúšobná skončila",
+    "a_month": "+1 mesiac",
+    "a_year": "+1 rok",
+    "a_trial": "+30 dní skúšobnej",
+    "a_cancel": "Zrušiť platbu",
+    "a_cancel_confirm": "Zrušiť platbu salónu {{name}}?",
+    "a_confirm": "{{action}} pre salón {{name}}?",
+    "link": "Administrácia platformy",
+    "empty": "Nič sa nenašlo."
   }
 }

@@ -349,7 +349,8 @@
       "appointment.set": "Appointment set",
       "appointment.cancel": "Appointment removed",
       "broadcast.send": "Message to clients",
-      "customer.export_all": "Client list export"
+      "customer.export_all": "Client list export",
+      "admin.plan": "Subscription change (admin)"
     }
   },
   "counter": {
@@ -526,5 +527,36 @@
     "next": "Next",
     "back": "Back",
     "default_name": "Loyalty card"
+  },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "All salons on Stálka",
+    "t_salons": "Salons",
+    "t_active": "Active (30 days)",
+    "t_trial": "On trial",
+    "t_paid": "Paying",
+    "t_expired": "Trial ended",
+    "t_clients": "Clients total",
+    "search": "Search salon or email",
+    "f_all": "All",
+    "f_trial": "On trial",
+    "f_active": "Paying",
+    "f_expired": "Trial ended",
+    "registered": "Registered {{date}}",
+    "clients": "Clients: {{n}}",
+    "stamps": "Stamps (30 days): {{n}}",
+    "last": "Last stamp: {{when}}",
+    "never": "no stamps yet",
+    "s_trial": "Trial · {{n}} days",
+    "s_active": "Paid until {{date}}",
+    "s_expired": "Trial ended",
+    "a_month": "+1 month",
+    "a_year": "+1 year",
+    "a_trial": "+30 trial days",
+    "a_cancel": "Cancel payment",
+    "a_cancel_confirm": "Cancel the payment of {{name}}?",
+    "a_confirm": "{{action}} for {{name}}?",
+    "link": "Platform admin",
+    "empty": "Nothing found."
   }
 }

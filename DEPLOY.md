@@ -40,6 +40,7 @@ Supabase works too: Project Settings → Database → Connection string → **Se
 | `MAIL_FROM` | `Stálka <noreply@example.sk>` |
 | `DEMO_SALON_SLUG` | optional: slug of a demo salon — the landing page at `/` shows a QR code to add its card |
 | `CONTACT_EMAIL` | optional: shown as a "Write to me" button on the landing page |
+| `ADMIN_EMAILS` | optional: comma-separated emails of platform owners — they get `/admin` with all salons and manual payment marking |
 
 `PORT` is set by Render; the server reads it. Wallet variables are described in sections 5 and 6.
 Saving changes on the **Environment** tab redeploys the service.
@@ -122,7 +123,7 @@ When everything works: Wallet Console → **Request publishing access** (busines
 
 ## 8. Operations
 
-- **Subscriptions:** every new salon gets a 30-day trial (`Salon.trialEndsAt`). Until online payments are added, mark a paying salon by hand in the Neon SQL editor:
+- **Subscriptions:** every new salon gets a 30-day trial (`Salon.trialEndsAt`). Until online payments are added, mark a paying salon on `/admin` (+1 month, +1 year, +30 trial days), or by hand in the Neon SQL editor:
   ```sql
   UPDATE "Salon" SET "paidUntil" = now() + interval '1 year' WHERE slug = 'salon-slug';
   ```

@@ -17,6 +17,11 @@ const envSchema = z.object({
   // Продающая страница: салон для демо-карты и контакт для салонов (оба необязательны)
   DEMO_SALON_SLUG: z.string().optional(),
   CONTACT_EMAIL: z.string().email().optional(),
+  // Владельцы платформы: доступ к /admin (через запятую)
+  ADMIN_EMAILS: z
+    .string()
+    .optional()
+    .transform((v) => (v ?? '').split(',').map((e) => e.trim().toLowerCase()).filter(Boolean)),
   // Фоновые задачи (синхронизация Wallet, напоминания). В тестах выключены.
   WORKERS_ENABLED: z
     .enum(['true', 'false'])

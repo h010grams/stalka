@@ -92,6 +92,8 @@ export interface MeResponse {
   user: { id: string; name: string; email: string; locale: Locale };
   salons: { id: string; name: string; role: Role }[];
   currentSalonId: string | null;
+  /** владелец платформы — видит /admin */
+  isAdmin: boolean;
 }
 
 // ───────── Тариф ─────────
@@ -384,3 +386,25 @@ export interface BroadcastsDto {
   nextAllowedAt: string | null;
   items: BroadcastItem[];
 }
+
+// ───────── Админка платформы ─────────
+
+export interface AdminSalonItem {
+  id: string;
+  name: string;
+  slug: string;
+  ownerEmail: string | null;
+  createdAt: string;
+  plan: PlanDto;
+  clients: number;
+  stamps30d: number;
+  lastStampAt: string | null;
+}
+
+export interface AdminOverviewDto {
+  salons: AdminSalonItem[];
+  totals: { salons: number; active30d: number; trial: number; paid: number; expired: number; clients: number };
+}
+
+export const ADMIN_PLAN_ACTIONS = ['paid_month', 'paid_year', 'trial_30', 'cancel_paid'] as const;
+export const adminPlanSchema = z.object({ action: z.enum(ADMIN_PLAN_ACTIONS) });
