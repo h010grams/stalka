@@ -18,6 +18,7 @@ import { CardPage, JoinPage, PrivacyPage, PublicLayout } from './pages/public';
 import { MessagesPage } from './pages/Messages';
 import { SetupPage } from './pages/Setup';
 import { AdminPage } from './pages/Admin';
+import { NotFoundPage, RouteErrorPage } from './pages/NotFound';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -26,6 +27,7 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     element: <AuthLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
@@ -36,6 +38,7 @@ const router = createBrowserRouter([
   },
   {
     element: <AppLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { path: '/', element: <ScanPage /> },
       { path: '/staff', element: <StaffPage /> },
@@ -55,12 +58,14 @@ const router = createBrowserRouter([
   {
     // публичные страницы для клиенток — без входа
     element: <PublicLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { path: '/j/:slug', element: <JoinPage /> },
       { path: '/j/:slug/privacy', element: <PrivacyPage /> },
       { path: '/c/:serial', element: <CardPage /> },
     ],
   },
+  { path: '*', element: <NotFoundPage /> },
 ]);
 
 createRoot(document.getElementById('root')!).render(

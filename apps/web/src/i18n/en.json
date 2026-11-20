@@ -558,5 +558,13 @@
     "a_confirm": "{{action}} for {{name}}?",
     "link": "Platform admin",
     "empty": "Nothing found."
+  },
+  "notfound": {
+    "title": "Page not found",
+    "text": "You may have an older version of the site open. Try reloading.",
+    "error_title": "Something went wrong",
+    "error_text": "Try reloading the page. If that does not help, write to info@stalka.sk.",
+    "reload": "Reload the page",
+    "home": "Go to the home page"
   }
 }

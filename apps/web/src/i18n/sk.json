@@ -558,5 +558,13 @@
     "a_confirm": "{{action}} pre salón {{name}}?",
     "link": "Administrácia platformy",
     "empty": "Nič sa nenašlo."
+  },
+  "notfound": {
+    "title": "Stránka sa nenašla",
+    "text": "Možno máte otvorenú staršiu verziu stránky. Skúste ju obnoviť.",
+    "error_title": "Niečo sa pokazilo",
+    "error_text": "Skúste stránku obnoviť. Ak to nepomôže, napíšte nám na info@stalka.sk.",
+    "reload": "Obnoviť stránku",
+    "home": "Na úvodnú stránku"
   }
 }
