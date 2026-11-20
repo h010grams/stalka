@@ -30,6 +30,12 @@ export function AdminPage() {
     queryFn: () => api.get<AdminOverviewDto>('/admin/salons'),
     enabled: !!me?.isAdmin,
   });
+  const [notice, setNotice] = useState<string | null>(null);
+  const remove = useMutation({
+    mutationFn: ({ id, confirmSlug }: { id: string; confirmSlug: string }) =>
+      api.delete(`/admin/salons/${id}`, { confirmSlug }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'salons'] }),
+  });
   const plan = useMutation({
     mutationFn: ({ id, action }: { id: string; action: Action }) => api.post(`/admin/salons/${id}/plan`, { action }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'salons'] }),
@@ -49,6 +55,17 @@ export function AdminPage() {
   if (data.isLoading) return <Spinner />;
   if (data.error) return <ErrorAlert error={data.error} />;
   const totals = data.data!.totals;
+
+  const askDelete = (s: AdminSalonItem) => {
+    const typed = window.prompt(t('admin.delete_prompt', { name: s.name, slug: s.slug }));
+    if (typed === null) return;
+    if (typed.trim() !== s.slug) {
+      setNotice(t('admin.delete_mismatch'));
+      return;
+    }
+    setNotice(null);
+    remove.mutate({ id: s.id, confirmSlug: typed.trim() });
+  };
 
   const run = (s: AdminSalonItem, action: Action, label: string) => {
     const msg =
@@ -96,12 +113,13 @@ export function AdminPage() {
         </div>
       </div>
 
-      <ErrorAlert error={plan.error} />
+      <ErrorAlert error={plan.error ?? remove.error} />
+      {notice && <p className="text-sm text-red-600">{notice}</p>}
       {salons.length === 0 && <p className="text-sm text-stone-500">{t('admin.empty')}</p>}
 
       <div className="space-y-3">
         {salons.map((s) => (
-          <Card key={s.id} className="space-y-3">
+          <Card key={s.id} className={`space-y-3 ${s.deletedAt ? 'opacity-60' : ''}`}>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <a href={`/j/${s.slug}`} target="_blank" rel="noreferrer" className="block truncate font-semibold hover:underline">
@@ -113,8 +131,12 @@ export function AdminPage() {
                   </a>
                 )}
               </div>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${BADGE[s.plan.status]}`}>
-                {s.plan.status === 'trial'
+              <span
+                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${s.deletedAt ? 'bg-stone-200 text-stone-600' : BADGE[s.plan.status]}`}
+              >
+                {s.deletedAt
+                  ? t('admin.s_deleted')
+                  : s.plan.status === 'trial'
                   ? t('admin.s_trial', { n: s.plan.daysLeft })
                   : s.plan.status === 'active'
                     ? t('admin.s_active', { date: formatDay(s.plan.paidUntil!) })
@@ -127,6 +149,11 @@ export function AdminPage() {
               <span>{t('admin.stamps', { n: s.stamps30d })}</span>
               <span>{s.lastStampAt ? t('admin.last', { when: formatRelative(s.lastStampAt) }) : t('admin.never')}</span>
             </div>
+            {s.deletedAt ? (
+              <p className="text-sm text-stone-500">
+                {t('admin.deleted_note', { date: formatDay(new Date(new Date(s.deletedAt).getTime() + 30 * 864e5).toISOString()) })}
+              </p>
+            ) : (
             <div className="flex flex-wrap gap-2">
               {(
                 [
@@ -155,7 +182,11 @@ export function AdminPage() {
                   {t('admin.a_cancel')}
                 </Button>
               )}
+              <Button variant="danger" className="min-h-9 px-3" disabled={remove.isPending} onClick={() => askDelete(s)}>
+                {t('admin.a_delete')}
+              </Button>
             </div>
+            )}
           </Card>
         ))}
       </div>

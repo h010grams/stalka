@@ -58,7 +58,7 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
 
   app.get('/site', { config: readLimit }, async (): Promise<SiteInfoDto> => {
     const demo = config.DEMO_SALON_SLUG
-      ? await prisma.salon.findUnique({ where: { slug: config.DEMO_SALON_SLUG }, select: { slug: true } })
+      ? await prisma.salon.findFirst({ where: { slug: config.DEMO_SALON_SLUG, deletedAt: null }, select: { slug: true } })
       : null;
     return { demo: demo ? { joinPath: `/j/${demo.slug}` } : null, contactEmail: config.CONTACT_EMAIL ?? null };
   });
@@ -74,7 +74,7 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
 
   app.get<{ Params: { slug: string } }>('/salons/:slug', { config: readLimit }, async (req): Promise<PublicSalonDto> => {
     const salon = await prisma.salon.findUnique({ where: { slug: req.params.slug }, include: { programs: true } });
-    if (!salon) throw notFound('salon_not_found');
+    if (!salon || salon.deletedAt) throw notFound('salon_not_found');
     const p = salon.programs.find((x) => x.isActive);
     let program: PublicSalonDto['program'] = null;
     if (p) {
@@ -95,8 +95,8 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
 
   app.post<{ Params: { slug: string } }>('/salons/:slug/join', { config: joinLimit }, async (req, reply) => {
     const input = parse(joinSchema, req.body);
-    const salon = await prisma.salon.findUnique({ where: { slug: req.params.slug }, select: { id: true } });
-    if (!salon) throw notFound('salon_not_found');
+    const salon = await prisma.salon.findUnique({ where: { slug: req.params.slug }, select: { id: true, deletedAt: true } });
+    if (!salon || salon.deletedAt) throw notFound('salon_not_found');
     const { serial } = await registerCustomer(salon.id, input, { actorUserId: null, source: 'poster' });
     return reply.code(201).send({ serial });
   });

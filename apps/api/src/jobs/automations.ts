@@ -11,6 +11,7 @@ import {
 import { t } from '../lib/i18n.js';
 import { prisma } from '../lib/prisma.js';
 import { notifyCard } from '../services/notify.js';
+import { purgeDeletedSalons } from '../services/salonDeletion.js';
 import { kickWalletWorker } from '../services/wallet/sync.js';
 
 /**
@@ -158,7 +159,10 @@ async function birthdays(p: Program, now: Date): Promise<number> {
 let timer: NodeJS.Timeout | null = null;
 
 export function startAutomationJob() {
-  const run = () => processAutomations().catch((e) => console.error('[automations]', e));
+  const run = () => {
+    processAutomations().catch((e) => console.error('[automations]', e));
+    purgeDeletedSalons().catch((e) => console.error('[purge]', e));
+  };
   timer = setInterval(run, 10 * 60_000);
   void run();
 }

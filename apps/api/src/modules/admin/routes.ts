@@ -1,11 +1,12 @@
 import type { FastifyPluginAsync } from 'fastify';
-import { adminPlanSchema, type AdminOverviewDto } from '@stalka/shared';
+import { adminDeleteSalonSchema, adminPlanSchema, type AdminOverviewDto } from '@stalka/shared';
 import { planOf } from '../../domain/plan.js';
 import { audit } from '../../lib/audit.js';
-import { assertUuid, notFound } from '../../lib/errors.js';
+import { assertUuid, badRequest, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
 import { requireAdmin } from '../../plugins/auth.js';
+import { deleteSalon } from '../../services/salonDeletion.js';
 
 const DAY = 24 * 3600 * 1000;
 
@@ -16,6 +17,7 @@ type Row = {
   createdAt: Date;
   trialEndsAt: Date;
   paidUntil: Date | null;
+  deletedAt: Date | null;
   ownerEmail: string | null;
   clients: bigint;
   stamps30d: bigint;
@@ -29,7 +31,7 @@ export const adminRoutes: FastifyPluginAsync = async (app) => {
   app.get('/salons', admin, async (): Promise<AdminOverviewDto> => {
     const now = new Date();
     const rows = await prisma.$queryRaw<Row[]>`
-      SELECT s.id, s.name, s.slug, s."createdAt", s."trialEndsAt", s."paidUntil",
+      SELECT s.id, s.name, s.slug, s."createdAt", s."trialEndsAt", s."paidUntil", s."deletedAt",
         (SELECT u.email FROM "Membership" m JOIN "User" u ON u.id = m."userId"
           WHERE m."salonId" = s.id AND m.role = 'OWNER' ORDER BY m."createdAt" LIMIT 1) AS "ownerEmail",
         (SELECT count(*) FROM "Customer" c WHERE c."salonId" = s.id AND c."anonymizedAt" IS NULL) AS clients,
@@ -49,17 +51,20 @@ export const adminRoutes: FastifyPluginAsync = async (app) => {
       clients: Number(r.clients),
       stamps30d: Number(r.stamps30d),
       lastStampAt: r.lastStampAt?.toISOString() ?? null,
+      deletedAt: r.deletedAt?.toISOString() ?? null,
     }));
-    const count = (status: string) => salons.filter((s) => s.plan.status === status).length;
+    // в итогах — только живые салоны
+    const live = salons.filter((s) => !s.deletedAt);
+    const count = (status: string) => live.filter((s) => s.plan.status === status).length;
     return {
       salons,
       totals: {
-        salons: salons.length,
-        active30d: salons.filter((s) => s.stamps30d > 0).length,
+        salons: live.length,
+        active30d: live.filter((s) => s.stamps30d > 0).length,
         trial: count('trial'),
         paid: count('active'),
         expired: count('expired'),
-        clients: salons.reduce((n, s) => n + s.clients, 0),
+        clients: live.reduce((n, s) => n + s.clients, 0),
       },
     };
   });
@@ -69,7 +74,7 @@ export const adminRoutes: FastifyPluginAsync = async (app) => {
     const id = assertUuid(req.params.id);
     const { action } = parse(adminPlanSchema, req.body);
     const salon = await prisma.salon.findUnique({ where: { id } });
-    if (!salon) throw notFound('salon_not_found');
+    if (!salon || salon.deletedAt) throw notFound('salon_not_found');
 
     const now = new Date();
     // оплата продлевает от конца уже оплаченного срока, а не от сегодня
@@ -97,5 +102,15 @@ export const adminRoutes: FastifyPluginAsync = async (app) => {
       return s;
     });
     return { plan: planOf(updated, now) };
+  });
+
+  app.delete<{ Params: { id: string } }>('/salons/:id', admin, async (req, reply) => {
+    const id = assertUuid(req.params.id);
+    const { confirmSlug } = parse(adminDeleteSalonSchema, req.body);
+    const salon = await prisma.salon.findUnique({ where: { id } });
+    if (!salon || salon.deletedAt) throw notFound('salon_not_found');
+    if (confirmSlug !== salon.slug) throw badRequest('confirm_mismatch');
+    await deleteSalon(id, req.auth!.user.id);
+    return reply.code(204).send();
   });
 };

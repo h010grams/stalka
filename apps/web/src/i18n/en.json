@@ -350,7 +350,8 @@
       "appointment.cancel": "Appointment removed",
       "broadcast.send": "Message to clients",
       "customer.export_all": "Client list export",
-      "admin.plan": "Subscription change (admin)"
+      "admin.plan": "Subscription change (admin)",
+      "admin.salon_delete": "Salon deleted (admin)"
     }
   },
   "counter": {
@@ -557,7 +558,12 @@
     "a_cancel_confirm": "Cancel the payment of {{name}}?",
     "a_confirm": "{{action}} for {{name}}?",
     "link": "Platform admin",
-    "empty": "Nothing found."
+    "empty": "Nothing found.",
+    "a_delete": "Delete salon",
+    "delete_prompt": "\"{{name}}\" will be deleted: its page disappears, the team loses access, client data is erased and their Wallet cards stop working. This cannot be undone.\n\nTo confirm, type the salon address: {{slug}}",
+    "delete_mismatch": "The address does not match – the salon was not deleted.",
+    "s_deleted": "Deleted",
+    "deleted_note": "Erased completely on {{date}}"
   },
   "notfound": {
     "title": "Page not found",

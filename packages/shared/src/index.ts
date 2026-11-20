@@ -399,6 +399,8 @@ export interface AdminSalonItem {
   clients: number;
   stamps30d: number;
   lastStampAt: string | null;
+  /** удалён: скрыт сразу, окончательно стирается через 30 дней */
+  deletedAt: string | null;
 }
 
 export interface AdminOverviewDto {
@@ -408,3 +410,5 @@ export interface AdminOverviewDto {
 
 export const ADMIN_PLAN_ACTIONS = ['paid_month', 'paid_year', 'trial_30', 'cancel_paid'] as const;
 export const adminPlanSchema = z.object({ action: z.enum(ADMIN_PLAN_ACTIONS) });
+/** Удаление салона: адрес салона (slug) вписывается вручную — защита от случайного нажатия. */
+export const adminDeleteSalonSchema = z.object({ confirmSlug: z.string().trim() });

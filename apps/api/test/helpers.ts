@@ -37,7 +37,7 @@ export class TestClient {
   post = (url: string, body?: unknown) => this.request('POST', url, body ?? {});
   patch = (url: string, body?: unknown) => this.request('PATCH', url, body ?? {});
   put = (url: string, body?: unknown) => this.request('PUT', url, body ?? {});
-  delete = (url: string) => this.request('DELETE', url);
+  delete = (url: string, body?: unknown) => this.request('DELETE', url, body);
 }
 
 export function json<T = any>(res: LightMyRequestResponse): T {

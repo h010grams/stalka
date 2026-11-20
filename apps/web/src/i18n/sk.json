@@ -350,7 +350,8 @@
       "appointment.cancel": "Termín zrušený",
       "broadcast.send": "Správa klientkam",
       "customer.export_all": "Export zoznamu klientov",
-      "admin.plan": "Zmena predplatného (admin)"
+      "admin.plan": "Zmena predplatného (admin)",
+      "admin.salon_delete": "Salón vymazaný (admin)"
     }
   },
   "counter": {
@@ -557,7 +558,12 @@
     "a_cancel_confirm": "Zrušiť platbu salónu {{name}}?",
     "a_confirm": "{{action}} pre salón {{name}}?",
     "link": "Administrácia platformy",
-    "empty": "Nič sa nenašlo."
+    "empty": "Nič sa nenašlo.",
+    "a_delete": "Vymazať salón",
+    "delete_prompt": "Salón „{{name}}“ sa vymaže: stránka zmizne, personál stratí prístup, údaje klientok sa vymažú a ich karty vo Wallete prestanú platiť. Vrátiť sa to nedá.\n\nPre potvrdenie napíšte adresu salónu: {{slug}}",
+    "delete_mismatch": "Adresa nesedí – salón sme nevymazali.",
+    "s_deleted": "Vymazaný",
+    "deleted_note": "Úplne zmizne {{date}}"
   },
   "notfound": {
     "title": "Stránka sa nenašla",

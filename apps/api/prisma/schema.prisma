@@ -50,6 +50,8 @@ model Salon {
   // Подписка: 30 дней бесплатно, потом оплачено до paidUntil (пока отмечается вручную)
   trialEndsAt   DateTime @default(dbgenerated("(now() + '30 days'::interval)")) @db.Timestamptz
   paidUntil     DateTime? @db.Timestamptz
+  // Удалён администратором платформы: сразу скрыт и обезличен, через 30 дней стирается совсем
+  deletedAt     DateTime? @db.Timestamptz
 
   memberships  Membership[]
   invites      Invite[]
