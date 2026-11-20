@@ -48,14 +48,15 @@ function hexToRgb(hex: string) {
 }
 
 /**
- * Квадратный логотип на белом фоне — для Google Wallet (программа, круглая маска)
- * и иконки Apple (показывается в уведомлениях).
+ * Квадратный логотип на фоне цвета карты — для Google Wallet (программа, круглая маска)
+ * и иконки Apple (показывается в уведомлениях). Фон карты, а не белый: светлый логотип
+ * с прозрачным фоном на белом пропал бы.
  */
 export async function squareLogo(logo: Buffer | null, colors: { bg: string; fg: string }, size: number) {
   if (!logo) return defaultMark(colors, size);
   const inner = Math.round(size * 0.7);
   const resized = await sharp(logo).resize({ width: inner, height: inner, fit: 'inside' }).png().toBuffer();
-  return sharp({ create: { width: size, height: size, channels: 4, background: '#ffffff' } })
+  return sharp({ create: { width: size, height: size, channels: 4, background: colors.bg } })
     .composite([{ input: resized, gravity: 'center' }])
     .png()
     .toBuffer();
