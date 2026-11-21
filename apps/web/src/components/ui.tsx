@@ -13,9 +13,9 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 /** Классы кнопки — и для <button>, и для ссылок, которые выглядят как кнопки. */
 export function buttonClass(variant: Variant = 'primary', className?: string) {
   return cx(
-    'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition disabled:opacity-50',
+    'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 text-sm font-semibold transition duration-200 disabled:opacity-50',
     variant === 'primary' && 'bg-stone-900 text-white active:bg-stone-700',
-    variant === 'secondary' && 'border border-stone-300 bg-white text-stone-900 active:bg-stone-100',
+    variant === 'secondary' && 'bg-white text-stone-900 shadow-soft active:bg-stone-50',
     variant === 'ghost' && 'text-stone-600 active:bg-stone-100',
     variant === 'danger' && 'text-red-700 active:bg-red-50',
     className,
@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
       ref={ref}
       {...rest}
       className={cx(
-        'min-h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-base outline-none focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10 aria-[invalid=true]:border-red-500',
+        'min-h-11 w-full rounded-2xl border border-stone-200 bg-white px-3.5 text-base outline-none placeholder:text-stone-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 aria-[invalid=true]:border-red-500',
         className,
       )}
     />
@@ -56,7 +56,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
       ref={ref}
       {...rest}
       className={cx(
-        'min-h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-base outline-none focus:border-stone-900',
+        'min-h-11 w-full rounded-2xl border border-stone-200 bg-white px-3.5 text-base outline-none focus:border-brand-500',
         className,
       )}
     />
@@ -77,7 +77,7 @@ export function Field({ label, error, children }: { label: string; error?: strin
 
 export function Card({ children, className, flush }: { children: ReactNode; className?: string; flush?: boolean }) {
   return (
-    <div className={cx('rounded-2xl border border-stone-200 bg-white', !flush && 'p-5', className)}>{children}</div>
+    <div className={cx('rounded-[22px] bg-white shadow-soft', !flush && 'p-5', className)}>{children}</div>
   );
 }
 

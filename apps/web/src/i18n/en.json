@@ -28,7 +28,8 @@
     "more": "More",
     "program": "Program & card",
     "audit": "Activity log",
-    "messages": "Messages"
+    "messages": "Messages",
+    "profile": "Profile"
   },
   "roles": {
     "OWNER": "Owner",
@@ -103,7 +104,14 @@
     "booking_url": "Online booking",
     "booking_url_hint": "Booksy, Reservio, Bookio, Instagram or your own website.",
     "review_url": "Google review",
-    "review_url_hint": "In your Google Business Profile: \"Ask for reviews\" → copy the link."
+    "review_url_hint": "In your Google Business Profile: \"Ask for reviews\" → copy the link.",
+    "stamps_one": "{{count}} stamp",
+    "stamps_other": "{{count}} stamps",
+    "salon_data": "Salon details",
+    "links_short": "Links on the card",
+    "export": "Export customers",
+    "language": "App language",
+    "messages": "Message to customers"
   },
   "v": {
     "email": "Enter a valid email",
@@ -280,14 +288,20 @@
     "p_marketing": "If you agreed to offers, the salon may send messages to your card: offers, a reminder when you have not visited for a while, and birthday wishes. You can unsubscribe with one tap on your card page."
   },
   "scan": {
-    "title": "Scanner",
+    "title": "Scan",
     "hint": "Point the camera at the QR code on the client's card.",
     "camera_error": "Couldn't start the camera. Allow camera access or search for the client below.",
     "manual": "Find a client",
     "search_placeholder": "Name or last digits",
     "not_card": "This is not a loyalty card.",
     "scanning": "Looking up the card…",
-    "start": "Start camera"
+    "start": "Start camera",
+    "hint_short": "Point at the QR code on the card",
+    "new_customer": "New customer",
+    "search_tile": "Search by name",
+    "today": "Today",
+    "today_all": "All",
+    "today_empty": "No visits yet today."
   },
   "staffcard": {
     "add_stamp": "+1 stamp",
@@ -338,7 +352,14 @@
     "birthday": "Birthday: {{date}}",
     "export_csv": "Download CSV",
     "message_all": "Message clients",
-    "h_STAMP_BONUS": "Bonus stamp (referral)"
+    "h_STAMP_BONUS": "Bonus stamp (referral)",
+    "f_all": "All",
+    "f_reward": "Reward",
+    "f_away": "Long absent",
+    "f_new": "New",
+    "reward_pill": "Reward",
+    "empty_filter": "Nobody in this filter yet.",
+    "search": "Name or phone"
   },
   "stats": {
     "title": "Overview",
@@ -358,7 +379,10 @@
     "chart": "Chart",
     "date": "Date",
     "month_visits": "Visits (30 days)",
-    "month_returning": "Came back (30 days)"
+    "month_returning": "Came back (30 days)",
+    "tile_customers": "customers",
+    "tile_visits": "visits in 30 days",
+    "tile_returning": "came back"
   },
   "audit": {
     "title": "Activity log",
@@ -535,7 +559,16 @@
     "contact": "Write to us",
     "banner_trial": "Free trial: {{count}} days left.",
     "banner_expired": "The free trial has ended.",
-    "details": "Details"
+    "details": "Details",
+    "label_trial": "Free trial",
+    "label_active": "Subscription",
+    "label_expired": "Trial has ended",
+    "days_left_one": "{{count}} day left",
+    "days_left_other": "{{count}} days left",
+    "until": "Active until {{date}}",
+    "expired_title": "Customer cards keep working",
+    "price_short": "Then €14.90 a month or €149 a year",
+    "subscribe": "Subscribe"
   },
   "wizard": {
     "step": "Step {{n}} of 3",

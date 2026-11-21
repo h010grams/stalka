@@ -1,10 +1,11 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { Prisma } from '@prisma/client';
-import type { CustomerDetailDto, CustomerListItem, CustomerListResponse, HistoryItem } from '@stalka/shared';
+import { CUSTOMER_FILTERS, type CustomerDetailDto, type CustomerFilter, type CustomerListItem, type CustomerListResponse, type HistoryItem } from '@stalka/shared';
 import { audit } from '../../lib/audit.js';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { requireTenant } from '../../plugins/auth.js';
+import { WINBACK_DEFAULT_DAYS } from '../../domain/automations.js';
 import { enqueueWalletSync, kickWalletWorker } from '../../services/wallet/sync.js';
 
 type Row = {
@@ -46,9 +47,30 @@ function escapeLike(s: string) {
   return s.replace(/[\\%_]/g, (m) => `\\${m}`);
 }
 
-async function queryCustomers(salonId: string, opts: { q?: string; sort?: string; limit: number; offset: number; id?: string }) {
+/** Быстрые фильтры списка клиентов. */
+/** «Давно не была» — дольше обычного ритма по умолчанию (как у напоминания «пора вернуться»). */
+const AWAY_DAYS = WINBACK_DEFAULT_DAYS;
+const NEW_DAYS = 30;
+const daysAgo = (n: number) => new Date(Date.now() - n * 24 * 3600_000);
+
+function filterSql(f: CustomerFilter): Prisma.Sql {
+  switch (f) {
+    case 'reward':
+      return Prisma.sql`COALESCE(k."rewardsAvailable", 0) > 0`;
+    case 'away':
+      return Prisma.sql`k."lastStampAt" < ${daysAgo(AWAY_DAYS)}`;
+    case 'new':
+      return Prisma.sql`c."createdAt" > ${daysAgo(NEW_DAYS)}`;
+  }
+}
+
+async function queryCustomers(
+  salonId: string,
+  opts: { q?: string; sort?: string; filter?: string; limit: number; offset: number; id?: string },
+) {
   const q = (opts.q ?? '').trim();
   const conditions: Prisma.Sql[] = [Prisma.sql`c."salonId" = ${salonId}::uuid`, Prisma.sql`c."anonymizedAt" IS NULL`];
+  if ((CUSTOMER_FILTERS as readonly string[]).includes(opts.filter ?? '')) conditions.push(filterSql(opts.filter as CustomerFilter));
   if (opts.id) conditions.push(Prisma.sql`c.id = ${opts.id}::uuid`);
   if (q) {
     const pattern = `%${escapeLike(q)}%`;
@@ -76,9 +98,25 @@ async function queryCustomers(salonId: string, opts: { q?: string; sort?: string
       WHERE ${where}
       ORDER BY ${order}
       LIMIT ${opts.limit} OFFSET ${opts.offset}`,
-    prisma.$queryRaw<{ n: bigint }[]>`SELECT count(*) AS n FROM "Customer" c WHERE ${where}`,
+    prisma.$queryRaw<{ n: bigint }[]>`
+      SELECT count(*) AS n FROM "Customer" c
+      LEFT JOIN "Card" k ON k."customerId" = c.id AND k.status = 'ACTIVE'
+      WHERE ${where}`,
   ]);
   return { rows, total: Number(count[0]?.n ?? 0) };
+}
+
+/** Сколько клиентов в каждом быстром фильтре (без учёта поиска) — для цифр на кнопках. */
+async function filterCounts(salonId: string): Promise<CustomerListResponse['counts']> {
+  const [r] = await prisma.$queryRaw<{ all: bigint; reward: bigint; away: bigint; new: bigint }[]>`
+    SELECT count(*) AS "all",
+           count(*) FILTER (WHERE ${filterSql('reward')}) AS "reward",
+           count(*) FILTER (WHERE ${filterSql('away')}) AS "away",
+           count(*) FILTER (WHERE ${filterSql('new')}) AS "new"
+    FROM "Customer" c
+    LEFT JOIN "Card" k ON k."customerId" = c.id AND k.status = 'ACTIVE'
+    WHERE c."salonId" = ${salonId}::uuid AND c."anonymizedAt" IS NULL`;
+  return { all: Number(r?.all ?? 0), reward: Number(r?.reward ?? 0), away: Number(r?.away ?? 0), new: Number(r?.new ?? 0) };
 }
 
 async function history(cardIds: string[]): Promise<HistoryItem[]> {
@@ -127,14 +165,19 @@ const CSV_HEADERS = {
 /** /api/customers */
 export const customerRoutes: FastifyPluginAsync = async (app) => {
   // Поиск нужен и мастеру: если камера не сработала, клиентку находят по имени/телефону.
-  app.get<{ Querystring: { q?: string; sort?: string; limit?: string; offset?: string } }>(
+  app.get<{ Querystring: { q?: string; sort?: string; filter?: string; limit?: string; offset?: string } }>(
     '/',
     { preHandler: requireTenant() },
     async (req): Promise<CustomerListResponse> => {
+      const { salonId } = req.tenant!;
       const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 50));
       const offset = Math.max(0, Number(req.query.offset) || 0);
-      const { rows, total } = await queryCustomers(req.tenant!.salonId, { q: req.query.q, sort: req.query.sort, limit, offset });
-      return { items: rows.map(toItem), total };
+      const [{ rows, total }, counts, program] = await Promise.all([
+        queryCustomers(salonId, { q: req.query.q, sort: req.query.sort, filter: req.query.filter, limit, offset }),
+        filterCounts(salonId),
+        prisma.loyaltyProgram.findUnique({ where: { salonId }, select: { stampsRequired: true } }),
+      ]);
+      return { items: rows.map(toItem), total, counts, stampsRequired: program?.stampsRequired ?? null };
     },
   );
 

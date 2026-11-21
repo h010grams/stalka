@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { prisma } from '../src/lib/prisma.js';
 import type { MemoryMailer } from '../src/lib/mailer.js';
 import { periodRange } from '../src/modules/stats/routes.js';
+import { addStamp } from '../src/services/cards.js';
 import { addStaff, createTestApp, joinCustomer, json, resetDb, salonWithProgram } from './helpers.js';
 
 let app: FastifyInstance;
@@ -176,5 +177,30 @@ describe('statistics', () => {
     expect(days.at(-1)).toBe('2026-10-07');
     expect(days[0]).toBe('2026-10-01');
     expect(from.toISOString()).toBe('2026-09-30T22:00:00.000Z');
+  });
+});
+
+describe('quick filters', () => {
+  it('filters by reward, long absence and new, with counts for the chips', async () => {
+    const { owner, salonId, slug } = await salonWithProgram(app, { stampsRequired: 2, cooldownHours: 0 });
+    const reward = await joinCustomer(app, slug, { name: 'Odmena Ová' });
+    await addStamp(salonId, reward.cardId, null);
+    await addStamp(salonId, reward.cardId, null);
+    const away = await joinCustomer(app, slug, { name: 'Dávno Nebola' });
+    await addStamp(salonId, away.cardId, null, new Date(Date.now() - 60 * 24 * 3600_000));
+    await prisma.customer.updateMany({
+      where: { cards: { some: { id: away.cardId } } },
+      data: { createdAt: new Date(Date.now() - 90 * 24 * 3600_000) },
+    });
+
+    const all = json(await owner.client.get('/api/customers'));
+    expect(all.counts).toEqual({ all: 2, reward: 1, away: 1, new: 1 });
+    expect(all.stampsRequired).toBe(2);
+    const names = async (f: string) =>
+      json(await owner.client.get(`/api/customers?filter=${f}`)).items.map((i: any) => i.name);
+    expect(await names('reward')).toEqual(['Odmena Ová']);
+    expect(await names('away')).toEqual(['Dávno Nebola']);
+    expect(await names('new')).toEqual(['Odmena Ová']);
+    expect(json(await owner.client.get('/api/customers?filter=away')).total).toBe(1);
   });
 });

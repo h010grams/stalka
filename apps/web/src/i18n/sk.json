@@ -28,7 +28,8 @@
     "more": "Viac",
     "program": "Program a karta",
     "audit": "Denník akcií",
-    "messages": "Správy"
+    "messages": "Správy",
+    "profile": "Profil"
   },
   "roles": {
     "OWNER": "Majiteľ",
@@ -103,7 +104,16 @@
     "booking_url": "Online rezervácia",
     "booking_url_hint": "Booksy, Reservio, Bookio, Instagram alebo vlastný web.",
     "review_url": "Hodnotenie v Google",
-    "review_url_hint": "V profile firmy v Google: „Požiadať o recenzie“ → skopírujte odkaz."
+    "review_url_hint": "V profile firmy v Google: „Požiadať o recenzie“ → skopírujte odkaz.",
+    "stamps_one": "{{count}} pečiatka",
+    "stamps_few": "{{count}} pečiatky",
+    "stamps_many": "{{count}} pečiatky",
+    "stamps_other": "{{count}} pečiatok",
+    "salon_data": "Údaje salónu",
+    "links_short": "Odkazy na karte",
+    "export": "Export klientov",
+    "language": "Jazyk aplikácie",
+    "messages": "Správa klientkam"
   },
   "v": {
     "email": "Zadajte platný e-mail",
@@ -280,14 +290,20 @@
     "p_marketing": "Ak ste súhlasili s ponukami, salón vám môže do karty posielať správy: ponuky, pripomienku, keď ste dlho neboli, a blahoželanie k narodeninám. Odhlásiť sa môžete jedným klikom na stránke svojej karty."
   },
   "scan": {
-    "title": "Skener",
+    "title": "Skenovať",
     "hint": "Namierte fotoaparát na QR kód na karte klienta.",
     "camera_error": "Fotoaparát sa nepodarilo spustiť. Povoľte prístup ku kamere alebo vyhľadajte klienta nižšie.",
     "manual": "Vyhľadať klienta",
     "search_placeholder": "Meno alebo koniec čísla",
     "not_card": "Toto nie je vernostná karta.",
     "scanning": "Hľadám kartu…",
-    "start": "Spustiť kameru"
+    "start": "Spustiť kameru",
+    "hint_short": "Namierte na QR kód na karte",
+    "new_customer": "Nová klientka",
+    "search_tile": "Hľadať podľa mena",
+    "today": "Dnes",
+    "today_all": "Všetci",
+    "today_empty": "Dnes zatiaľ žiadna návšteva."
   },
   "staffcard": {
     "add_stamp": "+1 pečiatka",
@@ -338,7 +354,14 @@
     "birthday": "Narodeniny: {{date}}",
     "export_csv": "Stiahnuť CSV",
     "message_all": "Správa klientkam",
-    "h_STAMP_BONUS": "Bonusová pečiatka (odporúčanie)"
+    "h_STAMP_BONUS": "Bonusová pečiatka (odporúčanie)",
+    "f_all": "Všetci",
+    "f_reward": "Odmena",
+    "f_away": "Dlho nebol(a)",
+    "f_new": "Noví",
+    "reward_pill": "Odmena",
+    "empty_filter": "V tomto filtri zatiaľ nikto nie je.",
+    "search": "Meno alebo telefón"
   },
   "stats": {
     "title": "Prehľad",
@@ -358,7 +381,10 @@
     "chart": "Graf",
     "date": "Dátum",
     "month_visits": "Návštevy (30 dní)",
-    "month_returning": "Vrátili sa (30 dní)"
+    "month_returning": "Vrátili sa (30 dní)",
+    "tile_customers": "klientov",
+    "tile_visits": "návštev za 30 dní",
+    "tile_returning": "sa vrátilo"
   },
   "audit": {
     "title": "Denník akcií",
@@ -535,7 +561,18 @@
     "contact": "Napísať",
     "banner_trial": "Skúšobná verzia: zostáva dní {{count}}.",
     "banner_expired": "Skúšobná verzia skončila.",
-    "details": "Podrobnosti"
+    "details": "Podrobnosti",
+    "label_trial": "Skúšobná verzia",
+    "label_active": "Predplatné",
+    "label_expired": "Skúšobná verzia skončila",
+    "days_left_one": "Zostáva {{count}} deň",
+    "days_left_few": "Zostávajú {{count}} dni",
+    "days_left_many": "Zostáva {{count}} dní",
+    "days_left_other": "Zostáva {{count}} dní",
+    "until": "Aktívne do {{date}}",
+    "expired_title": "Karty klientok fungujú ďalej",
+    "price_short": "Potom 14,90 € mesačne alebo 149 € ročne",
+    "subscribe": "Predplatiť"
   },
   "wizard": {
     "step": "Krok {{n}} z 3",

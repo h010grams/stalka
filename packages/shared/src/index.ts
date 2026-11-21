@@ -366,9 +366,16 @@ export interface CustomerListItem {
   createdAt: string;
 }
 
+export const CUSTOMER_FILTERS = ['reward', 'away', 'new'] as const;
+export type CustomerFilter = (typeof CUSTOMER_FILTERS)[number];
+
 export interface CustomerListResponse {
   items: CustomerListItem[];
   total: number;
+  /** сколько клиентов в каждом быстром фильтре (без учёта поиска) */
+  counts: { all: number; reward: number; away: number; new: number };
+  /** штампов до награды в программе салона — для «7/10» в списке */
+  stampsRequired: number | null;
 }
 
 export interface HistoryItem {

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AuditItem, CustomerDetailDto, CustomerListResponse, StatsDto } from '@stalka/shared';
+import type { AuditItem, CustomerDetailDto, CustomerFilter, CustomerListResponse, StatsDto } from '@stalka/shared';
+import { Search, Sparkles, TrendingUp, Users } from 'lucide-react';
+import { CustomerRow, PageTitle } from '../components/app';
 import { api } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { formatDateTime, formatDay, formatRelative } from '../lib/format';
@@ -14,24 +16,27 @@ export function CustomersPage() {
   const { t } = useTranslation();
   const [q, setQ] = useState('');
   const [query, setQuery] = useState('');
-  const [sort, setSort] = useState('recent');
+  const [filter, setFilter] = useState<CustomerFilter | ''>('');
   useEffect(() => {
     const id = setTimeout(() => setQuery(q.trim()), 300);
     return () => clearTimeout(id);
   }, [q]);
 
   const list = useInfiniteQuery({
-    queryKey: ['customers', 'list', query, sort],
+    queryKey: ['customers', 'list', query, filter],
     queryFn: ({ pageParam }) =>
-      api.get<CustomerListResponse>(`/customers?q=${encodeURIComponent(query)}&sort=${sort}&limit=${PAGE}&offset=${pageParam}`),
+      api.get<CustomerListResponse>(
+        `/customers?q=${encodeURIComponent(query)}&filter=${filter}&sort=recent&limit=${PAGE}&offset=${pageParam}`,
+      ),
     initialPageParam: 0,
     getNextPageParam: (last, pages) => {
       const loaded = pages.reduce((n, p) => n + p.items.length, 0);
       return loaded < last.total ? loaded : undefined;
     },
   });
+  const first = list.data?.pages[0];
   const items = list.data?.pages.flatMap((p) => p.items) ?? [];
-  const total = list.data?.pages[0]?.total ?? 0;
+  const counts = first?.counts;
   const isOwner = useCurrentRole() === 'OWNER';
   const stats = useQuery({
     queryKey: ['stats', '30d'],
@@ -39,81 +44,88 @@ export function CustomersPage() {
     enabled: isOwner,
   });
 
+  const chips: { key: CustomerFilter | ''; label: string; n?: number }[] = [
+    { key: '', label: t('customers.f_all'), n: counts?.all },
+    { key: 'reward', label: t('customers.f_reward'), n: counts?.reward },
+    { key: 'away', label: t('customers.f_away'), n: counts?.away },
+    { key: 'new', label: t('customers.f_new'), n: counts?.new },
+  ];
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{t('customers.title')}</h1>
+    <div>
+      <PageTitle>{t('customers.title')}</PageTitle>
 
       {/* Три цифры, ради которых салон пользуется сервисом */}
       {stats.data && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="mb-3 grid grid-cols-3 gap-2">
           {[
-            { label: t('stats.total_customers'), value: stats.data.totalCustomers },
-            { label: t('stats.month_visits'), value: stats.data.visits },
-            { label: t('stats.month_returning'), value: stats.data.returningCustomers },
+            { icon: Users, value: stats.data.totalCustomers, label: t('stats.tile_customers') },
+            { icon: TrendingUp, value: stats.data.visits, label: t('stats.tile_visits') },
+            { icon: Sparkles, value: stats.data.returningCustomers, label: t('stats.tile_returning') },
           ].map((s) => (
-            <Card key={s.label} className="p-3 text-center">
-              <p className="text-2xl font-bold tabular-nums">{s.value}</p>
-              <p className="text-xs leading-tight text-stone-500">{s.label}</p>
-            </Card>
+            <div key={s.label} className="rounded-[22px] bg-white px-2.5 py-3 shadow-soft">
+              <span className="mb-2 grid size-7 place-items-center rounded-[9px] bg-brand-100 text-brand-700">
+                <s.icon className="size-4" aria-hidden />
+              </span>
+              <p className="text-[22px] font-bold tabular-nums tracking-tight">{s.value}</p>
+              <p className="text-[11.5px] leading-tight text-stone-500">{s.label}</p>
+            </div>
           ))}
         </div>
       )}
-      {isOwner && (
-        <div className="grid grid-cols-2 gap-2">
-          <Link to="/messages" className={buttonClass('secondary', 'w-full')}>
-            {t('customers.message_all')}
-          </Link>
-          <a href="/api/customers/export.csv" download className={buttonClass('secondary', 'w-full')}>
-            {t('customers.export_csv')}
-          </a>
-        </div>
-      )}
-      <div className="flex gap-2">
-        <div className="min-w-0 flex-1">
-          <Input type="search" placeholder={t('scan.search_placeholder')} value={q} onChange={(e) => setQ(e.target.value)} />
-        </div>
-        <div className="w-36 shrink-0">
-        <Select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="sort">
-          {(['recent', 'visits', 'new', 'name'] as const).map((s) => (
-            <option key={s} value={s}>
-              {t(`customers.sort_${s}`)}
-            </option>
-          ))}
-        </Select>
-        </div>
+
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-stone-400" aria-hidden />
+        <Input
+          type="search"
+          placeholder={t('customers.search')}
+          aria-label={t('customers.search')}
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          className="border-transparent pl-11 shadow-soft"
+        />
+      </div>
+
+      <div className="-mx-5 my-3 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+        {chips.map((c) => (
+          <button
+            key={c.key || 'all'}
+            type="button"
+            aria-pressed={filter === c.key}
+            onClick={() => setFilter(c.key)}
+            className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 py-[7px] text-[12.5px] font-semibold transition-colors ${
+              filter === c.key ? 'bg-stone-900 text-white' : 'bg-white text-stone-600 ring-1 ring-inset ring-[#EDE5E0]'
+            }`}
+          >
+            {c.label}
+            {c.n !== undefined && ` ${c.n}`}
+          </button>
+        ))}
       </div>
 
       {list.isLoading && <Spinner />}
       <ErrorAlert error={list.error} />
-      {list.data && total === 0 && !query && <Card className="text-center text-stone-600">{t('customers.empty')}</Card>}
+      {first && first.total === 0 && (
+        <Card className="text-center text-stone-600">
+          {!query && !filter ? t('customers.empty') : filter ? t('customers.empty_filter') : t('errors.customer_not_found')}
+        </Card>
+      )}
 
       {items.length > 0 && (
         <>
-          <p className="text-sm text-stone-500">{t('customers.total', { count: total })}</p>
-          <Card flush>
-            <ul className="divide-y divide-stone-100">
-              {items.map((c) => (
-                <li key={c.id}>
-                  <Link to={`/customers/${c.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-medium">
-                        {c.name} {c.rewardsAvailable > 0 && <span title="reward">🎁</span>}
-                      </p>
-                      <p className="truncate text-sm text-stone-500">{c.phone ?? c.email}</p>
-                    </div>
-                    <div className="shrink-0 text-right text-sm">
-                      <p className="font-medium tabular-nums">{t('customers.visits', { count: c.totalVisits })}</p>
-                      <p className="text-stone-500">
-                        {c.lastVisitAt ? t('customers.last_visit', { when: formatRelative(c.lastVisitAt) }) : '—'}
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <ul className="divide-y divide-[#F3EEEA] overflow-hidden rounded-[22px] bg-white shadow-soft">
+            {items.map((c) => (
+              <CustomerRow
+                key={c.id}
+                c={c}
+                to={`/customers/${c.id}`}
+                sub={c.lastVisitAt ? formatRelative(c.lastVisitAt) : (c.phone ?? c.email ?? '—')}
+                required={first?.stampsRequired ?? null}
+              />
+            ))}
+          </ul>
           {list.hasNextPage && (
-            <Button variant="secondary" className="w-full" loading={list.isFetchingNextPage} onClick={() => list.fetchNextPage()}>
+            <Button variant="secondary" className="mt-3 w-full" loading={list.isFetchingNextPage} onClick={() => list.fetchNextPage()}>
               {t('customers.more')}
             </Button>
           )}
