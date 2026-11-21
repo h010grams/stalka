@@ -253,7 +253,8 @@
     "demo_reminder": "Appointment reminder",
     "demo_winback": "\"It's been a while\"",
     "demo_sent": "Sent. Lock your phone and wait a few seconds.",
-    "demo_done": "You have tried all examples. More tomorrow."
+    "demo_done": "You have tried all examples. More tomorrow.",
+    "demo_no_wallet": "Notifications arrive in Apple or Google Wallet. Apple Wallet is coming soon – for now you can try it on Android."
   },
   "privacy": {
     "title": "Privacy",

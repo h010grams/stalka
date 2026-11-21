@@ -253,7 +253,8 @@
     "demo_reminder": "Pripomienka termínu",
     "demo_winback": "„Dlho sme sa nevideli“",
     "demo_sent": "Odoslané. Zamknite mobil a počkajte pár sekúnd.",
-    "demo_done": "Všetky ukážky ste vyskúšali. Ďalšie zajtra."
+    "demo_done": "Všetky ukážky ste vyskúšali. Ďalšie zajtra.",
+    "demo_no_wallet": "Upozornenia chodia do Apple alebo Google Wallet. Apple Wallet pripravujeme – zatiaľ si ukážku vyskúšate na Androide."
   },
   "privacy": {
     "title": "Ochrana osobných údajov",
