@@ -96,11 +96,21 @@ export async function registerCustomer(
     });
     if (before) return { cardId: before.id, serial: before.serialNumber, created: false };
 
+    // пригласившая — карта той же программы, активная и не своя; только для новой клиентки
+    const referrer =
+      !existing && program.referralEnabled && input.ref
+        ? await tx.card.findFirst({
+            where: { referralCode: input.ref, programId: program.id, status: 'ACTIVE', NOT: { customerId } },
+            select: { id: true },
+          })
+        : null;
+
     const card = await tx.card.create({
       data: {
         salonId,
         programId: program.id,
         customerId,
+        referredByCardId: referrer?.id ?? null,
         qrToken: randomToken(18),
         appleAuthToken: randomToken(24),
       },

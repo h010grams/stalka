@@ -87,6 +87,9 @@ export function buildPassJson(card: WalletCard, apple: Pick<AppleConfig, 'passTy
         { key: 'notice', label: t(loc, 'notice'), value: card.walletNotice ?? '—', changeMessage: '%@' },
         ...(salon.bookingUrl ? [linkField('booking', t(loc, 'book_online'), salon.bookingUrl)] : []),
         ...(salon.reviewUrl ? [linkField('review', t(loc, 'leave_review'), salon.reviewUrl)] : []),
+        ...(program.referralEnabled
+          ? [linkField('refer', t(loc, 'refer_friend'), urls.referral(salon.slug, card.referralCode))]
+          : []),
         { key: 'customer', label: t(loc, 'customer'), value: customer.name },
         {
           key: 'terms',

@@ -118,7 +118,8 @@
     "contact_required": "Enter a phone or email",
     "datetime": "Enter date and time",
     "birthday": "Check the birthday date",
-    "url": "Enter a link, e.g. booksy.com/…"
+    "url": "Enter a link, e.g. booksy.com/…",
+    "referral_bonus": "From 1 to 3"
   },
   "errors": {
     "unauthorized": "Please log in.",
@@ -192,7 +193,10 @@
     "birthday_gift_placeholder": "e.g. 20% off the next visit",
     "review": "Ask for a review",
     "review_hint": "A few hours after a visit, the customer gets a link to review you on Google. Only once, and only to customers who agreed to messages.",
-    "review_needs_link": "Add the review link in Settings first."
+    "review_needs_link": "Add the review link in Settings first.",
+    "referral": "Invite a friend",
+    "referral_hint": "Every customer has a personal link on their card. When someone new comes for a first visit through it, both get extra stamps.",
+    "referral_bonus": "Extra stamps for both"
   },
   "poster": {
     "title": "QR poster for the counter",
@@ -228,7 +232,8 @@
     "birthday": "Birthday (optional)",
     "birthday_hint": "No year needed – just so the salon can wish you a happy birthday.",
     "day": "Day",
-    "month": "Month"
+    "month": "Month",
+    "referral": "{{name}} recommends this salon to you. After your first visit, you both get a +{{bonus}} bonus on your cards."
   },
   "public_card": {
     "add_apple": "Add to Apple Wallet",
@@ -254,7 +259,13 @@
     "demo_winback": "\"It's been a while\"",
     "demo_sent": "Sent. Lock your phone and wait a few seconds.",
     "demo_done": "You have tried all examples. More tomorrow.",
-    "demo_no_wallet": "Notifications arrive in Apple or Google Wallet. Apple Wallet is coming soon – for now you can try it on Android."
+    "demo_no_wallet": "Notifications arrive in Apple or Google Wallet. Apple Wallet is coming soon – for now you can try it on Android.",
+    "refer_title": "Recommend us to friends",
+    "refer_text": "Send your link to friends. When someone comes for the first time through it, you both get a +{{bonus}} bonus on your cards.",
+    "refer_share": "Send link",
+    "refer_copy": "Copy link",
+    "refer_copied": "Copied",
+    "refer_message": "I go to {{salon}} and recommend it. Add the loyalty card with this link and after your first visit we both get a bonus stamp:"
   },
   "privacy": {
     "title": "Privacy",
@@ -326,7 +337,8 @@
     "marketing_no": "Offers: no consent",
     "birthday": "Birthday: {{date}}",
     "export_csv": "Download CSV",
-    "message_all": "Message clients"
+    "message_all": "Message clients",
+    "h_STAMP_BONUS": "Bonus stamp (referral)"
   },
   "stats": {
     "title": "Overview",

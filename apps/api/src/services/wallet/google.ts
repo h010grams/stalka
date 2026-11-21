@@ -106,6 +106,9 @@ export function buildObject(card: WalletCard) {
       uris: [
         ...(salon.bookingUrl ? [{ id: 'booking', uri: salon.bookingUrl, description: t(loc, 'book_online') }] : []),
         ...(salon.reviewUrl ? [{ id: 'review', uri: salon.reviewUrl, description: t(loc, 'leave_review') }] : []),
+        ...(program.referralEnabled
+          ? [{ id: 'refer', uri: urls.referral(salon.slug, card.referralCode), description: t(loc, 'refer_friend') }]
+          : []),
         ...(salon.phone ? [{ id: 'phone', uri: `tel:${salon.phone.replace(/[^\d+]/g, '')}`, description: salon.phone }] : []),
         { id: 'card', uri: urls.cardPage(card.serialNumber), description: salon.name },
       ],

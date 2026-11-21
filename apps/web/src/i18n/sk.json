@@ -118,7 +118,8 @@
     "contact_required": "Zadajte telefón alebo e-mail",
     "datetime": "Zadajte dátum a čas",
     "birthday": "Skontrolujte dátum narodenín",
-    "url": "Zadajte odkaz, napríklad booksy.com/…"
+    "url": "Zadajte odkaz, napríklad booksy.com/…",
+    "referral_bonus": "Od 1 do 3"
   },
   "errors": {
     "unauthorized": "Prihláste sa, prosím.",
@@ -192,7 +193,10 @@
     "birthday_gift_placeholder": "napr. −20 % na ďalšiu návštevu",
     "review": "Poprosiť o hodnotenie",
     "review_hint": "Pár hodín po návšteve pošleme klientke odkaz na hodnotenie v Google. Iba raz a len klientkam so súhlasom so správami.",
-    "review_needs_link": "Najprv pridajte odkaz na hodnotenie v Nastaveniach."
+    "review_needs_link": "Najprv pridajte odkaz na hodnotenie v Nastaveniach.",
+    "referral": "Odporuč známym",
+    "referral_hint": "Každý klient má na karte vlastný odkaz. Keď podľa neho príde niekto nový na prvú návštevu, obaja dostanú pečiatky navyše.",
+    "referral_bonus": "Pečiatky navyše pre obe"
   },
   "poster": {
     "title": "QR plagát na pult",
@@ -228,7 +232,8 @@
     "birthday": "Narodeniny (nepovinné)",
     "birthday_hint": "Bez roku – len aby vám salón mohol zablahoželať.",
     "day": "Deň",
-    "month": "Mesiac"
+    "month": "Mesiac",
+    "referral": "{{name}} vám odporúča tento salón. Po vašej prvej návšteve dostane každý z vás na kartu bonus +{{bonus}}."
   },
   "public_card": {
     "add_apple": "Pridať do Apple Wallet",
@@ -254,7 +259,13 @@
     "demo_winback": "„Dlho sme sa nevideli“",
     "demo_sent": "Odoslané. Zamknite mobil a počkajte pár sekúnd.",
     "demo_done": "Všetky ukážky ste vyskúšali. Ďalšie zajtra.",
-    "demo_no_wallet": "Upozornenia chodia do Apple alebo Google Wallet. Apple Wallet pripravujeme – zatiaľ si ukážku vyskúšate na Androide."
+    "demo_no_wallet": "Upozornenia chodia do Apple alebo Google Wallet. Apple Wallet pripravujeme – zatiaľ si ukážku vyskúšate na Androide.",
+    "refer_title": "Odporučte nás známym",
+    "refer_text": "Pošlite známym svoj odkaz. Keď podľa neho niekto príde prvýkrát, každý z vás dostane na kartu bonus +{{bonus}}.",
+    "refer_share": "Poslať odkaz",
+    "refer_copy": "Kopírovať odkaz",
+    "refer_copied": "Skopírované",
+    "refer_message": "Chodím do {{salon}} a odporúčam. Cez tento odkaz si pridáš vernostnú kartu a po tvojej prvej návšteve dostane každý z nás bonusovú pečiatku:"
   },
   "privacy": {
     "title": "Ochrana osobných údajov",
@@ -326,7 +337,8 @@
     "marketing_no": "Ponuky: bez súhlasu",
     "birthday": "Narodeniny: {{date}}",
     "export_csv": "Stiahnuť CSV",
-    "message_all": "Správa klientkam"
+    "message_all": "Správa klientkam",
+    "h_STAMP_BONUS": "Bonusová pečiatka (odporúčanie)"
   },
   "stats": {
     "title": "Prehľad",

@@ -46,6 +46,9 @@ export function toPublicCard(card: WalletCard, demoUsedKinds: DemoKind[] | null 
     salonPhone: card.salon.phone,
     marketing: card.customer.marketingConsentAt !== null,
     demo: demoUsedKinds ? { used: demoUsedKinds } : null,
+    referral: card.program.referralEnabled
+      ? { url: urls.referral(card.salon.slug, card.referralCode), bonus: card.program.referralBonus }
+      : null,
   };
 }
 
@@ -82,7 +85,7 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
 
   // ───────── Салон и регистрация ─────────
 
-  app.get<{ Params: { slug: string } }>('/salons/:slug', { config: readLimit }, async (req): Promise<PublicSalonDto> => {
+  app.get<{ Params: { slug: string }; Querystring: { ref?: string } }>('/salons/:slug', { config: readLimit }, async (req): Promise<PublicSalonDto> => {
     const salon = await prisma.salon.findUnique({ where: { slug: req.params.slug }, include: { programs: true } });
     if (!salon || salon.deletedAt) throw notFound('salon_not_found');
     const p = salon.programs.find((x) => x.isActive);
@@ -96,12 +99,24 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
         rewardReminderEnabled: _r,
         birthdayEnabled: _b,
         reviewRequestEnabled: _rv,
+        referralEnabled: _re,
+        referralBonus: _rb,
         birthdayGift: _g,
         ...rest
       } = toProgramDto(p);
       program = rest;
     }
-    return { name: salon.name, slug: salon.slug, address: salon.address, phone: salon.phone, program };
+    // по ссылке подруги показываем только её первое имя
+    const ref = typeof req.query.ref === 'string' ? req.query.ref.slice(0, 32) : '';
+    const referrer =
+      p?.referralEnabled && ref
+        ? await prisma.card.findFirst({
+            where: { referralCode: ref, programId: p.id, status: 'ACTIVE' },
+            select: { customer: { select: { name: true } } },
+          })
+        : null;
+    const referral = referrer && p ? { name: referrer.customer.name.split(/\s+/)[0]!, bonus: p.referralBonus } : null;
+    return { name: salon.name, slug: salon.slug, address: salon.address, phone: salon.phone, program, referral };
   });
 
   app.post<{ Params: { slug: string } }>('/salons/:slug/join', { config: joinLimit }, async (req, reply) => {

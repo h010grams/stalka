@@ -1,15 +1,17 @@
 import type { StaffCardDto } from '@stalka/shared';
 import {
+  applyBonus,
   applyRedeem,
   applyRevoke,
   applyStamp,
   canRevoke,
+  type CardCounters,
   DomainError,
   nextStampAllowedAt,
   revokeDeadline,
 } from '../domain/stamping.js';
 import { audit } from '../lib/audit.js';
-import { notFound } from '../lib/errors.js';
+import { AppError, notFound } from '../lib/errors.js';
 import { t } from '../lib/i18n.js';
 import { prisma, type Tx } from '../lib/prisma.js';
 import { enqueueWalletSync, kickWalletWorker } from './wallet/sync.js';
@@ -121,7 +123,8 @@ export async function addStamp(
     const retryAt = opts.ignoreCooldown ? null : nextStampAllowedAt(card.lastStampAt, program.cooldownHours, now);
     if (retryAt) throw new DomainError('cooldown', { retryAt: retryAt.toISOString() });
 
-    const { counters, rewardEarned } = applyStamp(card, program.stampsRequired);
+    const stamped = applyStamp(card, program.stampsRequired);
+    let { counters, rewardEarned } = stamped;
     const event = await tx.stampEvent.create({
       data: { salonId, cardId, type: 'ADD', actorUserId, createdAt: now },
     });
@@ -129,14 +132,41 @@ export async function addStamp(
       await tx.reward.create({ data: { salonId, cardId, earnedByEventId: event.id, earnedAt: now } });
     }
 
-    const notice = rewardEarned
+    let notice = rewardEarned
       ? t(customer.locale, 'msg_reward', { reward: program.rewardText })
       : t(customer.locale, 'msg_stamp', { count: counters.stampCount, n: program.stampsRequired });
 
+    // «Приведи подругу»: первый визит приглашённой (штамп ставит мастер, а не система) — бонус обеим
+    const referral =
+      actorUserId && card.referredByCardId && !card.referralRewardedAt && program.referralEnabled
+        ? { referrerCardId: card.referredByCardId, bonus: program.referralBonus, actorUserId }
+        : null;
+    if (referral) {
+      const b = await addBonusStamps(tx, salonId, cardId, counters, referral.bonus, program.stampsRequired, now);
+      counters = b.counters;
+      notice = b.rewardEarned || rewardEarned
+        ? t(customer.locale, 'msg_reward', { reward: program.rewardText })
+        : t(customer.locale, 'msg_referral_friend', {
+            bonus: referral.bonus,
+            count: counters.stampCount,
+            n: program.stampsRequired,
+          });
+      rewardEarned ||= b.rewardEarned;
+    }
+
     await tx.card.update({
       where: { id: cardId },
-      data: { ...counters, lastStampAt: now, walletUpdatedAt: now, walletNotice: notice },
+      data: {
+        ...counters,
+        lastStampAt: now,
+        walletUpdatedAt: now,
+        walletNotice: notice,
+        ...(referral ? { referralRewardedAt: now } : {}),
+      },
     });
+    if (referral) {
+      await rewardReferrer(tx, salonId, referral.referrerCardId, customer.name, referral.bonus, referral.actorUserId, now);
+    }
     await audit(tx, {
       salonId,
       actorUserId,
@@ -150,6 +180,73 @@ export async function addStamp(
   });
   kickWalletWorker();
   return result;
+}
+
+/** Бонусные штампы: событие BONUS на каждый (к нему привязывается награда, если она выпала). */
+async function addBonusStamps(
+  tx: Tx,
+  salonId: string,
+  cardId: string,
+  counters: CardCounters,
+  stamps: number,
+  stampsRequired: number,
+  now: Date,
+): Promise<{ counters: CardCounters; rewardEarned: boolean }> {
+  const result = applyBonus(counters, stamps, stampsRequired);
+  for (let i = 0; i < stamps; i++) {
+    const ev = await tx.stampEvent.create({ data: { salonId, cardId, type: 'BONUS', createdAt: now } });
+    if (result.rewardAt.includes(i)) {
+      await tx.reward.create({ data: { salonId, cardId, earnedByEventId: ev.id, earnedAt: now } });
+    }
+  }
+  return { counters: result.counters, rewardEarned: result.rewardAt.length > 0 };
+}
+
+/** Бонус той, кто пригласила, — если её карта ещё активна. */
+async function rewardReferrer(
+  tx: Tx,
+  salonId: string,
+  referrerCardId: string,
+  friendName: string,
+  bonus: number,
+  actorUserId: string,
+  now: Date,
+) {
+  let ref;
+  try {
+    ref = await lockCard(tx, salonId, referrerCardId);
+  } catch (e) {
+    if (e instanceof AppError && e.statusCode === 404) return; // карту удалили или обезличили
+    throw e;
+  }
+  const { counters, rewardEarned } = await addBonusStamps(
+    tx,
+    salonId,
+    ref.id,
+    ref,
+    bonus,
+    ref.program.stampsRequired,
+    now,
+  );
+  const loc = ref.customer.locale;
+  const notice = rewardEarned
+    ? t(loc, 'msg_reward', { reward: ref.program.rewardText })
+    : t(loc, 'msg_referral', {
+        friend: friendName.split(/\s+/)[0]!,
+        bonus,
+        count: counters.stampCount,
+        n: ref.program.stampsRequired,
+      });
+  await tx.card.update({ where: { id: ref.id }, data: { ...counters, walletUpdatedAt: now, walletNotice: notice } });
+  await audit(tx, {
+    salonId,
+    actorUserId,
+    action: 'referral.reward',
+    entityType: 'card',
+    entityId: ref.id,
+    payload: { bonus, rewardEarned },
+  });
+  await enqueueWalletSync(tx, ref.id, notice);
 }
 
 export async function revokeLastStamp(salonId: string, cardId: string, actorUserId: string, now = new Date()) {

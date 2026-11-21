@@ -4,6 +4,7 @@ import { config } from '../config.js';
 export const urls = {
   joinPage: (slug: string) => `${config.APP_URL}/j/${slug}`,
   cardPage: (serial: string) => `${config.APP_URL}/c/${serial}`,
+  referral: (slug: string, code: string) => `${config.APP_URL}/j/${slug}?ref=${code}`,
   logo: (programId: string, version: number) =>
     `${config.APP_URL}/api/public/programs/${programId}/logo.png?v=${version}`,
   logoSquare: (programId: string, version: number) =>

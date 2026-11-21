@@ -96,7 +96,7 @@ async function history(cardIds: string[]): Promise<HistoryItem[]> {
   const items: HistoryItem[] = [
     ...events.map((e) => ({
       id: e.id,
-      type: e.type === 'ADD' ? ('STAMP' as const) : ('STAMP_REVOKED' as const),
+      type: e.type === 'ADD' ? ('STAMP' as const) : e.type === 'BONUS' ? ('STAMP_BONUS' as const) : ('STAMP_REVOKED' as const),
       at: e.createdAt.toISOString(),
       actorName: nameOf(e.actorUserId),
     })),

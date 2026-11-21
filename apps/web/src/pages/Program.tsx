@@ -9,7 +9,7 @@ import { api } from '../lib/api';
 import { useCurrentRole } from '../lib/auth';
 import { CardVisual } from '../components/CardVisual';
 import { COLOR_PRESETS } from '../lib/presets';
-import { Alert, Button, Card, ErrorAlert, Field, Input, Spinner, buttonClass } from '../components/ui';
+import { Alert, Button, Card, ErrorAlert, Field, Input, Select, Spinner, buttonClass } from '../components/ui';
 
 const DEFAULTS = {
   name: 'Vernostná karta',
@@ -21,6 +21,8 @@ const DEFAULTS = {
   rewardReminderEnabled: true,
   birthdayEnabled: true,
   reviewRequestEnabled: true,
+  referralEnabled: false,
+  referralBonus: 1,
   birthdayGift: '' as string | null,
   bgColor: '#1C1917',
   fgColor: '#FFFFFF',
@@ -169,6 +171,24 @@ export function ProgramPage() {
               {values.birthdayEnabled && (
                 <Field label={t('program.birthday_gift')} error={errors.birthdayGift?.message}>
                   <Input placeholder={t('program.birthday_gift_placeholder')} {...form.register('birthdayGift')} />
+                </Field>
+              )}
+              <label className="flex gap-3 text-sm">
+                <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-stone-900" {...form.register('referralEnabled')} />
+                <span>
+                  <span className="font-medium">{t('program.referral')}</span>
+                  <span className="block text-xs text-stone-500">{t('program.referral_hint')}</span>
+                </span>
+              </label>
+              {values.referralEnabled && (
+                <Field label={t('program.referral_bonus')} error={errors.referralBonus?.message}>
+                  <Select {...form.register('referralBonus')}>
+                    {[1, 2, 3].map((n) => (
+                      <option key={n} value={n}>
+                        +{n}
+                      </option>
+                    ))}
+                  </Select>
                 </Field>
               )}
               <label className="flex gap-3 text-sm">

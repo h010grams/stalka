@@ -23,6 +23,7 @@ enum Locale {
 enum StampType {
   ADD
   REVOKE
+  BONUS // бонусный штамп (за приглашённую подругу) — не визит
 }
 
 enum RewardStatus {
@@ -166,6 +167,8 @@ model LoyaltyProgram {
   winbackEnabled        Boolean @default(true) // «пора вернуться» по ритму визитов клиентки
   rewardReminderEnabled Boolean @default(true) // награда лежит неиспользованной
   birthdayEnabled       Boolean @default(true)
+  referralEnabled       Boolean @default(false) // «Приведи подругу»
+  referralBonus         Int     @default(1) // штампов в подарок обеим после первого визита подруги
   reviewRequestEnabled  Boolean @default(true) // просьба об отзыве после первого визита (если у салона есть reviewUrl)
   birthdayGift          String? // «-20 % на ďalšiu manikúru» — добавляется к поздравлению
   isActive       Boolean @default(true)
@@ -240,6 +243,10 @@ model Card {
   walletNotice    String?
   winbackSentAt   DateTime? @db.Timestamptz // «пора вернуться» — не чаще одного раза за паузу
   reviewRequestedAt DateTime? @db.Timestamptz // просьба об отзыве — один раз на карту
+  // «Приведи подругу»: код в ссылке /j/{slug}?ref={code} (не serial — по serial открывается карта)
+  referralCode       String    @unique @default(dbgenerated("substr(md5((gen_random_uuid())::text), 1, 10)"))
+  referredByCardId   String?   @db.Uuid // карта подруги, которая пригласила
+  referralRewardedAt DateTime? @db.Timestamptz // бонус обеим уже выдан
   googleObjectId  String?   @unique
   googleSavedAt   DateTime? @db.Timestamptz
   createdAt       DateTime  @default(now()) @db.Timestamptz
@@ -255,6 +262,7 @@ model Card {
 
   @@unique([customerId, programId])
   @@index([salonId, lastStampAt])
+  @@index([referredByCardId])
 }
 
 // ───────── События ─────────

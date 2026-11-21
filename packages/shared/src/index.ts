@@ -188,6 +188,8 @@ export const programSchema = z.object({
   rewardReminderEnabled: z.boolean().optional(),
   birthdayEnabled: z.boolean().optional(),
   reviewRequestEnabled: z.boolean().optional(),
+  referralEnabled: z.boolean().optional(),
+  referralBonus: z.coerce.number().int('v.int').min(1, 'v.referral_bonus').max(3, 'v.referral_bonus').optional(),
   // '' — подарка нет, только поздравление
   birthdayGift: z.string().trim().max(60, 'v.too_long').nullable().optional(),
   bgColor: hexColor,
@@ -207,6 +209,8 @@ export interface ProgramDto {
   rewardReminderEnabled: boolean;
   birthdayEnabled: boolean;
   reviewRequestEnabled: boolean;
+  referralEnabled: boolean;
+  referralBonus: number;
   birthdayGift: string | null;
   bgColor: string;
   fgColor: string;
@@ -239,6 +243,8 @@ export const joinSchema = z
     birthDay: optionalInt(1, 31),
     birthMonth: optionalInt(1, 12),
     locale: localeSchema.default('sk'),
+    // код из ссылки подруги (/j/{slug}?ref=…); неверный код просто игнорируется
+    ref: z.string().trim().max(32).optional(),
   })
   .refine((v) => v.phone !== '' || v.email !== '', { message: 'v.contact_required', path: ['phone'] })
   .refine((v) => (v.birthDay === undefined) === (v.birthMonth === undefined), {
@@ -258,8 +264,10 @@ export interface PublicSalonDto {
   phone: string | null;
   program: Omit<
     ProgramDto,
-    'id' | 'cooldownHours' | 'firstStampOnJoin' | 'winbackEnabled' | 'rewardReminderEnabled' | 'birthdayEnabled' | 'reviewRequestEnabled' | 'birthdayGift'
+    'id' | 'cooldownHours' | 'firstStampOnJoin' | 'winbackEnabled' | 'rewardReminderEnabled' | 'birthdayEnabled' | 'reviewRequestEnabled' | 'referralEnabled' | 'referralBonus' | 'birthdayGift'
   > | null;
+  /** пришла по ссылке подруги: её имя (только первое) и бонус */
+  referral: { name: string; bonus: number } | null;
 }
 
 export interface PublicCardDto {
@@ -284,6 +292,8 @@ export interface PublicCardDto {
   bookingUrl: string | null;
   reviewUrl: string | null;
   salonPhone: string | null;
+  /** «Приведи подругу»: личная ссылка клиентки, если программа это включила */
+  referral: { url: string; bonus: number } | null;
   /** карта демо-салона: какие примеры push посетитель уже отправил себе за сутки */
   demo: { used: DemoKind[] } | null;
   /** клиентка согласилась на рекламные сообщения — показываем ссылку «отписаться» */
@@ -363,7 +373,7 @@ export interface CustomerListResponse {
 
 export interface HistoryItem {
   id: string;
-  type: 'STAMP' | 'STAMP_REVOKED' | 'REWARD_EARNED' | 'REWARD_REDEEMED';
+  type: 'STAMP' | 'STAMP_BONUS' | 'STAMP_REVOKED' | 'REWARD_EARNED' | 'REWARD_REDEEMED';
   at: string;
   actorName: string | null;
 }

@@ -49,6 +49,28 @@ export function applyStamp(
   };
 }
 
+/**
+ * Бонусные штампы (за приглашённую подругу): как обычные, но это не визит.
+ * Возвращает, какой по счёту бонусный штамп принёс награду (для привязки награды к событию).
+ */
+export function applyBonus(
+  c: CardCounters,
+  stamps: number,
+  stampsRequired: number,
+): { counters: CardCounters; rewardAt: number[] } {
+  let { stampCount, rewardsAvailable } = c;
+  const rewardAt: number[] = [];
+  for (let i = 0; i < stamps; i++) {
+    stampCount++;
+    if (stampCount >= stampsRequired) {
+      stampCount = 0;
+      rewardsAvailable++;
+      rewardAt.push(i);
+    }
+  }
+  return { counters: { stampCount, rewardsAvailable, totalVisits: c.totalVisits }, rewardAt };
+}
+
 export function applyRedeem(c: CardCounters): CardCounters {
   if (c.rewardsAvailable <= 0) throw new DomainError('no_reward');
   return { ...c, rewardsAvailable: c.rewardsAvailable - 1 };

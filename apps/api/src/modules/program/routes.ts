@@ -23,6 +23,8 @@ export function toProgramDto(p: LoyaltyProgram): ProgramDto {
     rewardReminderEnabled: p.rewardReminderEnabled,
     birthdayEnabled: p.birthdayEnabled,
     reviewRequestEnabled: p.reviewRequestEnabled,
+    referralEnabled: p.referralEnabled,
+    referralBonus: p.referralBonus,
     birthdayGift: p.birthdayGift,
     bgColor: p.bgColor,
     fgColor: p.fgColor,
