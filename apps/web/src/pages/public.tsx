@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { CalendarPlus, Phone, Star } from 'lucide-react';
+import { BellRing, CalendarPlus, Check, Phone, Send, Star } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { joinSchema, type Locale, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
+import { DEMO_KINDS, joinSchema, type DemoKind, type Locale, type PublicCardDto, type PublicSalonDto } from '@stalka/shared';
 import { api } from '../lib/api';
 import { CardVisual } from '../components/CardVisual';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
@@ -152,6 +152,50 @@ function platform(): 'ios' | 'android' | 'other' {
   return 'other';
 }
 
+/** Живое демо (только карты демо-салона): посетитель шлёт себе настоящий push. */
+function DemoPush({ serial, used, hasWallet }: { serial: string; used: DemoKind[]; hasWallet: boolean }) {
+  const { t } = useTranslation();
+  const qc = useQueryClient();
+  const send = useMutation({
+    mutationFn: (kind: DemoKind) => api.post<PublicCardDto>(`/public/cards/${serial}/demo`, { kind }),
+    onSuccess: (data) => qc.setQueryData(['public-card', serial], data),
+  });
+  const labels: Record<DemoKind, string> = {
+    stamp: t('public_card.demo_stamp'),
+    reminder: t('public_card.demo_reminder'),
+    winback: t('public_card.demo_winback'),
+  };
+  const allDone = DEMO_KINDS.every((k) => used.includes(k));
+  return (
+    <section className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+      <div className="flex items-start gap-2">
+        <BellRing className="mt-0.5 size-5 shrink-0 text-amber-700" aria-hidden />
+        <div>
+          <h2 className="font-semibold">{t('public_card.demo_title')}</h2>
+          {hasWallet && <p className="text-sm text-stone-600">{t('public_card.demo_text')}</p>}
+        </div>
+      </div>
+      <div className="grid gap-2">
+        {DEMO_KINDS.map((k) => (
+          <button
+            key={k}
+            type="button"
+            disabled={used.includes(k) || send.isPending}
+            onClick={() => send.mutate(k)}
+            className="flex min-h-11 items-center justify-between rounded-xl bg-white px-4 text-sm font-medium shadow-sm ring-1 ring-stone-200 disabled:opacity-50"
+          >
+            {labels[k]}
+            {used.includes(k) ? <Check className="size-4 text-emerald-600" aria-hidden /> : <Send className="size-4" aria-hidden />}
+          </button>
+        ))}
+      </div>
+      <ErrorAlert error={send.error} />
+      {send.isSuccess && !allDone && <p className="text-sm font-medium text-emerald-700" role="status">{t('public_card.demo_sent')}</p>}
+      {allDone && <p className="text-sm text-stone-600">{t('public_card.demo_done')}</p>}
+    </section>
+  );
+}
+
 /** Запись, звонок и отзыв — только те, что салон указал. */
 function SalonActions({ bookingUrl, reviewUrl, phone }: { bookingUrl: string | null; reviewUrl: string | null; phone: string | null }) {
   const { t } = useTranslation();
@@ -291,6 +335,8 @@ export function CardPage() {
         <p className="text-sm text-stone-500">{t('public_card.show_qr')}</p>
         {buttons.length === 0 && <p className="text-xs text-stone-500">{t('public_card.save_page')}</p>}
       </div>
+
+      {c.demo && <DemoPush serial={serial!} used={c.demo.used} hasWallet={buttons.length > 0} />}
 
       <SalonActions bookingUrl={c.bookingUrl} reviewUrl={c.reviewUrl} phone={c.salonPhone} />
 

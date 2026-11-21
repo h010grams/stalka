@@ -154,7 +154,8 @@
     "apple_disabled": "Apple Wallet is not enabled yet.",
     "google_disabled": "Google Wallet is not enabled yet.",
     "broadcast_too_soon": "You can send the next message 24 hours after the previous one.",
-    "no_recipients": "There is no one to send to yet – no client has agreed to offers."
+    "no_recipients": "There is no one to send to yet – no client has agreed to offers.",
+    "demo_used": "You already tried this example today."
   },
   "program": {
     "title": "Program & card",
@@ -245,7 +246,14 @@
     "marketing_start": "Turn on",
     "book": "Book an appointment",
     "call": "Call",
-    "review": "Review us on Google"
+    "review": "Review us on Google",
+    "demo_title": "See what your customer gets",
+    "demo_text": "Add the card to your Wallet first. Then press a button and lock your phone – the notification arrives in 8 seconds.",
+    "demo_stamp": "+1 stamp",
+    "demo_reminder": "Appointment reminder",
+    "demo_winback": "\"It's been a while\"",
+    "demo_sent": "Sent. Lock your phone and wait a few seconds.",
+    "demo_done": "You have tried all examples. More tomorrow."
   },
   "privacy": {
     "title": "Privacy",
@@ -446,7 +454,7 @@
     "f_lang_t": "Slovak, English, Ukrainian",
     "f_lang": "Every client sees the card in her own language.",
     "demo_title": "Try it yourself",
-    "demo_text": "Add a demo card to your phone and see exactly what your clients will see.",
+    "demo_text": "Add the demo card to your phone, press a button and a notification arrives a few seconds later – exactly what your customers will get.",
     "demo_scan": "Scan with your phone camera",
     "demo_open": "Open the demo card",
     "pilot_title": "Looking for the first 10 businesses",

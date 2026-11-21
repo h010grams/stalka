@@ -154,7 +154,8 @@
     "apple_disabled": "Apple Wallet zatiaľ nie je zapnutý.",
     "google_disabled": "Google Wallet zatiaľ nie je zapnutý.",
     "broadcast_too_soon": "Ďalšiu správu môžete poslať až 24 hodín po predchádzajúcej.",
-    "no_recipients": "Zatiaľ nie je komu poslať – žiadna klientka nesúhlasila s ponukami."
+    "no_recipients": "Zatiaľ nie je komu poslať – žiadna klientka nesúhlasila s ponukami.",
+    "demo_used": "Túto ukážku ste dnes už vyskúšali."
   },
   "program": {
     "title": "Program a karta",
@@ -245,7 +246,14 @@
     "marketing_start": "Zapnúť",
     "book": "Rezervovať termín",
     "call": "Zavolať",
-    "review": "Ohodnoťte nás v Google"
+    "review": "Ohodnoťte nás v Google",
+    "demo_title": "Vyskúšajte, ako to príde klientke",
+    "demo_text": "Kartu si najprv pridajte do Walletu. Potom stlačte tlačidlo a zamknite mobil – o 8 sekúnd príde upozornenie.",
+    "demo_stamp": "+1 pečiatka",
+    "demo_reminder": "Pripomienka termínu",
+    "demo_winback": "„Dlho sme sa nevideli“",
+    "demo_sent": "Odoslané. Zamknite mobil a počkajte pár sekúnd.",
+    "demo_done": "Všetky ukážky ste vyskúšali. Ďalšie zajtra."
   },
   "privacy": {
     "title": "Ochrana osobných údajov",
@@ -446,7 +454,7 @@
     "f_lang_t": "Slovensky, anglicky, ukrajinsky",
     "f_lang": "Každá klientka vidí kartu vo svojom jazyku.",
     "demo_title": "Vyskúšajte si to na sebe",
-    "demo_text": "Pridajte si demo kartu do svojho mobilu a uvidíte presne to, čo uvidia vaše klientky.",
+    "demo_text": "Pridajte si demo kartu do mobilu, stlačte tlačidlo a o pár sekúnd vám príde upozornenie – presne také, aké dostanú vaše klientky.",
     "demo_scan": "Naskenujte fotoaparátom v mobile",
     "demo_open": "Otvoriť demo kartu",
     "pilot_title": "Hľadáme prvých 10 podnikov",

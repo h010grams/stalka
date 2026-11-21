@@ -197,3 +197,46 @@ describe('public join page', () => {
     expect((await app.inject({ method: 'GET', url: '/api/public/cards/nope' })).statusCode).toBe(404);
   });
 });
+
+describe('live demo push', () => {
+  it('builds tomorrow 14:00 in the salon time zone, summer and winter', async () => {
+    const { tomorrowAt } = await import('../src/services/demo.js');
+    expect(tomorrowAt(new Date('2026-11-21T22:30:00Z'), 14, 'Europe/Bratislava').toISOString()).toBe('2026-11-22T13:00:00.000Z');
+    expect(tomorrowAt(new Date('2026-07-10T08:00:00Z'), 14, 'Europe/Bratislava').toISOString()).toBe('2026-07-11T12:00:00.000Z');
+  });
+
+  it('sends each example once a day, only on demo salon cards, with a delay to lock the phone', async () => {
+    const { config } = await import('../src/config.js');
+    const { slug } = await salonWithProgram(app, { cooldownHours: 12, firstStampOnJoin: true });
+    const other = await salonWithProgram(app);
+    const { serial, cardId } = await joinCustomer(app, slug);
+    const stranger = await joinCustomer(app, other.slug);
+    (config as any).DEMO_SALON_SLUG = slug;
+    try {
+      expect(json(await app.inject({ method: 'GET', url: `/api/public/cards/${serial}` })).demo).toEqual({ used: [] });
+      expect(json(await app.inject({ method: 'GET', url: `/api/public/cards/${stranger.serial}` })).demo).toBeNull();
+
+      const push = (s: string, kind: string) => app.inject({ method: 'POST', url: `/api/public/cards/${s}/demo`, payload: { kind } });
+      const before = Date.now();
+      // штамп сразу после штампа при регистрации — пауза между штампами в демо не действует
+      const res = await push(serial, 'stamp');
+      expect(res.statusCode).toBe(200);
+      expect(json(res)).toMatchObject({ stampCount: 2, demo: { used: ['stamp'] } });
+      const job = await prisma.walletSyncJob.findUniqueOrThrow({ where: { cardId } });
+      expect(job.notify).toBe('Pribudla pečiatka: 2 z 5. Ďakujeme za návštevu!');
+      expect(job.nextAttemptAt.getTime()).toBeGreaterThanOrEqual(before + 7_000);
+
+      expect((await push(serial, 'stamp')).statusCode).toBe(429);
+      const rem = await push(serial, 'reminder');
+      expect(json(rem).demo.used).toEqual(['stamp', 'reminder']);
+      const card = await prisma.card.findUniqueOrThrow({ where: { id: cardId } });
+      expect(card.walletNotice).toMatch(/^Pripomíname termín v salóne Salón Test: .+14:00\.$/);
+
+      expect((await push(serial, 'winback')).statusCode).toBe(200);
+      expect((await push(serial, 'nonsense')).statusCode).toBe(400);
+      expect((await push(stranger.serial, 'stamp')).statusCode).toBe(404);
+    } finally {
+      (config as any).DEMO_SALON_SLUG = undefined;
+    }
+  });
+});

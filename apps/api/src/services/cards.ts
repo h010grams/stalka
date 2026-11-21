@@ -100,12 +100,25 @@ export async function findCardIdByQr(salonId: string, qrToken: string): Promise<
 }
 
 /** actorUserId = null — штамп ставит система (первый штамп при самостоятельной регистрации). */
-export async function addStamp(salonId: string, cardId: string, actorUserId: string | null, now = new Date()) {
+export interface StampOptions {
+  /** живое демо на сайте: без паузы между штампами */
+  ignoreCooldown?: boolean;
+  /** push позже, чтобы посетитель успел заблокировать телефон */
+  notifyDelayMs?: number;
+}
+
+export async function addStamp(
+  salonId: string,
+  cardId: string,
+  actorUserId: string | null,
+  now = new Date(),
+  opts: StampOptions = {},
+) {
   const result = await prisma.$transaction(async (tx) => {
     const card = await lockCard(tx, salonId, cardId);
     const { program, customer } = card;
 
-    const retryAt = nextStampAllowedAt(card.lastStampAt, program.cooldownHours, now);
+    const retryAt = opts.ignoreCooldown ? null : nextStampAllowedAt(card.lastStampAt, program.cooldownHours, now);
     if (retryAt) throw new DomainError('cooldown', { retryAt: retryAt.toISOString() });
 
     const { counters, rewardEarned } = applyStamp(card, program.stampsRequired);
@@ -132,7 +145,7 @@ export async function addStamp(salonId: string, cardId: string, actorUserId: str
       entityId: cardId,
       payload: { eventId: event.id, stampCount: counters.stampCount, rewardEarned },
     });
-    await enqueueWalletSync(tx, cardId, notice);
+    await enqueueWalletSync(tx, cardId, notice, opts.notifyDelayMs);
     return { rewardEarned };
   });
   kickWalletWorker();

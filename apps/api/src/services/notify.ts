@@ -2,9 +2,9 @@ import { type Tx } from '../lib/prisma.js';
 import { enqueueWalletSync } from './wallet/sync.js';
 
 /** Сообщение на карту: текст в поле уведомлений (Apple) и сообщение Google → push на телефоне. */
-export async function notifyCard(tx: Tx, cardId: string, text: string, now: Date) {
+export async function notifyCard(tx: Tx, cardId: string, text: string, now: Date, delayMs = 0) {
   await tx.card.update({ where: { id: cardId }, data: { walletNotice: text, walletUpdatedAt: now } });
-  await enqueueWalletSync(tx, cardId, text);
+  await enqueueWalletSync(tx, cardId, text, delayMs);
 }
 
 /** То же для многих карт сразу (рассылка): два запроса вместо 2×N. */

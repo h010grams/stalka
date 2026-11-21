@@ -284,6 +284,8 @@ export interface PublicCardDto {
   bookingUrl: string | null;
   reviewUrl: string | null;
   salonPhone: string | null;
+  /** карта демо-салона: какие примеры push посетитель уже отправил себе за сутки */
+  demo: { used: DemoKind[] } | null;
   /** клиентка согласилась на рекламные сообщения — показываем ссылку «отписаться» */
   marketing: boolean;
 }
@@ -296,6 +298,11 @@ export interface SiteInfoDto {
 }
 
 export const marketingToggleSchema = z.object({ enabled: z.boolean() });
+
+/** Живое демо: какое сообщение прислать себе на телефон. */
+export const DEMO_KINDS = ['stamp', 'reminder', 'winback'] as const;
+export type DemoKind = (typeof DEMO_KINDS)[number];
+export const demoPushSchema = z.object({ kind: z.enum(DEMO_KINDS) });
 
 // ───────── Мастер: карта клиента ─────────
 

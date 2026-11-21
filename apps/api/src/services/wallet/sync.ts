@@ -13,14 +13,15 @@ import * as google from './google.js';
 
 const MAX_ATTEMPTS = 8;
 
-export async function enqueueWalletSync(tx: Tx, cardId: string, notify?: string | null) {
+export async function enqueueWalletSync(tx: Tx, cardId: string, notify?: string | null, delayMs = 0) {
+  const nextAttemptAt = new Date(Date.now() + delayMs);
   await tx.walletSyncJob.upsert({
     where: { cardId },
-    create: { cardId, notify: notify ?? null },
+    create: { cardId, notify: notify ?? null, nextAttemptAt },
     update: {
       ...(notify ? { notify } : {}),
       attempts: 0,
-      nextAttemptAt: new Date(),
+      nextAttemptAt,
       lastError: null,
     },
   });

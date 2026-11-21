@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync, FastifyReply } from 'fastify';
 import QRCode from 'qrcode';
-import { joinSchema, marketingToggleSchema, type PublicCardDto, type PublicSalonDto, type SiteInfoDto } from '@stalka/shared';
+import { demoPushSchema, joinSchema, marketingToggleSchema, type DemoKind, type PublicCardDto, type PublicSalonDto, type SiteInfoDto } from '@stalka/shared';
 import { config } from '../../config.js';
 import { urls } from '../../services/urls.js';
 import { assertUuid, notFound } from '../../lib/errors.js';
@@ -12,10 +12,16 @@ import * as apple from '../../services/wallet/apple.js';
 import * as google from '../../services/wallet/google.js';
 import { loadWalletCard, type WalletCard } from '../../services/walletCard.js';
 import { toProgramDto } from '../program/routes.js';
+import { demoUsed, isDemoCard, sendDemoPush } from '../../services/demo.js';
+
+/** Карта для страницы клиентки; у демо-салона — ещё и какие примеры push уже отправлены. */
+async function withDemo(card: WalletCard): Promise<PublicCardDto> {
+  return toPublicCard(card, isDemoCard(card) ? await demoUsed(card) : null);
+}
 
 const IMMUTABLE = 'public, max-age=31536000, immutable';
 
-export function toPublicCard(card: WalletCard): PublicCardDto {
+export function toPublicCard(card: WalletCard, demoUsedKinds: DemoKind[] | null = null): PublicCardDto {
   const program = toProgramDto(card.program);
   return {
     serial: card.serialNumber,
@@ -39,6 +45,7 @@ export function toPublicCard(card: WalletCard): PublicCardDto {
     reviewUrl: card.salon.reviewUrl,
     salonPhone: card.salon.phone,
     marketing: card.customer.marketingConsentAt !== null,
+    demo: demoUsedKinds ? { used: demoUsedKinds } : null,
   };
 }
 
@@ -108,7 +115,15 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
   // ───────── Карта клиентки ─────────
 
   app.get<{ Params: { serial: string } }>('/cards/:serial', { config: readLimit }, async (req) => {
-    return toPublicCard(await activeCard(assertUuid(req.params.serial, 'card_not_found')));
+    return withDemo(await activeCard(assertUuid(req.params.serial, 'card_not_found')));
+  });
+
+  // Живое демо: настоящий push на телефон посетителя (только карты демо-салона)
+  app.post<{ Params: { serial: string } }>('/cards/:serial/demo', { config: joinLimit }, async (req) => {
+    const { kind } = parse(demoPushSchema, req.body);
+    const card = await activeCard(assertUuid(req.params.serial, 'card_not_found'));
+    await sendDemoPush(card, kind);
+    return withDemo(await activeCard(card.serialNumber));
   });
 
   // Клиентка сама включает или отключает рекламные сообщения (GDPR: отказ так же прост, как согласие)
@@ -119,7 +134,7 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
       where: { id: card.customerId },
       data: { marketingConsentAt: enabled ? new Date() : null },
     });
-    return toPublicCard(await activeCard(card.serialNumber));
+    return withDemo(await activeCard(card.serialNumber));
   });
 
   app.get<{ Params: { serial: string } }>('/cards/:serial/qr.svg', { config: readLimit }, async (req, reply) => {
