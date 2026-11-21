@@ -352,7 +352,11 @@
     "appointment_saved": "Termín uložený, klient dostane pripomienku deň vopred.",
     "scan_next": "Skenovať ďalšiu kartu",
     "customer_detail": "Detail klienta",
-    "rewards_available": "Odmeny k dispozícii: {{count}}"
+    "rewards_available": "Odmeny k dispozícii: {{count}}",
+    "reward_ready_one": "Odmena pripravená",
+    "reward_ready_few": "{{count}} odmeny pripravené",
+    "reward_ready_many": "{{count}} odmeny pripravené",
+    "reward_ready_other": "{{count}} odmien pripravených"
   },
   "customers": {
     "title": "Klienti",

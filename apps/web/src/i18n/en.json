@@ -350,7 +350,9 @@
     "appointment_saved": "Saved – the client gets a reminder a day before.",
     "scan_next": "Scan next card",
     "customer_detail": "Client details",
-    "rewards_available": "Rewards available: {{count}}"
+    "rewards_available": "Rewards available: {{count}}",
+    "reward_ready_one": "Reward ready",
+    "reward_ready_other": "{{count}} rewards ready"
   },
   "customers": {
     "title": "Customers",

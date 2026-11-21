@@ -352,7 +352,11 @@
     "appointment_saved": "Збережено – клієнт отримає нагадування за день.",
     "scan_next": "Сканувати наступну",
     "customer_detail": "Деталі клієнта",
-    "rewards_available": "Доступно нагород: {{count}}"
+    "rewards_available": "Доступно нагород: {{count}}",
+    "reward_ready_one": "Нагорода готова",
+    "reward_ready_few": "{{count}} нагороди готові",
+    "reward_ready_many": "{{count}} нагород готові",
+    "reward_ready_other": "{{count}} нагород готові"
   },
   "customers": {
     "title": "Клієнти",
