@@ -15,6 +15,10 @@ export const WINBACK_MIN_DAYS = 21;
 export const WINBACK_MAX_DAYS = 120;
 /** Дольше этого клиентка, скорее всего, ушла — не тревожим. */
 export const WINBACK_GIVE_UP_DAYS = 180;
+/** Просьба об отзыве: не раньше чем через столько часов после визита… */
+export const REVIEW_AFTER_HOURS = 2;
+/** …и не позже — через неделю визит уже забылся. */
+export const REVIEW_WINDOW_DAYS = 3;
 /** Сообщения уходят только днём по времени салона: [с, до). */
 export const SEND_FROM_HOUR = 10;
 export const SEND_UNTIL_HOUR = 19;

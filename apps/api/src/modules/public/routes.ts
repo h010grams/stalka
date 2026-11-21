@@ -35,6 +35,9 @@ export function toPublicCard(card: WalletCard): PublicCardDto {
     nextAppointmentAt: card.appointments[0]?.startsAt.toISOString() ?? null,
     timezone: card.salon.timezone,
     wallet: { apple: apple.appleEnabled(), google: google.googleEnabled() },
+    bookingUrl: card.salon.bookingUrl,
+    reviewUrl: card.salon.reviewUrl,
+    salonPhone: card.salon.phone,
     marketing: card.customer.marketingConsentAt !== null,
   };
 }
@@ -85,6 +88,7 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
         winbackEnabled: _w,
         rewardReminderEnabled: _r,
         birthdayEnabled: _b,
+        reviewRequestEnabled: _rv,
         birthdayGift: _g,
         ...rest
       } = toProgramDto(p);

@@ -102,7 +102,14 @@ export function buildObject(card: WalletCard) {
     },
     hexBackgroundColor: program.bgColor,
     textModulesData: textModules,
-    linksModuleData: { uris: [{ id: 'card', uri: urls.cardPage(card.serialNumber), description: salon.name }] },
+    linksModuleData: {
+      uris: [
+        ...(salon.bookingUrl ? [{ id: 'booking', uri: salon.bookingUrl, description: t(loc, 'book_online') }] : []),
+        ...(salon.reviewUrl ? [{ id: 'review', uri: salon.reviewUrl, description: t(loc, 'leave_review') }] : []),
+        ...(salon.phone ? [{ id: 'phone', uri: `tel:${salon.phone.replace(/[^\d+]/g, '')}`, description: salon.phone }] : []),
+        { id: 'card', uri: urls.cardPage(card.serialNumber), description: salon.name },
+      ],
+    },
   };
 }
 

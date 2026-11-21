@@ -22,6 +22,7 @@ export function toProgramDto(p: LoyaltyProgram): ProgramDto {
     winbackEnabled: p.winbackEnabled,
     rewardReminderEnabled: p.rewardReminderEnabled,
     birthdayEnabled: p.birthdayEnabled,
+    reviewRequestEnabled: p.reviewRequestEnabled,
     birthdayGift: p.birthdayGift,
     bgColor: p.bgColor,
     fgColor: p.fgColor,

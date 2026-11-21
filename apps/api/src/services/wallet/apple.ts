@@ -25,6 +25,13 @@ function rgb(hex: string) {
   return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
 }
 
+const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/** Поле на обороте карты: на iPhone ссылка в attributedValue нажимается. */
+function linkField(key: string, label: string, url: string) {
+  return { key, label, value: url, attributedValue: `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>` };
+}
+
 export function buildPassJson(card: WalletCard, apple: Pick<AppleConfig, 'passTypeId' | 'teamId'>, hasLogo: boolean) {
   const { program, customer, salon } = card;
   const loc = customer.locale;
@@ -78,6 +85,8 @@ export function buildPassJson(card: WalletCard, apple: Pick<AppleConfig, 'passTy
       backFields: [
         // Единый канал уведомлений: смена значения → push на экране с этим текстом.
         { key: 'notice', label: t(loc, 'notice'), value: card.walletNotice ?? '—', changeMessage: '%@' },
+        ...(salon.bookingUrl ? [linkField('booking', t(loc, 'book_online'), salon.bookingUrl)] : []),
+        ...(salon.reviewUrl ? [linkField('review', t(loc, 'leave_review'), salon.reviewUrl)] : []),
         { key: 'customer', label: t(loc, 'customer'), value: customer.name },
         {
           key: 'terms',

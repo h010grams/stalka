@@ -171,6 +171,43 @@ describe('birthday', () => {
   });
 });
 
+describe('review request', () => {
+  it('asks once, a few hours after a visit, only with consent and a review link', async () => {
+    const { owner, salonId, slug } = await salonWithProgram(app, { cooldownHours: 0 });
+    const fan = await joinCustomer(app, slug, { marketing: true });
+    const quiet = await joinCustomer(app, slug);
+    for (const c of [fan, quiet]) await addStamp(salonId, c.cardId, null, new Date(NOON.getTime() - 3 * 3600_000));
+
+    // без ссылки салона — ничего
+    expect((await processAutomations(NOON)).reviews).toBe(0);
+
+    const patched = await owner.client.patch('/api/salon', { reviewUrl: 'g.page/r/salon-test/review' });
+    expect(json(patched).reviewUrl).toBe('https://g.page/r/salon-test/review');
+    expect((await processAutomations(NOON)).reviews).toBe(1);
+    expect(await noticeOf(fan.cardId)).toBe(
+      'Ďakujeme za návštevu v Salón Test! Ak ste boli spokojní, budeme radi za hodnotenie: https://g.page/r/salon-test/review',
+    );
+    expect(await noticeOf(quiet.cardId)).toMatch(/^Pribudla pečiatka/); // без согласия — только обычное сообщение о штампе
+
+    // второй визит — больше не просим
+    await addStamp(salonId, fan.cardId, null, new Date(NOON.getTime() + DAY));
+    expect((await processAutomations(new Date(NOON.getTime() + DAY + 3 * 3600_000))).reviews).toBe(0);
+  });
+
+  it('waits a couple of hours, gives up after a few days and can be switched off', async () => {
+    const { owner, salonId, slug, program } = await salonWithProgram(app, { cooldownHours: 0 });
+    await owner.client.patch('/api/salon', { reviewUrl: 'https://g.page/r/x/review' });
+    const justNow = await joinCustomer(app, slug, { marketing: true });
+    await addStamp(salonId, justNow.cardId, null, new Date(NOON.getTime() - 30 * 60_000));
+    const longAgo = await joinCustomer(app, slug, { marketing: true });
+    await addStamp(salonId, longAgo.cardId, null, daysBefore(5));
+    expect((await processAutomations(NOON)).reviews).toBe(0);
+
+    await owner.client.put('/api/program', { ...program, reviewRequestEnabled: false });
+    expect((await processAutomations(new Date(NOON.getTime() + 3 * 3600_000))).reviews).toBe(0);
+  });
+});
+
 describe('broadcast', () => {
   it('reaches only clients with consent, at most once a day', async () => {
     const { owner, slug } = await salonWithProgram(app);

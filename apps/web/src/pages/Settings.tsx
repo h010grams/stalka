@@ -27,8 +27,15 @@ export function SettingsPage() {
 
   useEffect(() => {
     if (salon.data) {
-      const { name, address, phone, defaultLocale } = salon.data;
-      form.reset({ name, address: address ?? '', phone: phone ?? '', defaultLocale });
+      const { name, address, phone, bookingUrl, reviewUrl, defaultLocale } = salon.data;
+      form.reset({
+        name,
+        address: address ?? '',
+        phone: phone ?? '',
+        bookingUrl: bookingUrl ?? '',
+        reviewUrl: reviewUrl ?? '',
+        defaultLocale,
+      });
     }
   }, [salon.data, form]);
 
@@ -82,6 +89,20 @@ export function SettingsPage() {
             <Field label={t('settings.phone')} error={errors.phone?.message}>
               <Input type="tel" inputMode="tel" {...form.register('phone')} />
             </Field>
+            <div className="space-y-4 border-t border-stone-200 pt-4">
+              <div>
+                <h3 className="font-semibold">{t('settings.links')}</h3>
+                <p className="text-xs text-stone-500">{t('settings.links_hint')}</p>
+              </div>
+              <Field label={t('settings.booking_url')} error={errors.bookingUrl?.message}>
+                <Input type="url" inputMode="url" placeholder="booksy.com/…" {...form.register('bookingUrl')} />
+              </Field>
+              <p className="-mt-2 text-xs text-stone-500">{t('settings.booking_url_hint')}</p>
+              <Field label={t('settings.review_url')} error={errors.reviewUrl?.message}>
+                <Input type="url" inputMode="url" placeholder="g.page/r/…/review" {...form.register('reviewUrl')} />
+              </Field>
+              <p className="-mt-2 text-xs text-stone-500">{t('settings.review_url_hint')}</p>
+            </div>
             <Field label={t('settings.default_locale')}>
               <Select {...form.register('defaultLocale')}>
                 {LOCALES.map((l) => (

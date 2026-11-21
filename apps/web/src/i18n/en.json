@@ -97,7 +97,13 @@
     "default_locale": "Language for cards and emails",
     "public_link": "Public salon address",
     "profile": "My profile",
-    "salon": "Salon"
+    "salon": "Salon",
+    "links": "Links on the customer card",
+    "links_hint": "Shown as buttons on the Wallet card and the web card.",
+    "booking_url": "Online booking",
+    "booking_url_hint": "Booksy, Reservio, Bookio, Instagram or your own website.",
+    "review_url": "Google review",
+    "review_url_hint": "In your Google Business Profile: \"Ask for reviews\" → copy the link."
   },
   "v": {
     "email": "Enter a valid email",
@@ -111,7 +117,8 @@
     "consent": "We can't issue a card without your consent",
     "contact_required": "Enter a phone or email",
     "datetime": "Enter date and time",
-    "birthday": "Check the birthday date"
+    "birthday": "Check the birthday date",
+    "url": "Enter a link, e.g. booksy.com/…"
   },
   "errors": {
     "unauthorized": "Please log in.",
@@ -181,7 +188,10 @@
     "birthday": "Birthday wishes",
     "birthday_hint": "Only clients who entered a birthday and agreed to offers.",
     "birthday_gift": "Birthday gift (optional)",
-    "birthday_gift_placeholder": "e.g. 20% off the next visit"
+    "birthday_gift_placeholder": "e.g. 20% off the next visit",
+    "review": "Ask for a review",
+    "review_hint": "A few hours after a visit, the customer gets a link to review you on Google. Only once, and only to customers who agreed to messages.",
+    "review_needs_link": "Add the review link in Settings first."
   },
   "poster": {
     "title": "QR poster for the counter",
@@ -232,7 +242,10 @@
     "marketing_on": "You get offers and reminders from the salon.",
     "marketing_off": "Offers and reminders are off.",
     "marketing_stop": "Unsubscribe",
-    "marketing_start": "Turn on"
+    "marketing_start": "Turn on",
+    "book": "Book an appointment",
+    "call": "Call",
+    "review": "Review us on Google"
   },
   "privacy": {
     "title": "Privacy",

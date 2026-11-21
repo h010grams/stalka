@@ -97,7 +97,13 @@
     "default_locale": "Jazyk kariet a e-mailov",
     "public_link": "Verejná adresa salónu",
     "profile": "Môj profil",
-    "salon": "Salón"
+    "salon": "Salón",
+    "links": "Odkazy na karte klientky",
+    "links_hint": "Zobrazia sa ako tlačidlá na karte vo Wallete aj na webe.",
+    "booking_url": "Online rezervácia",
+    "booking_url_hint": "Booksy, Reservio, Bookio, Instagram alebo vlastný web.",
+    "review_url": "Hodnotenie v Google",
+    "review_url_hint": "V profile firmy v Google: „Požiadať o recenzie“ → skopírujte odkaz."
   },
   "v": {
     "email": "Zadajte platný e-mail",
@@ -111,7 +117,8 @@
     "consent": "Bez súhlasu kartu vydať nemôžeme",
     "contact_required": "Zadajte telefón alebo e-mail",
     "datetime": "Zadajte dátum a čas",
-    "birthday": "Skontrolujte dátum narodenín"
+    "birthday": "Skontrolujte dátum narodenín",
+    "url": "Zadajte odkaz, napríklad booksy.com/…"
   },
   "errors": {
     "unauthorized": "Prihláste sa, prosím.",
@@ -181,7 +188,10 @@
     "birthday": "Blahoželanie k narodeninám",
     "birthday_hint": "Len klientkam, ktoré zadali narodeniny a súhlasili s ponukami.",
     "birthday_gift": "Darček k narodeninám (nepovinné)",
-    "birthday_gift_placeholder": "napr. −20 % na ďalšiu návštevu"
+    "birthday_gift_placeholder": "napr. −20 % na ďalšiu návštevu",
+    "review": "Poprosiť o hodnotenie",
+    "review_hint": "Pár hodín po návšteve pošleme klientke odkaz na hodnotenie v Google. Iba raz a len klientkam so súhlasom so správami.",
+    "review_needs_link": "Najprv pridajte odkaz na hodnotenie v Nastaveniach."
   },
   "poster": {
     "title": "QR plagát na pult",
@@ -232,7 +242,10 @@
     "marketing_on": "Dostávate ponuky a pripomienky od salónu.",
     "marketing_off": "Ponuky a pripomienky sú vypnuté.",
     "marketing_stop": "Odhlásiť sa",
-    "marketing_start": "Zapnúť"
+    "marketing_start": "Zapnúť",
+    "book": "Rezervovať termín",
+    "call": "Zavolať",
+    "review": "Ohodnoťte nás v Google"
   },
   "privacy": {
     "title": "Ochrana osobných údajov",

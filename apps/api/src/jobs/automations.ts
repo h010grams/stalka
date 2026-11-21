@@ -4,6 +4,8 @@ import {
   isSendingHour,
   isWinbackDue,
   localParts,
+  REVIEW_AFTER_HOURS,
+  REVIEW_WINDOW_DAYS,
   REWARD_REMINDER_AFTER_DAYS,
   WINBACK_GIVE_UP_DAYS,
   WINBACK_MIN_DAYS,
@@ -18,7 +20,8 @@ import { kickWalletWorker } from '../services/wallet/sync.js';
  * Автоматические сообщения на карту:
  * - награда лежит без дела 2 недели (служебное — согласие на рекламу не нужно);
  * - «пора вернуться» по ритму визитов (только с согласием на рекламу, не чаще раза за паузу);
- * - поздравление с днём рождения (только с согласием, раз в год).
+ * - поздравление с днём рождения (только с согласием, раз в год);
+ * - просьба оставить отзыв после визита (только с согласием и если салон дал ссылку, раз на карту).
  * Всё — только днём по времени салона. Каждая отправка помечается атомарно,
  * поэтому два одновременных запуска не пришлют сообщение дважды.
  */
@@ -32,21 +35,23 @@ export interface AutomationResult {
   rewards: number;
   winback: number;
   birthdays: number;
+  reviews: number;
 }
 
 export async function processAutomations(now = new Date()): Promise<AutomationResult> {
   const programs = await prisma.loyaltyProgram.findMany({
-    where: { isActive: true, OR: [{ winbackEnabled: true }, { rewardReminderEnabled: true }, { birthdayEnabled: true }] },
+    where: { isActive: true, OR: [{ winbackEnabled: true }, { rewardReminderEnabled: true }, { birthdayEnabled: true }, { reviewRequestEnabled: true }] },
     include: { salon: true },
   });
-  const result: AutomationResult = { rewards: 0, winback: 0, birthdays: 0 };
+  const result: AutomationResult = { rewards: 0, winback: 0, birthdays: 0, reviews: 0 };
   for (const p of programs) {
     if (!isSendingHour(now, p.salon.timezone)) continue;
     if (p.rewardReminderEnabled) result.rewards += await rewardReminders(p, now);
     if (p.winbackEnabled) result.winback += await winback(p, now);
     if (p.birthdayEnabled) result.birthdays += await birthdays(p, now);
+    if (p.reviewRequestEnabled && p.salon.reviewUrl) result.reviews += await reviewRequests(p, p.salon.reviewUrl, now);
   }
-  if (result.rewards + result.winback + result.birthdays > 0) kickWalletWorker();
+  if (result.rewards + result.winback + result.birthdays + result.reviews > 0) kickWalletWorker();
   return result;
 }
 
@@ -150,6 +155,34 @@ async function birthdays(p: Program, now: Date): Promise<number> {
         ? t(c.locale, 'msg_birthday_gift', { salon: p.salon.name, gift: p.birthdayGift })
         : t(c.locale, 'msg_birthday', { salon: p.salon.name });
       for (const card of c.cards) await notifyCard(tx, card.id, text, now);
+      sent++;
+    });
+  }
+  return sent;
+}
+
+async function reviewRequests(p: Program, reviewUrl: string, now: Date): Promise<number> {
+  const cards = await prisma.card.findMany({
+    where: {
+      programId: p.id,
+      status: 'ACTIVE',
+      reviewRequestedAt: null,
+      lastStampAt: {
+        lte: new Date(now.getTime() - REVIEW_AFTER_HOURS * 3600_000),
+        gt: new Date(now.getTime() - REVIEW_WINDOW_DAYS * DAY),
+      },
+      customer: { marketingConsentAt: { not: null }, anonymizedAt: null },
+    },
+    select: { id: true, customer: { select: { locale: true } } },
+    take: BATCH,
+  });
+
+  let sent = 0;
+  for (const c of cards) {
+    await prisma.$transaction(async (tx) => {
+      const { count } = await tx.card.updateMany({ where: { id: c.id, reviewRequestedAt: null }, data: { reviewRequestedAt: now } });
+      if (count === 0) return;
+      await notifyCard(tx, c.id, t(c.customer.locale, 'msg_review', { salon: p.salon.name, url: reviewUrl }), now);
       sent++;
     });
   }

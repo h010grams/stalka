@@ -22,6 +22,29 @@ const optionalText = (max: number) =>
     .nullable()
     .optional();
 
+/** Ссылка, которую салон вставляет сам: «booksy.com/…» дополняется до https://, другие схемы не принимаем. */
+export function normalizeUrl(raw: string): string | null {
+  const s = raw.trim();
+  if (s === '') return null;
+  const withScheme = /^[a-z][a-z0-9+.-]*:/i.test(s) ? s : `https://${s}`;
+  try {
+    const u = new URL(withScheme);
+    if ((u.protocol !== 'https:' && u.protocol !== 'http:') || !u.hostname.includes('.')) return null;
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+const optionalUrl = z
+  .string()
+  .trim()
+  .max(500, 'v.too_long')
+  .refine((s) => s === '' || normalizeUrl(s) !== null, 'v.url')
+  .transform((s) => normalizeUrl(s))
+  .nullable()
+  .optional();
+
 // ───────── Auth ─────────
 
 export const registerSchema = z.object({
@@ -63,6 +86,8 @@ export const updateSalonSchema = z.object({
   name: z.string().trim().min(2, 'v.required').max(80, 'v.too_long').optional(),
   address: optionalText(200),
   phone: optionalText(40),
+  bookingUrl: optionalUrl,
+  reviewUrl: optionalUrl,
   defaultLocale: localeSchema.optional(),
 });
 export type UpdateSalonInput = z.input<typeof updateSalonSchema>;
@@ -117,6 +142,8 @@ export interface SalonDto {
   slug: string;
   address: string | null;
   phone: string | null;
+  bookingUrl: string | null;
+  reviewUrl: string | null;
   defaultLocale: Locale;
   timezone: string;
   plan: PlanDto;
@@ -160,6 +187,7 @@ export const programSchema = z.object({
   winbackEnabled: z.boolean().optional(),
   rewardReminderEnabled: z.boolean().optional(),
   birthdayEnabled: z.boolean().optional(),
+  reviewRequestEnabled: z.boolean().optional(),
   // '' — подарка нет, только поздравление
   birthdayGift: z.string().trim().max(60, 'v.too_long').nullable().optional(),
   bgColor: hexColor,
@@ -178,6 +206,7 @@ export interface ProgramDto {
   winbackEnabled: boolean;
   rewardReminderEnabled: boolean;
   birthdayEnabled: boolean;
+  reviewRequestEnabled: boolean;
   birthdayGift: string | null;
   bgColor: string;
   fgColor: string;
@@ -229,7 +258,7 @@ export interface PublicSalonDto {
   phone: string | null;
   program: Omit<
     ProgramDto,
-    'id' | 'cooldownHours' | 'firstStampOnJoin' | 'winbackEnabled' | 'rewardReminderEnabled' | 'birthdayEnabled' | 'birthdayGift'
+    'id' | 'cooldownHours' | 'firstStampOnJoin' | 'winbackEnabled' | 'rewardReminderEnabled' | 'birthdayEnabled' | 'reviewRequestEnabled' | 'birthdayGift'
   > | null;
 }
 
@@ -251,6 +280,10 @@ export interface PublicCardDto {
   nextAppointmentAt: string | null;
   timezone: string;
   wallet: { apple: boolean; google: boolean };
+  /** кнопки «Записаться» и «Оставить отзыв» — если салон указал ссылки */
+  bookingUrl: string | null;
+  reviewUrl: string | null;
+  salonPhone: string | null;
   /** клиентка согласилась на рекламные сообщения — показываем ссылку «отписаться» */
   marketing: boolean;
 }

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { CalendarPlus, Phone, Star } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -151,6 +152,41 @@ function platform(): 'ios' | 'android' | 'other' {
   return 'other';
 }
 
+/** Запись, звонок и отзыв — только те, что салон указал. */
+function SalonActions({ bookingUrl, reviewUrl, phone }: { bookingUrl: string | null; reviewUrl: string | null; phone: string | null }) {
+  const { t } = useTranslation();
+  if (!bookingUrl && !reviewUrl && !phone) return null;
+  const btn = 'flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-medium';
+  return (
+    <div className="space-y-3">
+      {(bookingUrl || phone) && (
+        <div className="flex flex-wrap gap-2">
+          {bookingUrl && (
+            <a href={bookingUrl} target="_blank" rel="noopener noreferrer" className={`${btn} bg-stone-900 text-white`}>
+              <CalendarPlus className="size-4" aria-hidden /> {t('public_card.book')}
+            </a>
+          )}
+          {phone && (
+            <a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className={`${btn} border border-stone-300 bg-white`}>
+              <Phone className="size-4" aria-hidden /> {t('public_card.call')}
+            </a>
+          )}
+        </div>
+      )}
+      {reviewUrl && (
+        <a
+          href={reviewUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-1.5 text-sm font-medium text-stone-700 underline underline-offset-4"
+        >
+          <Star className="size-4 fill-amber-400 text-amber-400" aria-hidden /> {t('public_card.review')}
+        </a>
+      )}
+    </div>
+  );
+}
+
 function WalletButton({ href, kind }: { href: string; kind: 'apple' | 'google' }) {
   const { t, i18n } = useTranslation();
   if (kind === 'google') {
@@ -255,6 +291,8 @@ export function CardPage() {
         <p className="text-sm text-stone-500">{t('public_card.show_qr')}</p>
         {buttons.length === 0 && <p className="text-xs text-stone-500">{t('public_card.save_page')}</p>}
       </div>
+
+      <SalonActions bookingUrl={c.bookingUrl} reviewUrl={c.reviewUrl} phone={c.salonPhone} />
 
       <p className="text-center text-xs text-stone-500">
         {t(c.marketing ? 'public_card.marketing_on' : 'public_card.marketing_off')}{' '}

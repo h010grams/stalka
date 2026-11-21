@@ -46,6 +46,9 @@ model Salon {
   timezone      String   @default("Europe/Bratislava")
   address       String?
   phone         String?
+  // Кнопки на карте клиентки: онлайн-запись (Booksy, Reservio…) и отзыв (Google)
+  bookingUrl    String?
+  reviewUrl     String?
   createdAt     DateTime @default(now()) @db.Timestamptz
   // Подписка: 30 дней бесплатно, потом оплачено до paidUntil (пока отмечается вручную)
   trialEndsAt   DateTime @default(dbgenerated("(now() + '30 days'::interval)")) @db.Timestamptz
@@ -163,6 +166,7 @@ model LoyaltyProgram {
   winbackEnabled        Boolean @default(true) // «пора вернуться» по ритму визитов клиентки
   rewardReminderEnabled Boolean @default(true) // награда лежит неиспользованной
   birthdayEnabled       Boolean @default(true)
+  reviewRequestEnabled  Boolean @default(true) // просьба об отзыве после первого визита (если у салона есть reviewUrl)
   birthdayGift          String? // «-20 % на ďalšiu manikúru» — добавляется к поздравлению
   isActive       Boolean @default(true)
 
@@ -235,6 +239,7 @@ model Card {
   // В Apple Wallet показывается через поле с changeMessage → push на экране.
   walletNotice    String?
   winbackSentAt   DateTime? @db.Timestamptz // «пора вернуться» — не чаще одного раза за паузу
+  reviewRequestedAt DateTime? @db.Timestamptz // просьба об отзыве — один раз на карту
   googleObjectId  String?   @unique
   googleSavedAt   DateTime? @db.Timestamptz
   createdAt       DateTime  @default(now()) @db.Timestamptz

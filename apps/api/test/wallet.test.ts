@@ -108,6 +108,33 @@ describe('Apple Wallet', () => {
     expect(passJson.storeCard.backFields[0]).toMatchObject({ key: 'notice', changeMessage: '%@' });
   });
 
+  it('puts booking and review links on the back of the pass and resyncs cards when they change', async () => {
+    const { owner, slug } = await salonWithProgram(app);
+    const { serial, cardId } = await joinCustomer(app, slug);
+    await prisma.walletSyncJob.deleteMany();
+
+    const bad = await owner.client.patch('/api/salon', { bookingUrl: 'javascript:alert(1)' });
+    expect(bad.statusCode).toBe(400);
+    const ok = await owner.client.patch('/api/salon', {
+      bookingUrl: 'booksy.com/sk-sk/123_salon-test',
+      reviewUrl: 'https://g.page/r/abc/review',
+    });
+    expect(json(ok)).toMatchObject({ bookingUrl: 'https://booksy.com/sk-sk/123_salon-test', reviewUrl: 'https://g.page/r/abc/review' });
+    expect(await prisma.walletSyncJob.findUnique({ where: { cardId } })).not.toBeNull();
+
+    const card = json(await app.inject({ method: 'GET', url: `/api/public/cards/${serial}` }));
+    expect(card).toMatchObject({ bookingUrl: 'https://booksy.com/sk-sk/123_salon-test', reviewUrl: 'https://g.page/r/abc/review' });
+
+    const { passJson } = unzip((await app.inject({ method: 'GET', url: `/api/public/cards/${serial}/pass.pkpass` })).rawPayload);
+    const back = passJson.storeCard.backFields;
+    expect(back[0].key).toBe('notice');
+    expect(back.find((f: any) => f.key === 'booking')).toMatchObject({
+      label: 'Rezervovať termín',
+      attributedValue: '<a href="https://booksy.com/sk-sk/123_salon-test">Rezervovať termín</a>',
+    });
+    expect(back.find((f: any) => f.key === 'review').label).toBe('Ohodnotiť salón');
+  });
+
   it('PassKit web service: register device, list updates, fetch pass, push on stamp, unregister', async () => {
     const { owner, slug } = await salonWithProgram(app);
     const { serial, cardId } = await joinCustomer(app, slug);
@@ -256,6 +283,18 @@ describe('Google Wallet', () => {
     expect(JSON.stringify(cls.classTemplateInfo)).toContain("object.textModulesData['next']");
     const p = await prisma.loyaltyProgram.findUniqueOrThrow({ where: { id: program.id } });
     expect(p.googleClassId).toBe(`3388000000012345678.p-${program.id}`);
+  });
+
+  it('save link carries booking and review links', async () => {
+    const { owner, slug } = await salonWithProgram(app);
+    await owner.client.patch('/api/salon', { bookingUrl: 'https://reservio.com/salon', reviewUrl: 'https://g.page/r/abc/review' });
+    const { serial } = await joinCustomer(app, slug, { locale: 'en' });
+    const res = await app.inject({ method: 'GET', url: `/api/public/cards/${serial}/google` });
+    const uris = decodeJwt(res.headers.location as string).payload.payload.loyaltyObjects[0].linksModuleData.uris;
+    expect(uris.slice(0, 2)).toEqual([
+      { id: 'booking', uri: 'https://reservio.com/salon', description: 'Book an appointment' },
+      { id: 'review', uri: 'https://g.page/r/abc/review', description: 'Leave a review' },
+    ]);
   });
 
   it('stamp updates the saved object and sends a notifying message', async () => {

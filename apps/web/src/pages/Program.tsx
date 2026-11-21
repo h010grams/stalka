@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,6 +20,7 @@ const DEFAULTS = {
   winbackEnabled: true,
   rewardReminderEnabled: true,
   birthdayEnabled: true,
+  reviewRequestEnabled: true,
   birthdayGift: '' as string | null,
   bgColor: '#1C1917',
   fgColor: '#FFFFFF',
@@ -169,6 +171,18 @@ export function ProgramPage() {
                   <Input placeholder={t('program.birthday_gift_placeholder')} {...form.register('birthdayGift')} />
                 </Field>
               )}
+              <label className="flex gap-3 text-sm">
+                <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-stone-900" {...form.register('reviewRequestEnabled')} />
+                <span>
+                  <span className="font-medium">{t('program.review')}</span>
+                  <span className="block text-xs text-stone-500">{t('program.review_hint')}</span>
+                  {values.reviewRequestEnabled && !salon.data?.reviewUrl && (
+                    <Link to="/settings" className="mt-1 block text-xs font-medium text-amber-700 underline">
+                      {t('program.review_needs_link')}
+                    </Link>
+                  )}
+                </span>
+              </label>
             </div>
 
             {isOwner && (
