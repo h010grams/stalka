@@ -99,6 +99,8 @@ export function JoinPage() {
             bgColor={p.bgColor}
             fgColor={p.fgColor}
             labelColor={p.labelColor}
+            stampShape={p.stampShape}
+            stampIcon={p.stampIcon}
           />
           <p className="text-center font-semibold">
             {t('join.reward_line', { n: p.stampsRequired, reward: p.rewardText })}
@@ -392,6 +394,8 @@ export function CardPage() {
         bgColor={c.bgColor}
         fgColor={c.fgColor}
         labelColor={c.labelColor}
+        stampShape={c.stampShape}
+        stampIcon={c.stampIcon}
         qrUrl={`/api/public/cards/${serial}/qr.svg`}
         nextAppointmentAt={c.nextAppointmentAt}
         timezone={c.timezone}

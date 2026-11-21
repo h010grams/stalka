@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { STAMP_ICONS, STAMP_SHAPES, type StampIcon, type StampShape } from './stamps.js';
+
+export * from './stamps.js';
 
 // Сообщения валидации — это ключи i18n (`v.*`), фронт переводит их сам.
 
@@ -195,6 +198,8 @@ export const programSchema = z.object({
   bgColor: hexColor,
   fgColor: hexColor,
   labelColor: hexColor,
+  stampShape: z.enum(STAMP_SHAPES).optional(),
+  stampIcon: z.enum(STAMP_ICONS).optional(),
 });
 export type ProgramInput = z.input<typeof programSchema>;
 
@@ -215,6 +220,8 @@ export interface ProgramDto {
   bgColor: string;
   fgColor: string;
   labelColor: string;
+  stampShape: StampShape;
+  stampIcon: StampIcon;
   logoUrl: string | null;
 }
 
@@ -284,6 +291,8 @@ export interface PublicCardDto {
   bgColor: string;
   fgColor: string;
   labelColor: string;
+  stampShape: StampShape;
+  stampIcon: StampIcon;
   logoUrl: string | null;
   nextAppointmentAt: string | null;
   timezone: string;

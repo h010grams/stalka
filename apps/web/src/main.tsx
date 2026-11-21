@@ -8,7 +8,7 @@ import { AppLayout, AuthLayout } from './components/Layout';
 import { ForgotPasswordPage, LoginPage, RegisterPage, ResetPasswordPage } from './pages/auth';
 import { AcceptInvitePage } from './pages/AcceptInvite';
 import { StaffPage } from './pages/Staff';
-import { ProfilePage, SalonSettingsPage, SettingsPage } from './pages/Settings';
+import { LinksSettingsPage, ProfilePage, SalonSettingsPage, SettingsPage } from './pages/Settings';
 import { ProgramPage } from './pages/Program';
 import { ScanPage } from './pages/Scan';
 import { NewCustomerPage } from './pages/NewCustomer';
@@ -44,6 +44,7 @@ const router = createBrowserRouter([
       { path: '/staff', element: <StaffPage /> },
       { path: '/settings', element: <SettingsPage /> },
       { path: '/settings/salon', element: <SalonSettingsPage /> },
+      { path: '/settings/links', element: <LinksSettingsPage /> },
       { path: '/profile', element: <ProfilePage /> },
       { path: '/program', element: <ProgramPage /> },
       { path: '/scan', element: <Navigate to="/" replace /> },

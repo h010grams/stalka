@@ -179,6 +179,8 @@ export function LandingPage() {
                 bgColor="#1C1917"
                 fgColor="#FFFFFF"
                 labelColor="#E7B9A8"
+                stampShape="hexagon"
+                stampIcon="scissors"
               />
             </div>
             <div className="absolute right-[4%] top-12 hidden w-[330px] rotate-[8deg] text-left lg:block">
@@ -191,6 +193,8 @@ export function LandingPage() {
                 bgColor="#1F3A34"
                 fgColor="#FFFFFF"
                 labelColor="#C9DCC8"
+                stampShape="square"
+                stampIcon="coffee"
               />
             </div>
             <div className="relative z-10 w-full max-w-[340px] rounded-2xl text-left shadow-2xl shadow-stone-900/25">

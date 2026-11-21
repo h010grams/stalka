@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import type { LoyaltyProgram } from '@prisma/client';
-import { programSchema, type ProgramDto } from '@stalka/shared';
+import { programSchema, STAMP_ICONS, STAMP_SHAPES, type ProgramDto, type StampIcon, type StampShape } from '@stalka/shared';
 import { audit } from '../../lib/audit.js';
 import { badRequest, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
@@ -29,6 +29,8 @@ export function toProgramDto(p: LoyaltyProgram): ProgramDto {
     bgColor: p.bgColor,
     fgColor: p.fgColor,
     labelColor: p.labelColor,
+    stampShape: (STAMP_SHAPES as readonly string[]).includes(p.stampShape) ? (p.stampShape as StampShape) : 'circle',
+    stampIcon: (STAMP_ICONS as readonly string[]).includes(p.stampIcon) ? (p.stampIcon as StampIcon) : 'check',
     logoUrl: p.logoAssetId ? urls.logo(p.id, p.designVersion) : null,
   };
 }
@@ -62,8 +64,8 @@ export const programRoutes: FastifyPluginAsync = async (app) => {
         program = await tx.loyaltyProgram.create({ data: { salonId, ...input } });
       } else {
         // всё, кроме лимита, видно на карте → новая версия дизайна и пересинхронизация карт
-        const visibleChanged = (['name', 'stampsRequired', 'rewardText', 'bgColor', 'fgColor', 'labelColor'] as const).some(
-          (k) => before[k] !== input[k],
+        const visibleChanged = (['name', 'stampsRequired', 'rewardText', 'bgColor', 'fgColor', 'labelColor', 'stampShape', 'stampIcon'] as const).some(
+          (k) => input[k] !== undefined && before[k] !== input[k],
         );
         program = await tx.loyaltyProgram.update({
           where: { id: before.id },

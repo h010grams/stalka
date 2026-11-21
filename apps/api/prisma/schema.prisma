@@ -167,6 +167,8 @@ model LoyaltyProgram {
   winbackEnabled        Boolean @default(true) // «пора вернуться» по ритму визитов клиентки
   rewardReminderEnabled Boolean @default(true) // награда лежит неиспользованной
   birthdayEnabled       Boolean @default(true)
+  stampShape            String  @default("circle") // форма штампа: circle | square | heart | star | hexagon
+  stampIcon             String  @default("check") // значок в заполненном штампе
   referralEnabled       Boolean @default(false) // «Приведи подругу»
   referralBonus         Int     @default(1) // штампов в подарок обеим после первого визита подруги
   reviewRequestEnabled  Boolean @default(true) // просьба об отзыве после первого визита (если у салона есть reviewUrl)

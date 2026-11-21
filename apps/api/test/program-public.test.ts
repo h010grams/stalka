@@ -240,3 +240,21 @@ describe('live demo push', () => {
     }
   });
 });
+
+describe('stamp style', () => {
+  it('saves shape and icon, bumps the design version and renders the Wallet strip', async () => {
+    const { owner, program } = await salonWithProgram(app);
+    const before = await prisma.loyaltyProgram.findUniqueOrThrow({ where: { id: program.id } });
+    const res = await owner.client.put('/api/program', { ...program, stampShape: 'heart', stampIcon: 'coffee' });
+    expect(res.statusCode).toBe(200);
+    expect(json(res).program).toMatchObject({ stampShape: 'heart', stampIcon: 'coffee' });
+    const after = await prisma.loyaltyProgram.findUniqueOrThrow({ where: { id: program.id } });
+    expect(after.designVersion).toBe(before.designVersion + 1);
+
+    const strip = await app.inject({ method: 'GET', url: `/api/public/programs/${program.id}/strip/3.png?v=${after.designVersion}` });
+    expect(strip.statusCode).toBe(200);
+    expect(strip.headers['content-type']).toBe('image/png');
+
+    expect((await owner.client.put('/api/program', { ...program, stampShape: 'triangle' })).statusCode).toBe(400);
+  });
+});

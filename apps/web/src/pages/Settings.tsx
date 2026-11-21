@@ -28,6 +28,15 @@ import {
 const LOCALE_NAMES = { sk: 'Slovenčina', en: 'English', uk: 'Українська' } as const;
 
 export function SalonSettingsPage() {
+  return <SalonForm mode="details" />;
+}
+
+export function LinksSettingsPage() {
+  return <SalonForm mode="links" />;
+}
+
+/** Данные prevádzky и ссылки на карте — одна форма, но на разных страницах. */
+function SalonForm({ mode }: { mode: 'details' | 'links' }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const role = useCurrentRole();
@@ -39,16 +48,14 @@ export function SalonSettingsPage() {
   useEffect(() => {
     if (salon.data) {
       const { name, address, phone, bookingUrl, reviewUrl, defaultLocale } = salon.data;
-      form.reset({
-        name,
-        address: address ?? '',
-        phone: phone ?? '',
-        bookingUrl: bookingUrl ?? '',
-        reviewUrl: reviewUrl ?? '',
-        defaultLocale,
-      });
+      // отправляем только поля своей страницы
+      form.reset(
+        mode === 'links'
+          ? { bookingUrl: bookingUrl ?? '', reviewUrl: reviewUrl ?? '' }
+          : { name, address: address ?? '', phone: phone ?? '', defaultLocale },
+      );
     }
-  }, [salon.data, form]);
+  }, [salon.data, form, mode]);
 
   const save = useMutation({
     mutationFn: (v: unknown) => api.patch<SalonDto>('/salon', v),
@@ -68,27 +75,38 @@ export function SalonSettingsPage() {
       <Link to="/settings" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
         <ChevronLeft className="size-4" aria-hidden /> {t('nav.settings')}
       </Link>
-      <PageTitle>{t('settings.salon_data')}</PageTitle>
+      <PageTitle>{mode === 'links' ? t('settings.links_short') : t('settings.salon_data')}</PageTitle>
 
       <Card>
         <form className="space-y-4" onSubmit={form.handleSubmit((v) => save.mutate(v))} noValidate>
           <fieldset disabled={!isOwner} className="space-y-4">
             <ErrorAlert error={save.error} />
             {save.isSuccess && !form.formState.isDirty && <Alert kind="success">{t('common.saved')}</Alert>}
-            <Field label={t('settings.salon_name')} error={errors.name?.message}>
-              <Input {...form.register('name')} />
-            </Field>
-            <Field label={t('settings.address')} error={errors.address?.message}>
-              <Input autoComplete="street-address" {...form.register('address')} />
-            </Field>
-            <Field label={t('settings.phone')} error={errors.phone?.message}>
-              <Input type="tel" inputMode="tel" {...form.register('phone')} />
-            </Field>
-            <div id="links" className="scroll-mt-20 space-y-4 border-t border-stone-200 pt-4">
-              <div>
-                <h3 className="font-semibold">{t('settings.links')}</h3>
-                <p className="text-xs text-stone-500">{t('settings.links_hint')}</p>
-              </div>
+            {mode === 'details' && (
+              <>
+                <Field label={t('settings.salon_name')} error={errors.name?.message}>
+                  <Input {...form.register('name')} />
+                </Field>
+                <Field label={t('settings.address')} error={errors.address?.message}>
+                  <Input autoComplete="street-address" {...form.register('address')} />
+                </Field>
+                <Field label={t('settings.phone')} error={errors.phone?.message}>
+                  <Input type="tel" inputMode="tel" {...form.register('phone')} />
+                </Field>
+                <Field label={t('settings.default_locale')}>
+                  <Select {...form.register('defaultLocale')}>
+                    {LOCALES.map((l) => (
+                      <option key={l} value={l}>
+                        {LOCALE_NAMES[l]}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+              </>
+            )}
+            {mode === 'links' && (
+            <div className="space-y-4">
+              <p className="text-sm text-stone-500">{t('settings.links_hint')}</p>
               <Field label={t('settings.booking_url')} error={errors.bookingUrl?.message}>
                 <Input type="url" inputMode="url" placeholder="booksy.com/…" {...form.register('bookingUrl')} />
               </Field>
@@ -98,15 +116,7 @@ export function SalonSettingsPage() {
               </Field>
               <p className="-mt-2 text-xs text-stone-500">{t('settings.review_url_hint')}</p>
             </div>
-            <Field label={t('settings.default_locale')}>
-              <Select {...form.register('defaultLocale')}>
-                {LOCALES.map((l) => (
-                  <option key={l} value={l}>
-                    {LOCALE_NAMES[l]}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+            )}
             {isOwner && (
               <Button type="submit" className="w-full" loading={save.isPending}>
                 {t('common.save')}
@@ -116,10 +126,12 @@ export function SalonSettingsPage() {
         </form>
       </Card>
 
-      <Card className="space-y-1">
-        <p className="text-sm text-stone-500">{t('settings.public_link')}</p>
-        <p className="break-all font-mono text-sm">{publicUrl}</p>
-      </Card>
+      {mode === 'details' && (
+        <Card className="space-y-1">
+          <p className="text-sm text-stone-500">{t('settings.public_link')}</p>
+          <p className="break-all font-mono text-sm">{publicUrl}</p>
+        </Card>
+      )}
 
     </div>
   );
@@ -175,7 +187,7 @@ export function SettingsPage() {
           icon={Link2}
           color="#8B6F9E"
           label={t('settings.links_short')}
-          to="/settings/salon#links"
+          to="/settings/links"
           value={hostOf(s.bookingUrl) ?? (linkCount ? String(linkCount) : undefined)}
         />
         <SettingsRow icon={MessageSquare} color="#5E8C6A" label={t('settings.messages')} to="/messages" />

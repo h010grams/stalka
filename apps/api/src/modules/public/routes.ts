@@ -37,6 +37,8 @@ export function toPublicCard(card: WalletCard, demoUsedKinds: DemoKind[] | null 
     bgColor: program.bgColor,
     fgColor: program.fgColor,
     labelColor: program.labelColor,
+    stampShape: program.stampShape,
+    stampIcon: program.stampIcon,
     logoUrl: program.logoUrl,
     nextAppointmentAt: card.appointments[0]?.startsAt.toISOString() ?? null,
     timezone: card.salon.timezone,

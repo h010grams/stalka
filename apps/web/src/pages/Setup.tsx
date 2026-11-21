@@ -55,7 +55,7 @@ export function SetupPage() {
   if (role && role !== 'OWNER') return <Navigate to="/" replace />;
 
   const current = program.data?.program ?? null;
-  const colors = COLOR_PRESETS[preset]!;
+  const { name: _preset, ...colors } = COLOR_PRESETS[preset]!;
   const input = (): ProgramInput => ({
     name: current?.name ?? t('wizard.default_name'),
     rewardText: reward.trim(),
