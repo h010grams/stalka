@@ -74,8 +74,11 @@ async function queryCustomers(
   if (opts.id) conditions.push(Prisma.sql`c.id = ${opts.id}::uuid`);
   if (q) {
     const pattern = `%${escapeLike(q)}%`;
-    // «0905 123 456» → ищем «905123456» в +421905123456
-    const digits = q.replace(/\D/g, '').replace(/^0+/, '');
+    // «0905 123 456» → ищем «905123456» в +421905123456.
+    // Но «0001» — это конец номера: без нулей останется «1», поэтому ищем цифры как есть.
+    const allDigits = q.replace(/\D/g, '');
+    const withoutPrefix = allDigits.replace(/^0+/, '');
+    const digits = withoutPrefix.length >= 3 ? withoutPrefix : allDigits;
     conditions.push(
       digits.length >= 3
         ? Prisma.sql`(c.name ILIKE ${pattern} OR c.email ILIKE ${pattern} OR c."phoneE164" LIKE ${`%${digits}%`})`

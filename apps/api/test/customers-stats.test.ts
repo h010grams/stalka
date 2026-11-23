@@ -43,6 +43,17 @@ describe('customer list', () => {
     expect(json(await owner.client.get('/api/customers?q=%25')).total).toBe(0);
   });
 
+  it('finds a customer by the last phone digits even when they start with zero', async () => {
+    const { owner, slug } = await salonWithProgram(app);
+    await joinCustomer(app, slug, { name: 'Jana Nováková', phone: '0900 000 001' });
+    await joinCustomer(app, slug, { name: 'Petra Kováčová', phone: '0910 333 444' });
+
+    for (const q of ['0001', '001']) {
+      const res = json(await owner.client.get(`/api/customers?q=${q}`));
+      expect(res.items.map((c: any) => c.name), `q=${q}`).toEqual(['Jana Nováková']);
+    }
+  });
+
   it('detail shows history with who did what', async () => {
     const { owner, slug } = await salonWithProgram(app, { stampsRequired: 2, cooldownHours: 0 });
     const { cardId } = await joinCustomer(app, slug);

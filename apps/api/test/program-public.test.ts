@@ -198,6 +198,38 @@ describe('public join page', () => {
   });
 });
 
+describe('marketing consent on the card page', () => {
+  const toggle = (serial: string, enabled: boolean) =>
+    app.inject({ method: 'POST', url: `/api/public/cards/${serial}/marketing`, payload: { enabled } });
+  const marketingLogs = (customerId: string) =>
+    prisma.auditLog.findMany({ where: { entityId: customerId, action: { startsWith: 'customer.marketing' } } });
+
+  it('opt-out and opt-in by the client are written to the audit log', async () => {
+    const { slug } = await salonWithProgram(app);
+    const { serial } = await joinCustomer(app, slug, { marketing: true });
+    const customer = await prisma.customer.findFirstOrThrow();
+
+    expect((await toggle(serial, false)).statusCode).toBe(200);
+    expect((await prisma.customer.findUniqueOrThrow({ where: { id: customer.id } })).marketingConsentAt).toBeNull();
+    expect((await toggle(serial, true)).statusCode).toBe(200);
+
+    const logs = await marketingLogs(customer.id);
+    expect(logs.map((l) => l.action).sort()).toEqual(['customer.marketing_off', 'customer.marketing_on']);
+    for (const l of logs) expect(l).toMatchObject({ salonId: customer.salonId, actorUserId: null, entityType: 'customer' });
+  });
+
+  it('repeating the same choice does not add another audit entry', async () => {
+    const { slug } = await salonWithProgram(app);
+    const { serial } = await joinCustomer(app, slug, { marketing: true });
+    const customer = await prisma.customer.findFirstOrThrow();
+
+    await toggle(serial, false);
+    await toggle(serial, false);
+
+    expect(await marketingLogs(customer.id)).toHaveLength(1);
+  });
+});
+
 describe('live demo push', () => {
   it('builds tomorrow 14:00 in the salon time zone, summer and winter', async () => {
     const { tomorrowAt } = await import('../src/services/demo.js');

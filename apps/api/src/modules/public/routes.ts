@@ -3,6 +3,7 @@ import QRCode from 'qrcode';
 import { demoPushSchema, joinSchema, marketingToggleSchema, type DemoKind, type PublicCardDto, type PublicSalonDto, type SiteInfoDto } from '@stalka/shared';
 import { config } from '../../config.js';
 import { urls } from '../../services/urls.js';
+import { audit } from '../../lib/audit.js';
 import { assertUuid, notFound } from '../../lib/errors.js';
 import { prisma } from '../../lib/prisma.js';
 import { parse } from '../../lib/validate.js';
@@ -147,10 +148,23 @@ export const publicRoutes: FastifyPluginAsync = async (app) => {
   app.post<{ Params: { serial: string } }>('/cards/:serial/marketing', { config: joinLimit }, async (req) => {
     const { enabled } = parse(marketingToggleSchema, req.body);
     const card = await activeCard(assertUuid(req.params.serial, 'card_not_found'));
-    await prisma.customer.update({
-      where: { id: card.customerId },
-      data: { marketingConsentAt: enabled ? new Date() : null },
-    });
+    // Согласие и его отзыв — в журнал (GDPR: салон должен уметь показать, когда что изменилось).
+    // Повторный клик с тем же выбором ничего не меняет и не пишет.
+    if (enabled !== (card.customer.marketingConsentAt !== null)) {
+      await prisma.$transaction(async (tx) => {
+        await tx.customer.update({
+          where: { id: card.customerId },
+          data: { marketingConsentAt: enabled ? new Date() : null },
+        });
+        await audit(tx, {
+          salonId: card.salon.id,
+          actorUserId: null,
+          action: enabled ? 'customer.marketing_on' : 'customer.marketing_off',
+          entityType: 'customer',
+          entityId: card.customerId,
+        });
+      });
+    }
     return withDemo(await activeCard(card.serialNumber));
   });
 
