@@ -127,8 +127,8 @@ export interface MeResponse {
 // ───────── Тариф ─────────
 
 export const TRIAL_DAYS = 30;
-export const PRICE_MONTH_EUR = 14.9;
-export const PRICE_YEAR_EUR = 149;
+export const PRICE_MONTH_EUR = 19.9;
+export const PRICE_YEAR_EUR = 199;
 
 export interface PlanDto {
   /** trial — пробный период; active — оплачено; expired — пробный период закончился, оплаты нет */

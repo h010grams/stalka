@@ -338,7 +338,7 @@ export function LandingPage() {
                 {t('landing.trial')}
               </span>
               <p className="pt-2">
-                <span className="font-display text-6xl font-semibold tracking-tight">14,90 €</span>{' '}
+                <span className="font-display text-6xl font-semibold tracking-tight">19,90 €</span>{' '}
                 <span className="text-stone-500">{t('landing.per_month')}</span>
               </p>
               <p className="text-stone-600">{t('landing.price_year')}</p>
