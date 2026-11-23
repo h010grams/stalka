@@ -8,14 +8,16 @@ import {
   Check,
   ChevronDown,
   Gift,
-  Globe,
   Megaphone,
+  Palette,
   QrCode,
   ScanLine,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  Star,
   Timer,
+  UserPlus,
   WalletCards,
   X,
   type LucideIcon,
@@ -33,10 +35,12 @@ const CTA_LIGHT = `${CTA} bg-white text-stone-900 ring-1 ring-stone-300 hover:bg
 const FEATURES: { key: string; icon: LucideIcon }[] = [
   { key: 'appt', icon: CalendarClock },
   { key: 'msg', icon: Megaphone },
+  { key: 'refer', icon: UserPlus },
+  { key: 'links', icon: Star },
+  { key: 'brand', icon: Palette },
   { key: 'bday', icon: Gift },
   { key: 'counter', icon: Timer },
   { key: 'gdpr', icon: ShieldCheck },
-  { key: 'lang', icon: Globe },
 ];
 const STEPS: LucideIcon[] = [QrCode, WalletCards, ScanLine];
 

@@ -133,9 +133,9 @@ export function AuthLayout() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col px-4 py-6">
       <div className="mb-8 flex items-center justify-between">
-        <span className="flex items-center gap-2 text-lg font-bold">
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold">
           <img src="/mark.svg" alt="" className="h-6 w-auto" /> Stálka
-        </span>
+        </Link>
         <LanguageSwitcher />
       </div>
       <Outlet />
