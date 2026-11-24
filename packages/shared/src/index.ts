@@ -50,12 +50,16 @@ const optionalUrl = z
 
 // ───────── Auth ─────────
 
+/** Verzia obchodných podmienok a zmluvy o spracúvaní (apps/web/src/legal). Pri zmene textu zvýšiť. */
+export const TERMS_VERSION = '2026-11-25';
+
 export const registerSchema = z.object({
   salonName: z.string().trim().min(2, 'v.required').max(80, 'v.too_long'),
   name: personName,
   email,
   password,
   locale: localeSchema.default('sk'),
+  acceptTerms: z.literal(true, { errorMap: () => ({ message: 'v.terms' }) }),
 });
 export type RegisterInput = z.input<typeof registerSchema>;
 

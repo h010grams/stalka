@@ -84,7 +84,8 @@ export function RegisterPage() {
     },
   });
 
-  if (me) return <Navigate to="/" replace />;
+  // после успешной регистрации уводит onSuccess (в /setup), а не этот редирект
+  if (me && !register.isSuccess) return <Navigate to="/" replace />;
   const { errors } = form.formState;
 
   return (
@@ -107,6 +108,21 @@ export function RegisterPage() {
         <Field label={t('common.password')} error={errors.password?.message}>
           <Input type="password" autoComplete="new-password" {...form.register('password')} />
         </Field>
+        <label className="flex gap-3 text-sm">
+          <input type="checkbox" className="mt-0.5 size-5 shrink-0 accent-stone-900" {...form.register('acceptTerms')} />
+          <span>
+            {t('auth.terms_accept')}{' '}
+            <a href="/podmienky" target="_blank" rel="noopener" className="underline">
+              {t('legal.terms_link')}
+            </a>{' '}
+            {t('auth.terms_and')}{' '}
+            <a href="/spracovanie-udajov" target="_blank" rel="noopener" className="underline">
+              {t('legal.dpa_link')}
+            </a>
+            .
+          </span>
+        </label>
+        {errors.acceptTerms && <p className="-mt-2 text-sm text-red-600">{t(errors.acceptTerms.message ?? 'v.terms')}</p>}
         <Button type="submit" className="w-full" loading={register.isPending}>
           {t('auth.register_submit')}
         </Button>

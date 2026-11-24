@@ -25,6 +25,7 @@ async function adminClient() {
     email: 'admin@stalka.test',
     password: 'password123',
     locale: 'sk',
+    acceptTerms: true,
   });
   expect(json(res).isAdmin).toBe(true);
   return client;

@@ -55,6 +55,7 @@ export async function registerOwner(app: FastifyInstance, salonName = 'Salón Te
     email,
     password: 'password123',
     locale: 'sk',
+    acceptTerms: true,
   });
   if (res.statusCode !== 201) throw new Error(`register failed: ${res.body}`);
   return { client, email, me: json(res) };

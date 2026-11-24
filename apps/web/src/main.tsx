@@ -18,6 +18,7 @@ import { CardPage, JoinPage, PrivacyPage, PublicLayout } from './pages/public';
 import { MessagesPage } from './pages/Messages';
 import { SetupPage } from './pages/Setup';
 import { AdminPage } from './pages/Admin';
+import { DpaPage, TermsPage } from './pages/Legal';
 import { NotFoundPage, RouteErrorPage } from './pages/NotFound';
 
 const queryClient = new QueryClient({
@@ -34,6 +35,8 @@ const router = createBrowserRouter([
       { path: '/forgot-password', element: <ForgotPasswordPage /> },
       { path: '/reset-password', element: <ResetPasswordPage /> },
       { path: '/invite/:token', element: <AcceptInvitePage /> },
+      { path: '/podmienky', element: <TermsPage /> },
+      { path: '/spracovanie-udajov', element: <DpaPage /> },
     ],
   },
   {

@@ -7,6 +7,7 @@ import {
   resetPasswordSchema,
   switchSalonSchema,
   updateMeSchema,
+  TERMS_VERSION,
   type MeResponse,
 } from '@stalka/shared';
 import { config } from '../../config.js';
@@ -58,7 +59,13 @@ export const authRoutes: FastifyPluginAsync<{ mailer: Mailer }> = async (app, { 
           data: { email: input.email, passwordHash, name: input.name, locale: input.locale },
         });
         const salon = await tx.salon.create({
-          data: { name: input.salonName, slug, defaultLocale: input.locale },
+          data: {
+            name: input.salonName,
+            slug,
+            defaultLocale: input.locale,
+            termsAcceptedAt: new Date(),
+            termsVersion: TERMS_VERSION,
+          },
         });
         await tx.membership.create({ data: { userId: user.id, salonId: salon.id, role: 'OWNER' } });
         await audit(tx, {
@@ -67,7 +74,7 @@ export const authRoutes: FastifyPluginAsync<{ mailer: Mailer }> = async (app, { 
           action: 'salon.create',
           entityType: 'salon',
           entityId: salon.id,
-          payload: { name: salon.name },
+          payload: { name: salon.name, termsVersion: TERMS_VERSION },
         });
         await createSession(tx, reply, user.id, salon.id);
         return { userId: user.id, salonId: salon.id };

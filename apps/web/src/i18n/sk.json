@@ -55,7 +55,9 @@
     "new_password": "Nové heslo",
     "reset_submit": "Nastaviť heslo",
     "reset_done": "Heslo bolo zmenené. Môžete sa prihlásiť.",
-    "to_login": "Na prihlásenie"
+    "to_login": "Na prihlásenie",
+    "terms_accept": "Súhlasím s",
+    "terms_and": "a so"
   },
   "invite": {
     "title": "Pozvánka do tímu",
@@ -99,7 +101,7 @@
     "public_link": "Verejná adresa prevádzky",
     "profile": "Môj profil",
     "salon": "Prevádzka",
-    "links": "Odkazy na karte klientky",
+    "links": "Odkazy na karte zákazníka",
     "links_hint": "Zobrazia sa ako tlačidlá na karte vo Wallete aj na webe.",
     "booking_url": "Online rezervácia",
     "booking_url_hint": "Booksy, Reservio, Bookio, Instagram alebo vlastný web.",
@@ -113,7 +115,7 @@
     "links_short": "Odkazy na karte",
     "export": "Export klientov",
     "language": "Jazyk aplikácie",
-    "messages": "Správa klientkam"
+    "messages": "Správa zákazníkom"
   },
   "v": {
     "email": "Zadajte platný e-mail",
@@ -129,7 +131,8 @@
     "datetime": "Zadajte dátum a čas",
     "birthday": "Skontrolujte dátum narodenín",
     "url": "Zadajte odkaz, napríklad booksy.com/…",
-    "referral_bonus": "Od 1 do 3"
+    "referral_bonus": "Od 1 do 3",
+    "terms": "Bez súhlasu s podmienkami sa nedá zaregistrovať"
   },
   "errors": {
     "unauthorized": "Prihláste sa, prosím.",
@@ -165,7 +168,7 @@
     "apple_disabled": "Apple Wallet zatiaľ nie je zapnutý.",
     "google_disabled": "Google Wallet zatiaľ nie je zapnutý.",
     "broadcast_too_soon": "Ďalšiu správu môžete poslať až 24 hodín po predchádzajúcej.",
-    "no_recipients": "Zatiaľ nie je komu poslať – žiadna klientka nesúhlasila s ponukami.",
+    "no_recipients": "Zatiaľ nie je komu poslať – žiadny zákazník nesúhlasil s ponukami.",
     "demo_used": "Túto ukážku ste dnes už vyskúšali."
   },
   "program": {
@@ -190,19 +193,19 @@
     "more_colors": "Vlastné farby",
     "advanced": "Pokročilé nastavenia",
     "first_stamp": "Prvá pečiatka pri registrácii",
-    "first_stamp_hint": "Nová klientka hneď vidí 1 pečiatku namiesto prázdnej karty.",
+    "first_stamp_hint": "Nový zákazník hneď vidí 1 pečiatku namiesto prázdnej karty.",
     "automations": "Automatické správy",
     "automations_hint": "Prídu ako upozornenie na kartu vo Wallete, len cez deň (10:00–19:00).",
-    "winback": "Pripomenúť, keď klientka dlho nepríde",
-    "winback_hint": "Podľa jej obvyklého rytmu návštev. Len klientkam so súhlasom s ponukami.",
+    "winback": "Pripomenúť, keď zákazník dlho nepríde",
+    "winback_hint": "Podľa jeho obvyklého rytmu návštev. Len zákazníkom so súhlasom s ponukami.",
     "reward_reminder": "Pripomenúť nevyužitú odmenu",
     "reward_reminder_hint": "Raz, ak odmena 14 dní čaká.",
     "birthday": "Blahoželanie k narodeninám",
-    "birthday_hint": "Len klientkam, ktoré zadali narodeniny a súhlasili s ponukami.",
+    "birthday_hint": "Len zákazníkom, ktorí zadali narodeniny a súhlasili s ponukami.",
     "birthday_gift": "Darček k narodeninám (nepovinné)",
     "birthday_gift_placeholder": "napr. −20 % na ďalšiu návštevu",
     "review": "Poprosiť o hodnotenie",
-    "review_hint": "Pár hodín po návšteve pošleme klientke odkaz na hodnotenie v Google. Iba raz a len klientkam so súhlasom so správami.",
+    "review_hint": "Pár hodín po návšteve pošleme zákazníkovi odkaz na hodnotenie v Google. Iba raz a len zákazníkom so súhlasom so správami.",
     "review_needs_link": "Najprv pridajte odkaz na hodnotenie v Nastaveniach → Odkazy na karte.",
     "referral": "Odporuč známym",
     "referral_hint": "Každý klient má na karte vlastný odkaz. Keď podľa neho príde niekto nový na prvú návštevu, obaja dostanú pečiatky navyše.",
@@ -290,7 +293,7 @@
     "book": "Rezervovať termín",
     "call": "Zavolať",
     "review": "Ohodnoťte nás v Google",
-    "demo_title": "Vyskúšajte, ako to príde klientke",
+    "demo_title": "Vyskúšajte, ako to príde zákazníkovi",
     "demo_text": "Kartu si najprv pridajte do Walletu. Potom stlačte tlačidlo a zamknite mobil – o 8 sekúnd príde upozornenie.",
     "demo_stamp": "+1 pečiatka",
     "demo_reminder": "Pripomienka termínu",
@@ -327,7 +330,7 @@
     "scanning": "Hľadám kartu…",
     "start": "Spustiť kameru",
     "hint_short": "Namierte na QR kód na karte",
-    "new_customer": "Nová klientka",
+    "new_customer": "Nový zákazník",
     "search_tile": "Hľadať podľa mena",
     "today": "Dnes",
     "today_all": "Všetci",
@@ -385,7 +388,7 @@
     "marketing_no": "Ponuky: bez súhlasu",
     "birthday": "Narodeniny: {{date}}",
     "export_csv": "Stiahnuť CSV",
-    "message_all": "Správa klientkam",
+    "message_all": "Správa zákazníkom",
     "h_STAMP_BONUS": "Bonusová pečiatka (odporúčanie)",
     "f_all": "Všetci",
     "f_reward": "Odmena",
@@ -442,7 +445,7 @@
       "reward.redeem": "Odmena uplatnená",
       "appointment.set": "Termín nastavený",
       "appointment.cancel": "Termín zrušený",
-      "broadcast.send": "Správa klientkam",
+      "broadcast.send": "Správa zákazníkom",
       "customer.export_all": "Export zoznamu klientov",
       "admin.plan": "Zmena predplatného (admin)",
       "admin.salon_delete": "Prevádzka vymazaná (admin)"
@@ -455,7 +458,7 @@
     "reward_title": "🎁 Odmena pripravená",
     "redeem_now": "Uplatniť odmenu",
     "more": "Viac",
-    "new_customer": "+ Nová klientka"
+    "new_customer": "+ Nový zákazník"
   },
   "setup": {
     "title": "Nastavte vernostnú kartu",
@@ -463,36 +466,36 @@
     "cta": "Nastaviť kartu"
   },
   "newcust": {
-    "title": "Nová klientka",
-    "text": "Zadajte meno a telefón. Karta sa vytvorí hneď a klientka si ju pridá do mobilu naskenovaním QR kódu.",
+    "title": "Nový zákazník",
+    "text": "Zadajte meno a telefón. Karta sa vytvorí hneď a zákazník si ju pridá do mobilu naskenovaním QR kódu.",
     "language": "Jazyk karty",
-    "consent": "Klientka súhlasí so spracovaním mena a kontaktu na účely vernostného programu.",
+    "consent": "Zákazník súhlasí so spracovaním mena a kontaktu na účely vernostného programu.",
     "submit": "Vytvoriť kartu",
     "created_stamp": "Karta vytvorená s prvou pečiatkou 🎉",
     "created": "Karta vytvorená",
-    "existing": "Klientka už kartu má – otvorili sme ju.",
-    "marketing": "Klientka chce dostávať ponuky a pripomienky (nepovinné)."
+    "existing": "Zákazník už kartu má – otvorili sme ju.",
+    "marketing": "Zákazník chce dostávať ponuky a pripomienky (nepovinné)."
   },
   "walletqr": {
     "title": "Karta do mobilu",
-    "text": "Nech klientka naskenuje tento QR kód fotoaparátom. Otvorí sa jej karta s tlačidlom Apple Wallet / Google Wallet.",
+    "text": "Nech zákazník naskenuje tento QR kód fotoaparátom. Otvorí sa mu karta s tlačidlom Apple Wallet / Google Wallet.",
     "show": "Zobraziť QR na pridanie karty",
     "done": "Hotovo"
   },
   "broadcast": {
-    "title": "Správa klientkam",
-    "text": "Správa príde ako upozornenie na kartu vo Wallete. Dostanú ju len klientky, ktoré súhlasili s ponukami.",
+    "title": "Správa zákazníkom",
+    "text": "Správa príde ako upozornenie na kartu vo Wallete. Dostanú ju len zákazníci, ktorí súhlasili s ponukami.",
     "reachable": "Dostane ju klientok: {{count}}",
     "placeholder": "napr. Zajtra o 14:00 máme voľný termín na manikúru.",
     "send": "Odoslať",
-    "confirm": "Odoslať správu {{count}} klientkam? Vziať späť sa nedá.",
+    "confirm": "Odoslať správu {{count}} zákazníkom? Vziať späť sa nedá.",
     "sent": "Správa odoslaná ({{count}})",
     "next_at": "Ďalšiu správu môžete poslať {{when}}.",
-    "limit_hint": "Najviac 1 správa denne – pri častejších správach si klientky upozornenia vypínajú.",
+    "limit_hint": "Najviac 1 správa denne – pri častejších správach si ľudia upozornenia vypínajú.",
     "history": "Odoslané",
     "recipients": "príjemcov: {{count}}",
     "none": "Zatiaľ ste nič neposlali.",
-    "nobody": "Zatiaľ žiadna klientka nesúhlasila s ponukami. Súhlas môže dať pri registrácii alebo na stránke svojej karty."
+    "nobody": "Zatiaľ žiadny zákazník nesúhlasil s ponukami. Súhlas môže dať pri registrácii alebo na stránke svojej karty."
   },
   "landing": {
     "login": "Prihlásiť sa",
@@ -525,7 +528,7 @@
     "f_gdpr_t": "V súlade s GDPR",
     "f_gdpr": "Súhlasy s dátumom, export a vymazanie údajov jedným klikom, dáta v EÚ.",
     "f_lang_t": "Slovensky, anglicky, ukrajinsky",
-    "f_lang": "Každá klientka vidí kartu vo svojom jazyku.",
+    "f_lang": "Každý zákazník vidí kartu vo svojom jazyku.",
     "demo_title": "Vyskúšajte si to na sebe",
     "demo_text": "Pridajte si demo kartu do mobilu, stlačte tlačidlo a o pár sekúnd vám príde upozornenie – presne také, aké dostanú vaši zákazníci.",
     "demo_scan": "Naskenujte fotoaparátom v mobile",
@@ -616,7 +619,7 @@
   },
   "wizard": {
     "step": "Krok {{n}} z 3",
-    "s1_title": "Akú odmenu dostane klientka?",
+    "s1_title": "Akú odmenu dostane zákazník?",
     "s1_text": "Odmenu aj počet pečiatok môžete neskôr kedykoľvek zmeniť.",
     "reward": "Odmena",
     "reward_placeholder": "napr. Zľava 50 % na ďalšiu návštevu",
@@ -631,10 +634,10 @@
     "logo": "Nahrať logo",
     "logo_change": "Zmeniť logo",
     "s3_title": "Hotovo! Karta je pripravená.",
-    "s3_text": "Zostáva vytlačiť plagát a dať ho na pult. Klientky si kartu pridajú naskenovaním QR kódu.",
+    "s3_text": "Zostáva vytlačiť plagát a dať ho na pult. Zákazníci si kartu pridajú naskenovaním QR kódu.",
     "todo_poster": "Stiahnuť plagát na pult (PDF)",
     "todo_try": "Vyskúšať kartu na svojom mobile",
-    "todo_first": "Pridať prvú klientku",
+    "todo_first": "Pridať prvého zákazníka",
     "todo_done": "Prejsť na skener",
     "next": "Ďalej",
     "back": "Späť",
@@ -648,14 +651,14 @@
     "t_trial": "Skúšobná verzia",
     "t_paid": "Platiace",
     "t_expired": "Po skúšobnej",
-    "t_clients": "Klientky spolu",
+    "t_clients": "Zákazníci spolu",
     "search": "Hľadať prevádzku alebo e-mail",
     "f_all": "Všetky",
     "f_trial": "Skúšobná verzia",
     "f_active": "Platiace",
     "f_expired": "Po skúšobnej",
     "registered": "Registrácia {{date}}",
-    "clients": "Klientky: {{n}}",
+    "clients": "Zákazníci: {{n}}",
     "stamps": "Pečiatky (30 dní): {{n}}",
     "last": "Posledná pečiatka: {{when}}",
     "never": "zatiaľ žiadna pečiatka",
@@ -683,5 +686,13 @@
     "error_text": "Skúste stránku obnoviť. Ak to nepomôže, napíšte nám na info@stalka.sk.",
     "reload": "Obnoviť stránku",
     "home": "Na úvodnú stránku"
+  },
+  "legal": {
+    "terms": "Obchodné podmienky",
+    "dpa": "Zmluva o spracúvaní osobných údajov",
+    "terms_link": "obchodnými podmienkami",
+    "dpa_link": "zmluvou o spracúvaní osobných údajov",
+    "to_register": "Späť na registráciu",
+    "footer": "Obchodné podmienky"
   }
 }

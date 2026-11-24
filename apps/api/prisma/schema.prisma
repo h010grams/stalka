@@ -56,6 +56,9 @@ model Salon {
   paidUntil     DateTime? @db.Timestamptz
   // Удалён администратором платформы: сразу скрыт и обезличен, через 30 дней стирается совсем
   deletedAt     DateTime? @db.Timestamptz
+  // Súhlas s obchodnými podmienkami pri registrácii: kedy a ktorá verzia (TERMS_VERSION)
+  termsAcceptedAt DateTime? @db.Timestamptz
+  termsVersion    String?
 
   memberships  Membership[]
   invites      Invite[]

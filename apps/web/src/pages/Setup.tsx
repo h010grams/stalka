@@ -146,7 +146,7 @@ export function SetupPage() {
             <h1 className="text-2xl">{t('wizard.s2_title')}</h1>
             <p className="text-sm text-stone-600">{t('wizard.s2_text')}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             {COLOR_PRESETS.map((p, i) => (
               <button
                 key={p.bgColor}
@@ -154,7 +154,7 @@ export function SetupPage() {
                 aria-label={p.bgColor}
                 aria-pressed={preset === i}
                 onClick={() => setPreset(i)}
-                className={`flex size-11 cursor-pointer items-center justify-center rounded-full ring-1 ring-black/10 ${
+                className={`flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full ring-1 ring-black/10 ${
                   preset === i ? 'outline-2 outline-offset-2 outline-stone-900' : ''
                 }`}
                 style={{ backgroundColor: p.bgColor }}

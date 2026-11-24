@@ -55,7 +55,9 @@
     "new_password": "New password",
     "reset_submit": "Set password",
     "reset_done": "Password changed. You can log in now.",
-    "to_login": "Go to login"
+    "to_login": "Go to login",
+    "terms_accept": "I agree to the",
+    "terms_and": "and the"
   },
   "invite": {
     "title": "Team invitation",
@@ -127,7 +129,8 @@
     "datetime": "Enter date and time",
     "birthday": "Check the birthday date",
     "url": "Enter a link, e.g. booksy.com/…",
-    "referral_bonus": "From 1 to 3"
+    "referral_bonus": "From 1 to 3",
+    "terms": "You need to accept the terms to sign up"
   },
   "errors": {
     "unauthorized": "Please log in.",
@@ -192,7 +195,7 @@
     "automations": "Automatic messages",
     "automations_hint": "Delivered as a notification on the Wallet card, only during the day (10:00–19:00).",
     "winback": "Remind clients who haven't come back",
-    "winback_hint": "Based on her usual visit rhythm. Only clients who agreed to offers.",
+    "winback_hint": "Based on their usual visit rhythm. Only clients who agreed to offers.",
     "reward_reminder": "Remind about an unused reward",
     "reward_reminder_hint": "Once, if the reward has been waiting for 14 days.",
     "birthday": "Birthday wishes",
@@ -460,9 +463,9 @@
   },
   "newcust": {
     "title": "New client",
-    "text": "Enter a name and phone number. The card is created right away and the client adds it to her phone by scanning a QR code.",
+    "text": "Enter a name and phone number. The card is created right away and the client adds it to their phone by scanning a QR code.",
     "language": "Card language",
-    "consent": "The client agrees to the processing of her name and contact for the loyalty program.",
+    "consent": "The client agrees to the processing of their name and contact for the loyalty program.",
     "submit": "Create card",
     "created_stamp": "Card created with the first stamp 🎉",
     "created": "Card created",
@@ -471,7 +474,7 @@
   },
   "walletqr": {
     "title": "Card to the phone",
-    "text": "Let the client scan this QR code with her camera. Her card opens with an Apple Wallet / Google Wallet button.",
+    "text": "Let the client scan this QR code with their camera. Their card opens with an Apple Wallet / Google Wallet button.",
     "show": "Show QR to add the card",
     "done": "Done"
   },
@@ -501,14 +504,14 @@
     "how_title": "How it works",
     "how_1_t": "QR poster on the counter",
     "how_1": "Set the reward and colors, print the poster. It takes about 10 minutes.",
-    "how_2_t": "Card on her phone",
+    "how_2_t": "Card on their phone",
     "how_2": "Customers scan the QR code and get the card in Apple or Google Wallet in seconds. No app, no password.",
     "how_3_t": "+1 stamp at checkout",
     "how_3": "At the counter you scan the card and add a stamp. The card on their phone updates itself and sends a notification.",
     "feat_title": "What Stálka does for you",
     "f_wallet_t": "On the phone, not in a drawer",
     "f_wallet": "Paper cards get lost. A Wallet card is always at hand, next to boarding passes.",
-    "f_winback_t": "Reminds her by itself",
+    "f_winback_t": "Reminds them by itself",
     "f_winback": "When a customer has not come back for a while, they get a gentle reminder – based on how often they usually visit.",
     "f_appt_t": "Appointment on the card",
     "f_appt": "The next appointment is on the card, with a reminder the day before. Fewer missed visits.",
@@ -521,7 +524,7 @@
     "f_gdpr_t": "GDPR-ready",
     "f_gdpr": "Dated consents, one-click export and deletion, data stored in the EU.",
     "f_lang_t": "Slovak, English, Ukrainian",
-    "f_lang": "Every client sees the card in her own language.",
+    "f_lang": "Every client sees the card in their own language.",
     "demo_title": "Try it yourself",
     "demo_text": "Add the demo card to your phone, press the button and a notification arrives in seconds – exactly what your customers will get.",
     "demo_scan": "Scan with your phone camera",
@@ -562,7 +565,7 @@
     "vs_paper_4": "Stamps are easy to fake",
     "vs_stalka": "Stálka",
     "vs_stalka_1": "Lives on the phone, next to boarding passes",
-    "vs_stalka_2": "Reminds her of appointments and to come back",
+    "vs_stalka_2": "Reminds them of appointments and to come back",
     "vs_stalka_3": "You see who comes back and who doesn't",
     "vs_stalka_4": "Every stamp is recorded",
     "faq_title": "Frequently asked questions",
@@ -665,7 +668,7 @@
     "link": "Platform admin",
     "empty": "Nothing found.",
     "a_delete": "Delete business",
-    "delete_prompt": "\"{{name}}\" will be deleted: its page disappears, the team loses access, client data is erased and their Wallet cards stop working. This cannot be undone.\n\nTo confirm, type the salon address: {{slug}}",
+    "delete_prompt": "\"{{name}}\" will be deleted: its page disappears, the team loses access, client data is erased and their Wallet cards stop working. This cannot be undone.\n\nTo confirm, type the business address: {{slug}}",
     "delete_mismatch": "The address does not match – the business was not deleted.",
     "s_deleted": "Deleted",
     "deleted_note": "Erased completely on {{date}}"
@@ -677,5 +680,13 @@
     "error_text": "Try reloading the page. If that does not help, write to info@stalka.sk.",
     "reload": "Reload the page",
     "home": "Go to the home page"
+  },
+  "legal": {
+    "terms": "Terms of service (in Slovak)",
+    "dpa": "Data processing agreement (in Slovak)",
+    "terms_link": "terms of service",
+    "dpa_link": "data processing agreement",
+    "to_register": "Back to sign-up",
+    "footer": "Terms of service"
   }
 }

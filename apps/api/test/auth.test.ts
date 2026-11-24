@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
+import { TERMS_VERSION } from '@stalka/shared';
 import { prisma } from '../src/lib/prisma.js';
 import type { MemoryMailer } from '../src/lib/mailer.js';
 import { createTestApp, json, registerOwner, resetDb, TestClient } from './helpers.js';
@@ -54,6 +55,7 @@ describe('registration', () => {
       name: 'X',
       email: email.toUpperCase(),
       password: 'password123',
+      acceptTerms: true,
     });
     expect(res.statusCode).toBe(409);
     expect(json(res).error.code).toBe('email_taken');
@@ -68,7 +70,20 @@ describe('registration', () => {
     });
     expect(res.statusCode).toBe(400);
     const messages = json(res).error.issues.map((i: { message: string }) => i.message);
-    expect(messages).toEqual(expect.arrayContaining(['v.email', 'v.password_min', 'v.required']));
+    expect(messages).toEqual(expect.arrayContaining(['v.email', 'v.password_min', 'v.required', 'v.terms']));
+  });
+
+  it('requires accepting the terms and stores the accepted version', async () => {
+    const body = { salonName: 'Kaviareň', name: 'Eva', email: 'terms@test.sk', password: 'password123' };
+    const rejected = await new TestClient(app).post('/api/auth/register', { ...body, acceptTerms: false });
+    expect(rejected.statusCode).toBe(400);
+    expect(json(rejected).error.issues.map((i: { message: string }) => i.message)).toContain('v.terms');
+
+    const res = await new TestClient(app).post('/api/auth/register', { ...body, acceptTerms: true });
+    expect(res.statusCode).toBe(201);
+    const salon = await prisma.salon.findFirstOrThrow({ where: { name: 'Kaviareň' } });
+    expect(salon.termsVersion).toBe(TERMS_VERSION);
+    expect(salon.termsAcceptedAt).toBeInstanceOf(Date);
   });
 });
 

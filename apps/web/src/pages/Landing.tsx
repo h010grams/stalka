@@ -410,9 +410,14 @@ export function LandingPage() {
         <span className="flex items-center gap-2">
           <img src="/mark.svg" alt="" className="h-5 w-auto" /> Stálka · {t('landing.footer')}
         </span>
-        <Link to="/login" className="hover:underline">
-          {t('landing.login')}
-        </Link>
+        <span className="flex gap-5">
+          <Link to="/podmienky" className="hover:underline">
+            {t('legal.footer')}
+          </Link>
+          <Link to="/login" className="hover:underline">
+            {t('landing.login')}
+          </Link>
+        </span>
       </footer>
     </div>
   );
