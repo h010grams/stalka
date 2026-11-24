@@ -12,6 +12,7 @@ import { AppError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
 import { prisma } from './lib/prisma.js';
 import { authPlugin } from './plugins/auth.js';
+import { securityHeaders } from './plugins/security.js';
 import { authRoutes } from './modules/auth/routes.js';
 import { salonRoutes } from './modules/salons/routes.js';
 import { inviteRoutes, staffRoutes } from './modules/staff/routes.js';
@@ -39,6 +40,7 @@ export async function buildApp(opts: AppOptions = {}) {
   });
   const mailer = opts.mailer ?? createMailer();
 
+  await app.register(securityHeaders);
   await app.register(cookie);
   await app.register(multipart, { limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
   // Лимиты заданы точечно в config.rateLimit маршрутов; в тестах плагин отключаем.
