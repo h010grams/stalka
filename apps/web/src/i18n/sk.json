@@ -277,7 +277,7 @@
     "referral": "{{name}} vám odporúča toto miesto. Po vašej prvej návšteve dostane každý z vás na kartu bonus +{{bonus}}."
   },
   "public_card": {
-    "add_apple": "Pridať do Apple Wallet",
+    "add_apple": "Pridať do Peňaženky Apple",
     "add_google": "Pridať do služby Google Peňaženka",
     "show_qr": "Pri návšteve ukážte tento QR kód",
     "save_page": "Tip: uložte si túto stránku do záložiek – je to vaša karta.",
@@ -300,7 +300,7 @@
     "demo_winback": "„Dlho sme sa nevideli“",
     "demo_sent": "Odoslané. Zamknite mobil a počkajte pár sekúnd.",
     "demo_done": "Všetky ukážky ste vyskúšali. Ďalšie zajtra.",
-    "demo_no_wallet": "Upozornenia chodia do Apple alebo Google Wallet. Apple Wallet pripravujeme – zatiaľ si ukážku vyskúšate na Androide.",
+    "demo_no_wallet": "Upozornenia chodia do Apple alebo Google Wallet. Otvorte túto stránku na iPhone alebo Androide a pridajte si kartu.",
     "refer_title": "Odporučte nás známym",
     "refer_text": "Pošlite známym svoj odkaz. Keď podľa neho niekto príde prvýkrát, každý z vás dostane na kartu bonus +{{bonus}}.",
     "refer_share": "Poslať odkaz",

@@ -306,26 +306,19 @@ function SalonActions({ bookingUrl, reviewUrl, phone }: { bookingUrl: string | n
 
 function WalletButton({ href, kind }: { href: string; kind: 'apple' | 'google' }) {
   const { t, i18n } = useTranslation();
-  if (kind === 'google') {
-    // официальная кнопка Google (менять цвет, текст и пропорции нельзя по правилам бренда)
-    const lang = (['sk', 'en', 'uk'] as const).find((l) => i18n.language.startsWith(l)) ?? 'en';
-    return (
-      <a href={href} className="mx-auto block w-fit rounded-full focus-visible:outline-2 focus-visible:outline-offset-2">
-        <img src={`/wallet/google-${lang}.svg`} alt={t('public_card.add_google')} className="h-12 w-auto" />
-      </a>
-    );
-  }
-  // Apple: официальный значок добавим, когда будет аккаунт Apple Developer (лицензия только для участников)
+  // Официальные значки Apple и Google: менять цвет, текст и пропорции нельзя по правилам брендов.
+  // Значки Apple — по Wallet Marketing Artwork License (аккаунт Apple Developer), вокруг нужен отступ ≥ 0,1 высоты.
+  const lang = (['sk', 'en', 'uk'] as const).find((l) => i18n.language.startsWith(l)) ?? 'en';
   return (
     <a
       href={href}
-      className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-black px-4 text-sm font-semibold text-white active:bg-stone-800"
+      className={`mx-auto block w-fit focus-visible:outline-2 focus-visible:outline-offset-2 ${kind === 'google' ? 'rounded-full' : 'rounded-lg'}`}
     >
-      <svg aria-hidden viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="3" y="6" width="18" height="13" rx="3" />
-        <path d="M3 10h18M16 14.5h2" strokeLinecap="round" />
-      </svg>
-      {t('public_card.add_apple')}
+      <img
+        src={`/wallet/${kind}-${lang}.svg`}
+        alt={t(kind === 'google' ? 'public_card.add_google' : 'public_card.add_apple')}
+        className="h-12 w-auto"
+      />
     </a>
   );
 }
